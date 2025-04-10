@@ -27,8 +27,8 @@ func UserRegister(c *gin.Context) {
 func UserLogin(c *gin.Context) {
 	var user models.Usuario
 	var input struct {
-		Email    string
-		Password string
+		Email    string `json:"Email"`
+		Password string `json:"password"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -85,7 +85,7 @@ func UserUpdate(c *gin.Context) {
 	}
 
 	var updateData struct {
-		Name     string `json:"nombre"`
+		Name     string `json:"name"`
 		Password string `json:"password"`
 	}
 
