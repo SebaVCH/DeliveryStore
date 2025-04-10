@@ -70,3 +70,49 @@ func UserInfo(c *gin.Context) {
 
 	c.IndentedJSON(http.StatusOK, gin.H{"user": user})
 }
+
+func UserUpdate(c *gin.Context) {
+	email, exists := c.Get("email")
+	if !exists {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener email"})
+		return
+	}
+
+	var user models.Usuario
+	if err := database.DB.Where("email = ?", email).First(&user).Error; err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Usuario no encontrado"})
+		return
+	}
+
+	var updateData struct {
+		Name     string `json:"nombre"`
+		Password string `json:"password"`
+	}
+
+	if err := c.ShouldBindJSON(&updateData); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Datos de actualización inválidos"})
+		return
+	}
+
+	updates := make(map[string]interface{})
+
+	if updateData.Name != "" {
+		updates["nombre"] = updateData.Name
+	}
+
+	if updateData.Password != "" {
+		updates["password"] = utils.HashPassword(updateData.Password)
+	}
+
+	if len(updates) == 0 {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "No se proporcionaron datos válidos para actualizar"})
+		return
+	}
+
+	if err := database.DB.Model(&user).Updates(updates).Error; err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Error al actualizar el usuario"})
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "Usuario actualizado correctamente"})
+}
