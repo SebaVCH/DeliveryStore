@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import "github.com/SebaVCH/DeliveryStore/app"
 
 func main() {
-	fmt.Print()
+
+	if err := app.StartBackend(); err != nil {
+		panic(err)
+	}
+
 }
