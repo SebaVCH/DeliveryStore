@@ -1,36 +1,59 @@
 import React,{SyntheticEvent, useState} from 'react';
-import { Navigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+
+interface LoginRespuesta
+{
+    token: string;
+    user: {
+        email: string;
+        name: string;
+    };
+}
+
 
 
 export const Login = () => {
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
-  const [redirect, setRedirect] =   useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const submit = async (e: SyntheticEvent) => 
   {
     e.preventDefault();
-    const api_url = 'http://localhost:8080/login';
+    setError('');
 
-    const respuesta = await fetch(api_url,{
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      credentials: 'include',
-      body: JSON.stringify({
-          email,
-          password
-      })
-  });
+      try {
+          const respuesta = await fetch('http://localhost:8080/login', {
+              method: 'POST',
+              headers: {
+                  'Content-Type':'application/json',
+                  'Accept':'application/json'
+              },
+              body: JSON.stringify({
+                  email,
+                  password
+              })
+          });
 
-  const contenido = await respuesta.json();
-    console.log(contenido); //pa visualizar el contenido del objeto que retorna cuando el user se registra
 
-    setRedirect(true);
-}
+          const contenido: LoginRespuesta = await respuesta.json();
 
-  if(redirect){
-    return <Navigate to = "/Home" />;
-  }
+          if (!respuesta.ok) {
+              throw new Error('error en el puto login');
+          }
+
+          localStorage.setItem('token', contenido.token);
+          localStorage.setItem('user', JSON.stringify(contenido.user));
+
+
+          navigate('/Home');
+
+      } catch (err) {
+          setError('credenciales incorrectas 8===D');
+          console.error('error en el login:', error);
+      }
+    };
 
 
   return (
@@ -38,14 +61,16 @@ export const Login = () => {
         <h1>Login</h1>
         <form onSubmit={submit}>
             <label>Correo: </label>
-            <input type="email" name="email" required 
+            <input type="email" name="email" id = "email" required value = {email}
               onChange = {e => setEmail(e.target.value)}
+                   placeholder = "Ingrese porfavor su correo.."
             />
             <label>Contraseña: </label>
-            <input type="password" name="password" required 
+            <input type="password" name="password" required value = {password}
               onChange = {e => setPassword(e.target.value)}
+                   placeholder = "Ingrese porfavor su contraseña"
             />
-            <input type="submit" value="Submit" />
+            <button type="submit" value="Submit">Login</button>
         </form>
         <p>Si no tienes cuenta, registrate <a href="/Register">aquí</a></p>
         <p>¿Olvidaste tu contraseña? <a href="/forgot-password">Recupera tu contraseña</a></p>
