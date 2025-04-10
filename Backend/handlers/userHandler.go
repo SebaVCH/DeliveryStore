@@ -17,6 +17,10 @@ func UserRegister(c *gin.Context) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al registrar usuario"})
 		return
 	}
+	if err := database.DB.Where("email = ?", user.Email).First(&user).Error; err == nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Este email ya esta en uso"})
+		return
+	}
 
 	user.Password = utils.HashPassword(user.Password)
 	database.DB.Create(&user)
@@ -27,8 +31,8 @@ func UserRegister(c *gin.Context) {
 func UserLogin(c *gin.Context) {
 	var user models.Usuario
 	var input struct {
-		Email    string `json:"Email"`
-		Password string `json:"password"`
+		Email    string
+		Password string
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -43,6 +47,7 @@ func UserLogin(c *gin.Context) {
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Usuario o contraseña incorrectos"})
+		return
 	}
 
 	token, err := utils.GenerateToken(user)
@@ -72,6 +77,7 @@ func UserInfo(c *gin.Context) {
 }
 
 func UserUpdate(c *gin.Context) {
+
 	email, exists := c.Get("email")
 	if !exists {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener email"})
@@ -85,8 +91,10 @@ func UserUpdate(c *gin.Context) {
 	}
 
 	var updateData struct {
-		Name     string `json:"name"`
-		Password string `json:"password"`
+		Name              string `json:"name"`
+		ActualPassword    string `json:"password"`
+		NewPassword       string `json:"new_password"`
+		RepeatNewPassword string `json:"repeat_new_password"`
 	}
 
 	if err := c.ShouldBindJSON(&updateData); err != nil {
@@ -97,11 +105,27 @@ func UserUpdate(c *gin.Context) {
 	updates := make(map[string]interface{})
 
 	if updateData.Name != "" {
-		updates["nombre"] = updateData.Name
+		updates["name"] = updateData.Name
 	}
 
-	if updateData.Password != "" {
-		updates["password"] = utils.HashPassword(updateData.Password)
+	if updateData.ActualPassword != "" || updateData.NewPassword != "" || updateData.RepeatNewPassword != "" {
+
+		if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(updateData.ActualPassword)) != nil {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Datos de actualización inválidos"})
+			return
+		}
+
+		if updateData.NewPassword != updateData.RepeatNewPassword {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Las nuevas claves no coinciden"})
+			return
+		}
+
+		if len(updateData.NewPassword) < 8 {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "La nueva clave debe tener al menos 8 caracteres"})
+			return
+		}
+
+		updates["password"] = utils.HashPassword(updateData.NewPassword)
 	}
 
 	if len(updates) == 0 {
