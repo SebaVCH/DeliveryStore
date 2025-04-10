@@ -1,9 +1,16 @@
-//import React from 'react';
-import { login } from './components/login';
+import React from 'react';
+import {BrowserRouter} from 'react-router-dom';
+import {AppRoutes} from './routes/AppRoutes';
 import './App.css';
 
 function App() {
-  return login()
-}
+  return(
+  <BrowserRouter>
+    <div className='App'>
+      <AppRoutes/>
+    </div>
+  </BrowserRouter>
+  ) 
+};
 
 export default App;
