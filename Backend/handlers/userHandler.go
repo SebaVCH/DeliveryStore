@@ -31,8 +31,8 @@ func UserRegister(c *gin.Context) {
 func UserLogin(c *gin.Context) {
 	var user models.Usuario
 	var input struct {
-		Email    string
-		Password string
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -41,12 +41,12 @@ func UserLogin(c *gin.Context) {
 	}
 
 	if err := database.DB.Where("email = ?", input.Email).First(&user).Error; err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Usuario o contraseña incorrectos"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Usuario o contraseña incorrectos 1"})
 		return
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Usuario o contraseña incorrectos"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Usuario o contraseña incorrectos 2"})
 		return
 	}
 
@@ -57,7 +57,12 @@ func UserLogin(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, gin.H{
+		"token": token,
+		"user": gin.H{
+			"email": user.Email,
+			"name":  user.Name,
+		}})
 
 }
 
