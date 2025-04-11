@@ -3,8 +3,8 @@ import {useNavigate} from "react-router-dom";
 
 interface User
 {
-    email: String;
-    name: String;
+    Email: String;
+    Name: String;
 }
 
 
@@ -26,7 +26,7 @@ export const Home = () => {
                 const respuesta = await fetch('http://localhost:8080/profile', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
+                        'Authorization': `${token}`, //falta el Bearer...
                         'Content-Type': 'application/json',
                         'Accept':'application/json'
                     }
@@ -34,15 +34,18 @@ export const Home = () => {
 
                 const contenido = await respuesta.json();
                 if (!respuesta.ok) {
-                    throw new Error('error al obtener los datos reqls');
+                    throw new Error('error al obtener los datos');
                 }
 
                 if (contenido.user) {
                     setUser(contenido.user);
+                    console.log(contenido.user);
                 } else {
+
                     throw new Error('error en el formato de los datos xd');
+
                 }
-            } catch (err) {
+            } catch (error) {
                 setError('error al cargar datos del usuario');
                 console.error('error en el fetch:', error);
                 localStorage.removeItem('token');
@@ -58,18 +61,18 @@ export const Home = () => {
 
     if(loading)
     {
-        return (<div>Cargando la wea...</div>)
+        return (<div>Cargando...</div>)
     }
 
     if(error)
     {
-        return (<div>Error CTM</div>)
+        return (<div>Error</div>)
     }
 
 
     return (
         <div>
-            {user ? 'Hola' + user.name + ':' + user.email : 'no estas logeado'}
+            {user ? 'Hola: ' + user.Name + ', Tu correo es: ' + user.Email : 'no estas logeado'}
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import React,{SyntheticEvent, useState} from 'react';
 import { Navigate } from 'react-router-dom';
 
-export const Register = () => {
+export const Register = () => { //Hooks
   const [name, setName] = useState('');
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');

@@ -40,7 +40,7 @@ export const Login = () => {
           const contenido: LoginRespuesta = await respuesta.json();
 
           if (!respuesta.ok) {
-              throw new Error('error en el puto login');
+              throw new Error('error en el login');
           }
 
           localStorage.setItem('token', contenido.token);
@@ -50,7 +50,7 @@ export const Login = () => {
           navigate('/Home');
 
       } catch (err) {
-          setError('credenciales incorrectas 8===D');
+          setError('credenciales incorrectas');
           console.error('error en el login:', error);
       }
     };
