@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/SebaVCH/DeliveryStore/config"
+	"github.com/SebaVCH/DeliveryStore/internal/config"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"

@@ -1,18 +1,13 @@
 package app
 
 import (
-	"github.com/SebaVCH/DeliveryStore/config"
-	"github.com/SebaVCH/DeliveryStore/database"
-	"github.com/SebaVCH/DeliveryStore/routes"
+	"github.com/SebaVCH/DeliveryStore/internal/config"
+	"github.com/SebaVCH/DeliveryStore/internal/interfaces/routes"
 )
 
 func StartBackend() error {
 
 	if err := config.LoadENV(); err != nil {
-		return err
-	}
-
-	if err := database.StartDB(); err != nil {
 		return err
 	}
 

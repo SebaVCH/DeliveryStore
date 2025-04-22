@@ -1,9 +1,9 @@
-package handlers
+package usecase
 
 import (
-	"github.com/SebaVCH/DeliveryStore/database"
-	"github.com/SebaVCH/DeliveryStore/models"
-	"github.com/SebaVCH/DeliveryStore/utils"
+	"github.com/SebaVCH/DeliveryStore/internal/domain"
+	"github.com/SebaVCH/DeliveryStore/internal/infrastructure/database"
+	utils2 "github.com/SebaVCH/DeliveryStore/internal/utils"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
@@ -11,7 +11,7 @@ import (
 
 func UserRegister(c *gin.Context) {
 
-	var user models.Usuario
+	var user domain.Usuario
 
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al registrar usuario"})
@@ -22,14 +22,14 @@ func UserRegister(c *gin.Context) {
 		return
 	}
 
-	user.Password = utils.HashPassword(user.Password)
+	user.Password = utils2.HashPassword(user.Password)
 	database.DB.Create(&user)
 	c.IndentedJSON(http.StatusOK, gin.H{"message": "Usuario registrado correctamente"})
 
 }
 
 func UserLogin(c *gin.Context) {
-	var user models.Usuario
+	var user domain.Usuario
 	var input struct {
 		Email    string
 		Password string
@@ -50,7 +50,7 @@ func UserLogin(c *gin.Context) {
 		return
 	}
 
-	token, err := utils.GenerateToken(user)
+	token, err := utils2.GenerateToken(user)
 
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al generar token"})
@@ -62,7 +62,7 @@ func UserLogin(c *gin.Context) {
 }
 
 func UserInfo(c *gin.Context) {
-	var user models.Usuario
+	var user domain.Usuario
 	email, exists := c.Get("email")
 	if !exists {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener email"})
@@ -84,7 +84,7 @@ func UserUpdate(c *gin.Context) {
 		return
 	}
 
-	var user models.Usuario
+	var user domain.Usuario
 	if err := database.DB.Where("email = ?", email).First(&user).Error; err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Usuario no encontrado"})
 		return
@@ -125,7 +125,7 @@ func UserUpdate(c *gin.Context) {
 			return
 		}
 
-		updates["password"] = utils.HashPassword(updateData.NewPassword)
+		updates["password"] = utils2.HashPassword(updateData.NewPassword)
 	}
 
 	if len(updates) == 0 {

@@ -1,4 +1,4 @@
-package models
+package domain
 
 type Usuario struct {
 	Email    string `gorm:"primaryKey"`

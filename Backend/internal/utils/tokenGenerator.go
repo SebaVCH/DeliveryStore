@@ -1,13 +1,13 @@
 package utils
 
 import (
-	"github.com/SebaVCH/DeliveryStore/config"
-	"github.com/SebaVCH/DeliveryStore/models"
+	"github.com/SebaVCH/DeliveryStore/internal/config"
+	"github.com/SebaVCH/DeliveryStore/internal/domain"
 	"github.com/golang-jwt/jwt/v5"
 	"time"
 )
 
-func GenerateToken(user models.Usuario) (string, error) {
+func GenerateToken(user domain.Usuario) (string, error) {
 
 	claims := jwt.MapClaims{
 		"email": user.Email,
