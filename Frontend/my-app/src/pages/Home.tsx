@@ -16,14 +16,14 @@ export const Home = () => {
 
     useEffect(() => {
         const fetchdata = async () => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token'); //ContexaAPI o zustand
             if(!token) {
                 navigate('/login');
                 return;
             }
 
             try {
-                const respuesta = await fetch('http://localhost:8080/profile', {
+                const respuesta = await fetch('http://localhost:8080/profile', { //REACT QUERY
                     method: 'GET',
                     headers: {
                         'Authorization': `${token}`, //falta el Bearer...
@@ -59,7 +59,7 @@ export const Home = () => {
         fetchdata();
     }, [error, navigate]);
 
-    if(loading)
+    if(loading)                                     //REACT QUERY
     {
         return (<div>Cargando...</div>)
     }

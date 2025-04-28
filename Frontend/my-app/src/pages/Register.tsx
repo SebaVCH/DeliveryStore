@@ -23,7 +23,7 @@ export const Register = () => { //Hooks
     });
 
     const contenido = await respuesta.json();
-    console.log(contenido); //pa visualizar el contenido del objeto que retorna cuando el user se registra
+    console.log(contenido); //para visualizar el contenido del objeto que retorna cuando el user se registra
 
     setRedirect(true);
   }
