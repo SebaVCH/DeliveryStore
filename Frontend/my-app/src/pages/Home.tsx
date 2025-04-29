@@ -14,6 +14,13 @@ export const Home = () => {
         return null;
     }
     
+    const logout = () => {
+        setToken(null);
+        sessionStorage.removeItem('token');
+        navigate('/Login');
+    }
+
+
     if(isLoading)
     {
         return <div> Cargando... </div>;
@@ -26,7 +33,12 @@ export const Home = () => {
         return null;
     }
 
-    return <div> Bienvenido {user?.Name}, tu correo es {user?.Email}</div>
+    return (
+    <div> 
+        <h2> Bienvenido: {user?.Name}, tu correo es: {user?.Email} </h2>
+        <button onClick={logout}>Cerrar la sesion 🤑</button>
+    </div>
+    );
     
 };
 
