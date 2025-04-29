@@ -1,80 +1,33 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
+import { useUserProfile } from '../hooks/useUserProfile';
 import {useNavigate} from "react-router-dom";
-
-interface User
-{
-    Email: String;
-    Name: String;
-}
-
+import { useAuth } from '../context/AuthContext';
 
 export const Home = () => {
-    const [user, setUser] = useState<User|null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+    const {token, setToken} = useAuth();
     const navigate = useNavigate();
+    const { data: user, isLoading, isError} = useUserProfile();
 
-    useEffect(() => {
-        const fetchdata = async () => {
-            const token = localStorage.getItem('token'); //ContexaAPI o zustand
-            if(!token) {
-                navigate('/login');
-                return;
-            }
-
-            try {
-                const respuesta = await fetch('http://localhost:8080/profile', { //REACT QUERY
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `${token}`, //falta el Bearer...
-                        'Content-Type': 'application/json',
-                        'Accept':'application/json'
-                    }
-                });
-
-                const contenido = await respuesta.json();
-                if (!respuesta.ok) {
-                    throw new Error('error al obtener los datos');
-                }
-
-                if (contenido.user) {
-                    setUser(contenido.user);
-                    console.log(contenido.user);
-                } else {
-
-                    throw new Error('error en el formato de los datos xd');
-
-                }
-            } catch (error) {
-                setError('error al cargar datos del usuario');
-                console.error('error en el fetch:', error);
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchdata();
-    }, [error, navigate]);
-
-    if(loading)                                     //REACT QUERY
+    if(!token)
     {
-        return (<div>Cargando...</div>)
+        navigate('/Login');
+        return null;
+    }
+    
+    if(isLoading)
+    {
+        return <div> Cargando... </div>;
+    }
+    
+    if(isError)
+    {
+        setToken(null);
+        navigate('/login');
+        return null;
     }
 
-    if(error)
-    {
-        return (<div>Error</div>)
-    }
-
-
-    return (
-        <div>
-            {user ? 'Hola: ' + user.Name + ', Tu correo es: ' + user.Email : 'no estas logeado'}
-        </div>
-    );
+    return <div> Bienvenido {user?.name}, tu correo es {user?.email}</div>
+    
 };
 
 export default Home;

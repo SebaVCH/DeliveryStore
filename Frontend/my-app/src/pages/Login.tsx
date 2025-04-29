@@ -1,59 +1,25 @@
 import React,{SyntheticEvent, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-
-interface LoginRespuesta
-{
-    token: string;
-    user: {
-        email: string;
-        name: string;
-    };
-}
-
-
+import { useAuth } from '../context/AuthContext';
+import { useLogin } from '../hooks/useLogin';
 
 export const Login = () => {
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
-  const [error, setError] = useState('');
+  const {setToken} = useAuth();
   const navigate = useNavigate();
 
-  const submit = async (e: SyntheticEvent) => 
+  const login = useLogin((token) => {
+    setToken(token);
+    navigate('/Home');
+  });
+
+  const submit = (e: SyntheticEvent) => 
   {
     e.preventDefault();
-    setError('');
-
-      try {
-          const respuesta = await fetch('http://localhost:8080/login', {
-              method: 'POST',
-              headers: {
-                  'Content-Type':'application/json',
-                  'Accept':'application/json'
-              },
-              body: JSON.stringify({
-                  email,
-                  password
-              })
-          });
-
-
-          const contenido: LoginRespuesta = await respuesta.json();
-
-          if (!respuesta.ok) {
-              throw new Error('error en el login');
-          }
-
-          localStorage.setItem('token', contenido.token);
-          localStorage.setItem('user', JSON.stringify(contenido.user));
-
-
-          navigate('/Home');
-
-      } catch (err) {
-          setError('credenciales incorrectas');
-          console.error('error en el login:', error);
-      }
-    };
+    login.mutate({email,password});
+      
+  };
 
 
   return (
@@ -72,6 +38,7 @@ export const Login = () => {
             />
             <button type="submit" value="Submit">Login</button>
         </form>
+        {login.isError && <p>usuario o contraseña incorrectas </p>}
         <p>Si no tienes cuenta, registrate <a href="/Register">aquí</a></p>
         <p>¿Olvidaste tu contraseña? <a href="/forgot-password">Recupera tu contraseña</a></p>
         
