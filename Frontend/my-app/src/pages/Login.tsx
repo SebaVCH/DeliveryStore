@@ -6,17 +6,24 @@ import { useLogin } from '../hooks/useLogin';
 export const Login = () => {
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const {setToken} = useAuth();
   const navigate = useNavigate();
 
   const login = useLogin((token) => {
     setToken(token);
     navigate('/Home');
-  });
+  },
+  (error)=>{
+    setErrorMsg(error);
+  }
+
+);
 
   const submit = (e: SyntheticEvent) => 
   {
     e.preventDefault();
+    setErrorMsg('');
     login.mutate({email,password});
       
   };
@@ -36,9 +43,12 @@ export const Login = () => {
               onChange = {e => setPassword(e.target.value)}
                    placeholder = "Ingrese porfavor su contraseña"
             />
-            <button type="submit" value="Submit">Login</button>
+            <button type="submit" value="Submit" disabled={login.isPending}>
+              {login.isPending? 'iniciando sesion...🗣️🗣️': 'Login'}
+            </button>
         </form>
         {login.isError && <p>usuario o contraseña incorrectas </p>}
+        {errorMsg && <p>{errorMsg}</p>}
         <p>Si no tienes cuenta, registrate <a href="/Register">aquí</a></p>
         <p>¿Olvidaste tu contraseña? <a href="/forgot-password">Recupera tu contraseña</a></p>
         

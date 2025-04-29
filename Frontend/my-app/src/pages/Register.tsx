@@ -1,58 +1,51 @@
 import React,{SyntheticEvent, useState} from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useRegister } from '../hooks/useRegister';
 
 export const Register = () => { //Hooks
   const [name, setName] = useState('');
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
-  const [redirect, setRedirect] =   useState(false);
+  const [errorMsg,setErrorMsg] = useState('');
+  const navigate = useNavigate();
 
-  const enviar = async (e:SyntheticEvent) => {
+  const register = useRegister(() => {
+    navigate('/Login');
+    },
+    (error) => {
+      setErrorMsg(error);
+    }
+  );
+
+  const enviar = (e: SyntheticEvent) => {
     e.preventDefault();
-
-    const api_url = 'http://localhost:8080/register';
-
-    const respuesta = await fetch(api_url,{
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-          name,
-          email,
-          password
-      })
-    });
-
-    const contenido = await respuesta.json();
-    console.log(contenido); //para visualizar el contenido del objeto que retorna cuando el user se registra
-
-    setRedirect(true);
-  }
-
-  if(redirect){
-    return <Navigate to = "/Login" />;
-  }
+    setErrorMsg('');
+    register.mutate({name,email,password});
+  };
 
   return (
     <div>
         <h1>Registro</h1>
         <form onSubmit={enviar}>
             <label>Ingrese su nombre</label>
-            <input type = "username" name = "username" placeholder = 'Ingrese su nombre de usuario...' required
+            <input type = "username" name = "username" placeholder = 'Ingrese su nombre de usuario...' required value={name}
               onChange={e => setName(e.target.value)}
             />
 
             <label>Correo Electronico: </label>
-            <input type = "email" name = "email" placeholder = 'Ingrese un correo electronico porfavor...' required
+            <input type = "email" name = "email" placeholder = 'Ingrese un correo electronico porfavor...' required value={email}
               onChange={e => setEmail(e.target.value)}
 
             />
             <label>Contraseña: </label>
-            <input type = "password" name = "password" placeholder = 'Ingrese una contraseña...' required
+            <input type = "password" name = "password" placeholder = 'Ingrese una contraseña...' required value={password}
               onChange={e => setPassword(e.target.value)}
             />
-            <button onClick={enviar}>Registrarse</button>
-
+            <button type="submit" disabled = {register.isPending}>
+              {register.isPending? 'Registrando...🗿' : 'Registrarse'}
+            </button>
         </form>
+        {errorMsg && <p>{errorMsg}</p>}
     </div>
   );
 }

@@ -26,7 +26,7 @@ export const Home = () => {
         return null;
     }
 
-    return <div> Bienvenido {user?.name}, tu correo es {user?.email}</div>
+    return <div> Bienvenido {user?.Name}, tu correo es {user?.Email}</div>
     
 };
 
