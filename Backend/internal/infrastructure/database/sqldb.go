@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/SebaVCH/DeliveryStore/models"
+	"github.com/SebaVCH/DeliveryStore/internal/domain"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -14,7 +14,7 @@ func StartDB() error {
 	if err != nil {
 		return err
 	}
-	if err := DB.AutoMigrate(&models.Usuario{}); err != nil {
+	if err := DB.AutoMigrate(&domain.Usuario{}); err != nil {
 		return err
 	}
 	return nil
