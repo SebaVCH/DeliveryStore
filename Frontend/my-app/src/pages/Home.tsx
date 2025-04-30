@@ -35,7 +35,7 @@ export const Home = () => {
 
     return (
     <div> 
-        <h2> Bienvenido: {user?.Name}, tu correo es: {user?.Email} </h2>
+        <p> Bienvenido: {user?.Name}, tu correo es: {user?.Email} </p>
         <button onClick={logout}>Cerrar la sesion 🤑</button>
     </div>
     );
