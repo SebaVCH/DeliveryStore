@@ -1,20 +1,24 @@
 import React, {SyntheticEvent, useState} from 'react'
 import { useProductos, useCrearProducto, useEliminarProducto } from '../hooks/useProductos';
 
-export const Producto = () => {
+export const Producto = () => 
+{
     const {data: productos,isLoading: cargaproducto} = useProductos();
     const crearProd = useCrearProducto();
     const eliminarPrdo = useEliminarProducto();
     const [nombre, setNombre] = useState('');
     const [precio,setPrecio] = useState('');
     const [descripcion, setDescripcion] = useState('');
+    const [metodo,setMetodo] = useState('')
     
     const crear = (e: SyntheticEvent) => {
         e.preventDefault();
-        crearProd.mutate({name: nombre, price: Number(precio), description: descripcion});
+        crearProd.mutate({name: nombre, price: Number(precio), description: descripcion, method: metodo});
         setNombre('');
         setPrecio('');
-    };
+        setDescripcion('');
+        setMetodo('');
+    };      
 
   return (
     <div>
@@ -27,13 +31,13 @@ export const Producto = () => {
                 <ul>
                     {productos.map((p: any) => (
                         <li key = {p._id}>
-                            {p.name} - ${p.price}
+                            {p.name} - ${p.price} - <strong>{p.method}</strong>
                             <button onClick={() => eliminarPrdo.mutate(p._id)}> Eliminar</button> 
                         </li>
                     ))}
                 </ul>
             ) : (<p> No hay productos</p>)
-            })
+            }
         </>
         )}
             
@@ -44,6 +48,11 @@ export const Producto = () => {
             <input type = "number" placeholder='Precio del producto...' value={precio} onChange={(e)=> setPrecio(e.target.value)} required/>
 
             <input type = "text" placeholder='Descripcion del producto...' value={descripcion} onChange={(e)=> setDescripcion(e.target.value)} required/>
+
+            <select value={metodo} onChange={(e)=> setMetodo(e.target.value)} required>
+                <option value="delivery">Delivery</option>
+                <option value="retiro en tienda">Retiro en tienda</option>
+            </select>
 
             <button type = "submit"> Agregar</button>
         </form>
