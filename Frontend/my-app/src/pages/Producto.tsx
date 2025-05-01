@@ -1,11 +1,13 @@
 import React, {SyntheticEvent, useState} from 'react'
 import { useProductos, useCrearProducto, useEliminarProducto } from '../hooks/useProductos';
+import { useNavigate } from 'react-router-dom';
 
 export const Producto = () => 
 {
     const {data: productos,isLoading: cargaproducto} = useProductos();
     const crearProd = useCrearProducto();
     const eliminarPrdo = useEliminarProducto();
+    const navigate = useNavigate();
     const [nombre, setNombre] = useState('');
     const [precio,setPrecio] = useState('');
     const [descripcion, setDescripcion] = useState('');
@@ -57,6 +59,7 @@ export const Producto = () =>
             <button type = "submit"> Agregar</button>
         </form>
 
+        <button onClick={()=> navigate('/Proveedores')}>Mis Proveedores</button>
     </div>
   );
 };
