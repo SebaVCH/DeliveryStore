@@ -1,0 +1,55 @@
+import React, {SyntheticEvent, useState} from 'react'
+import { useProductos, useCrearProducto, useEliminarProducto } from '../hooks/useProductos';
+
+export const Producto = () => {
+    const {data: productos,isLoading: cargaproducto} = useProductos();
+    const crearProd = useCrearProducto();
+    const eliminarPrdo = useEliminarProducto();
+    const [nombre, setNombre] = useState('');
+    const [precio,setPrecio] = useState('');
+    const [descripcion, setDescripcion] = useState('');
+    
+    const crear = (e: SyntheticEvent) => {
+        e.preventDefault();
+        crearProd.mutate({name: nombre, price: Number(precio), description: descripcion});
+        setNombre('');
+        setPrecio('');
+    };
+
+  return (
+    <div>
+        <h1>Mis Productos</h1>
+        {cargaproducto ? (<p>Cargando productos...</p>)
+        : (
+        <>
+            <h2>Productos en Venta</h2>
+            {productos?.length > 0 ? (
+                <ul>
+                    {productos.map((p: any) => (
+                        <li key = {p._id}>
+                            {p.name} - ${p.price}
+                            <button onClick={() => eliminarPrdo.mutate(p._id)}> Eliminar</button> 
+                        </li>
+                    ))}
+                </ul>
+            ) : (<p> No hay productos</p>)
+            })
+        </>
+        )}
+            
+        <h3>Agregar producto</h3>
+        <form onSubmit={crear}>
+            <input type = "text" placeholder='Nombre del producto...' value={nombre} onChange={(e)=> setNombre(e.target.value)} required/>
+
+            <input type = "number" placeholder='Precio del producto...' value={precio} onChange={(e)=> setPrecio(e.target.value)} required/>
+
+            <input type = "text" placeholder='Descripcion del producto...' value={descripcion} onChange={(e)=> setDescripcion(e.target.value)} required/>
+
+            <button type = "submit"> Agregar</button>
+        </form>
+
+    </div>
+  );
+};
+
+export default Producto;

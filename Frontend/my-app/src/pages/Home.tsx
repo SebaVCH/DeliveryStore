@@ -6,7 +6,8 @@ import { useAuth } from '../context/AuthContext';
 export const Home = () => {
     const {token, setToken} = useAuth();
     const navigate = useNavigate();
-    const { data: user, isLoading, isError} = useUserProfile();
+    const { data: user, isLoading: cargauser, isError} = useUserProfile();
+    
 
     if(!token)
     {
@@ -21,7 +22,7 @@ export const Home = () => {
     }
 
 
-    if(isLoading)
+    if(cargauser)
     {
         return <div> Cargando... </div>;
     }
@@ -35,7 +36,8 @@ export const Home = () => {
 
     return (
     <div> 
-        <p> Bienvenido: {user?.Name}, tu correo es: {user?.Email} </p>
+        <h2> Bienvenido: {user?.Name}, tu correo es: {user?.Email} </h2>
+        <button onClick={()=> navigate('/Producto')}>Ir a los productos</button>
         <button onClick={logout}>Cerrar la sesion 🤑</button>
     </div>
     );
