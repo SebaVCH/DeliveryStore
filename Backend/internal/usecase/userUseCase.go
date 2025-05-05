@@ -1,38 +1,58 @@
 package usecase
 
 import (
+	"net/http"
+
 	"github.com/SebaVCH/DeliveryStore/internal/domain"
-	"github.com/SebaVCH/DeliveryStore/internal/infrastructure/database"
-	utils2 "github.com/SebaVCH/DeliveryStore/internal/utils"
+	"github.com/SebaVCH/DeliveryStore/internal/repository"
+	"github.com/SebaVCH/DeliveryStore/internal/utils"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
-	"net/http"
 )
 
-func UserRegister(c *gin.Context) {
+type UserUseCase interface {
+	Register(c *gin.Context)
+	Login(c *gin.Context)
+	Info(c *gin.Context)
+	Update(c *gin.Context)
+}
 
+type userUseCase struct {
+	userRepo repository.UserRepository
+}
+
+func NewUserUseCase(repo repository.UserRepository) UserUseCase {
+	return &userUseCase{
+		userRepo: repo,
+	}
+}
+
+func (uc *userUseCase) Register(c *gin.Context) {
 	var user domain.Usuario
 
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al registrar usuario"})
 		return
 	}
-	if err := database.DB.Where("email = ?", user.Email).First(&user).Error; err == nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Este email ya esta en uso"})
+
+	if uc.userRepo.Exists(user.Email) {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Este email ya está en uso"})
 		return
 	}
 
-	user.Password = utils2.HashPassword(user.Password)
-	database.DB.Create(&user)
-	c.IndentedJSON(http.StatusOK, gin.H{"message": "Usuario registrado correctamente"})
+	user.Password = utils.HashPassword(user.Password)
+	if err := uc.userRepo.Create(user); err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Error al crear usuario"})
+		return
+	}
 
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "Usuario registrado correctamente"})
 }
 
-func UserLogin(c *gin.Context) {
-	var user domain.Usuario
+func (uc *userUseCase) Login(c *gin.Context) {
 	var input struct {
-		Email    string
-		Password string
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -40,7 +60,8 @@ func UserLogin(c *gin.Context) {
 		return
 	}
 
-	if err := database.DB.Where("email = ?", input.Email).First(&user).Error; err != nil {
+	user, err := uc.userRepo.FindByEmail(input.Email)
+	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Usuario o contraseña incorrectos"})
 		return
 	}
@@ -50,42 +71,40 @@ func UserLogin(c *gin.Context) {
 		return
 	}
 
-	token, err := utils2.GenerateToken(user)
-
+	token, err := utils.GenerateToken(user)
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al generar token"})
 		return
 	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{"token": token})
-
 }
 
-func UserInfo(c *gin.Context) {
-	var user domain.Usuario
+func (uc *userUseCase) Info(c *gin.Context) {
 	email, exists := c.Get("email")
 	if !exists {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener email"})
 		return
 	}
-	if err := database.DB.Where("email = ?", email).First(&user).Error; err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Problema al obtener la informacion del usuario"})
+
+	user, err := uc.userRepo.FindByEmail(email.(string))
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Problema al obtener la información del usuario"})
 		return
 	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{"user": user})
 }
 
-func UserUpdate(c *gin.Context) {
-
+func (uc *userUseCase) Update(c *gin.Context) {
 	email, exists := c.Get("email")
 	if !exists {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener email"})
 		return
 	}
 
-	var user domain.Usuario
-	if err := database.DB.Where("email = ?", email).First(&user).Error; err != nil {
+	user, err := uc.userRepo.FindByEmail(email.(string))
+	if err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Usuario no encontrado"})
 		return
 	}
@@ -109,9 +128,8 @@ func UserUpdate(c *gin.Context) {
 	}
 
 	if updateData.ActualPassword != "" || updateData.NewPassword != "" || updateData.RepeatNewPassword != "" {
-
 		if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(updateData.ActualPassword)) != nil {
-			c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Datos de actualización inválidos"})
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Contraseña actual incorrecta"})
 			return
 		}
 
@@ -125,7 +143,7 @@ func UserUpdate(c *gin.Context) {
 			return
 		}
 
-		updates["password"] = utils2.HashPassword(updateData.NewPassword)
+		updates["password"] = utils.HashPassword(updateData.NewPassword)
 	}
 
 	if len(updates) == 0 {
@@ -133,7 +151,7 @@ func UserUpdate(c *gin.Context) {
 		return
 	}
 
-	if err := database.DB.Model(&user).Updates(updates).Error; err != nil {
+	if err := uc.userRepo.Update(user, updates); err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Error al actualizar el usuario"})
 		return
 	}

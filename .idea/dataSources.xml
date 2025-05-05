@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="delivery" uuid="5880bafe-0b18-4f56-8483-a7b913a9908c">
+    <data-source source="LOCAL" name="delivery [2]" uuid="9ad7ec9a-53f7-48f7-b7e1-a13edd42b55d">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+<<<<<<< Updated upstream
       <jdbc-url>jdbc:sqlite:C:\Users\david\Documents\GitHub\DeliveryStore\delivery.db</jdbc-url>
+=======
+      <jdbc-url>jdbc:sqlite:C:\Users\sebav\OneDrive\Documentos\Github\DeliveryStore\Backend\delivery.db</jdbc-url>
+>>>>>>> Stashed changes
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
       </jdbc-additional-properties>
