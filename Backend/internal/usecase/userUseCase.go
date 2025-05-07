@@ -1,20 +1,22 @@
 package usecase
 
 import (
-	"net/http"
-
 	"github.com/SebaVCH/DeliveryStore/internal/domain"
 	"github.com/SebaVCH/DeliveryStore/internal/repository"
 	"github.com/SebaVCH/DeliveryStore/internal/utils"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"net/http"
 )
 
 type UserUseCase interface {
 	Register(c *gin.Context)
 	Login(c *gin.Context)
 	Info(c *gin.Context)
-	Update(c *gin.Context)
+	UpdateMyAccount(c *gin.Context)
+	Delete(c *gin.Context)
+	GetAllUsers(c *gin.Context)
+	UpdateAnyAccount(c *gin.Context)
 }
 
 type userUseCase struct {
@@ -25,6 +27,24 @@ func NewUserUseCase(repo repository.UserRepository) UserUseCase {
 	return &userUseCase{
 		userRepo: repo,
 	}
+}
+
+func (uc *userUseCase) Delete(c *gin.Context) {
+	email := c.Param("email")
+	if err := uc.userRepo.DeleteUser(email); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al eliminar usuario"})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "Usuario eliminado correctamente"})
+}
+
+func (uc *userUseCase) GetAllUsers(c *gin.Context) {
+	users, err := uc.userRepo.GetAllUsers()
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener usuarios"})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, users)
 }
 
 func (uc *userUseCase) Register(c *gin.Context) {
@@ -96,7 +116,7 @@ func (uc *userUseCase) Info(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{"user": user})
 }
 
-func (uc *userUseCase) Update(c *gin.Context) {
+func (uc *userUseCase) UpdateMyAccount(c *gin.Context) {
 	email, exists := c.Get("email")
 	if !exists {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener email"})
@@ -151,7 +171,34 @@ func (uc *userUseCase) Update(c *gin.Context) {
 		return
 	}
 
-	if err := uc.userRepo.Update(user, updates); err != nil {
+	if err := uc.userRepo.UpdateMyAccount(user, updates); err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Error al actualizar el usuario"})
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "Usuario actualizado correctamente"})
+}
+
+func (uc *userUseCase) UpdateAnyAccount(c *gin.Context) {
+	email := c.Param("email")
+
+	var updateData map[string]interface{}
+	if err := c.ShouldBindJSON(&updateData); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al leer datos"})
+		return
+	}
+
+	if pwd, ok := updateData["password"].(string); ok && pwd != "" {
+		updateData["password"] = utils.HashPassword(pwd)
+	}
+
+	if len(updateData) == 0 {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "No se proporcionaron datos válidos para actualizar"})
+		return
+	}
+
+	user := domain.Usuario{Email: email}
+	if err := uc.userRepo.UpdateAnyAccount(user, updateData); err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Error al actualizar el usuario"})
 		return
 	}

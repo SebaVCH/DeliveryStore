@@ -20,5 +20,5 @@ func SetupUserRouter(router *gin.Engine) {
 	protected := router.Group("/")
 	protected.Use(middleware.AuthMiddleware())
 	protected.GET("/profile", userController.Info)
-	protected.PUT("/profile/update", userController.Update)
+	protected.PUT("/profile/update", userController.UpdateMyAccount)
 }

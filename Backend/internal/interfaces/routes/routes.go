@@ -13,6 +13,7 @@ func SetupRouter() *gin.Engine {
 	SetupUserRouter(r)
 	SetupProductRouter(r)
 	SetupSupplierRouter(r)
+	SetupPresidentRouter(r)
 
 	return r
 }

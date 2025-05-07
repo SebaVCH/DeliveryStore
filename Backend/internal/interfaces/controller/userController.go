@@ -27,6 +27,18 @@ func (ctrl *UserController) Info(c *gin.Context) {
 	ctrl.userUseCase.Info(c)
 }
 
-func (ctrl *UserController) Update(c *gin.Context) {
-	ctrl.userUseCase.Update(c)
+func (ctrl *UserController) UpdateMyAccount(c *gin.Context) {
+	ctrl.userUseCase.UpdateMyAccount(c)
+}
+
+func (ctrl *UserController) Delete(c *gin.Context) {
+	ctrl.userUseCase.Delete(c)
+}
+
+func (ctrl *UserController) GetAllUsers(c *gin.Context) {
+	ctrl.userUseCase.GetAllUsers(c)
+}
+
+func (ctrl *UserController) UpdateAnyAccount(c *gin.Context) {
+	ctrl.userUseCase.UpdateAnyAccount(c)
 }
