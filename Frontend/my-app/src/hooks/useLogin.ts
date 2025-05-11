@@ -19,6 +19,7 @@ export function useLogin(onSuccess: (token: string)=> void, onFail:(error:string
     return useMutation<Loginresponse,AxiosError,Logindata>({
         mutationFn: async ({email,password}: Logindata): Promise<Loginresponse> => {
             const respuesta = await api.post('/login', {email,password});
+            console.log(respuesta.data);
             return respuesta.data;
         },
         onSuccess: (data) => {
