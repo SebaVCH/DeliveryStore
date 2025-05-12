@@ -1,27 +1,35 @@
-import React,{SyntheticEvent, useState} from 'react';
-import { useOrdenes, useAceptarOrden, useActualizarEnvio} from '../hooks/useOrdenes';
+import React,{SyntheticEvent} from 'react';
+import { useOrdenes, useAceptarOrden} from '../hooks/useOrdenes';
+import { useNavigate } from 'react-router-dom';
 
-export const Ordenes = () => {
+export const Repartidores = () => {
     const {data: ordenes, isLoading} = useOrdenes();
     const aceptarOrden = useAceptarOrden();
-
-    const [idEnvio, setIdEnvio] = useState('');
-    const [idRepartidor, setIdRepartidor] = useState('');
-    const [estadoEnvio, setEstado] = useState('');
-    const [fechaEntrega, setFechaEntrega] = useState('');
+    const repartidor_id = 1; //cambiar esto pal caso de que venga incluido en el back como parte de usuario o parte del json que devuelve el endpoint de ordenes (sapear eso) 
+    const navigate = useNavigate();
+    
 
     const crear = (e:SyntheticEvent) => {
             e.preventDefault();
-            aceptarOrden.mutate({orden_id: Number(idEnvio), repartidor_id: Number(idRepartidor), estado_envio: estadoEnvio, fecha_entrega: new Date(Date.parse(fechaEntrega))});
-            setIdEnvio('');
-            setIdRepartidor('');
-            setEstado('');
-            setFechaEntrega('');
+            aceptarOrden.mutate(
+                {
+                    orden_id: ordenes.id, 
+                    repartidor_id: repartidor_id , 
+                    estado_envio: 'En camino...', 
+                    fecha_entrega: new Date(Date.parse(ordenes.fecha_entrega))
+                },
+                {
+                    onSuccess:() => {
+                        navigate('/Envios');
+                    },
+                }
+            );
         };
 
     return (
         <div>
         <h1>Ordenes disponibles:</h1>
+        <button onClick={() => navigate('/Envios')}>mis envios</button>
         {isLoading ? (<p>Cargando ordenes disponibles...</p>)
         : (
             <>
@@ -29,23 +37,18 @@ export const Ordenes = () => {
                 <ul>
                     {ordenes?.map((p: any) => (
                         <li key = {p.id}>
-                            {setIdEnvio(p.orden_id)}
-                            {setIdRepartidor(p.repartidor_id)}
-                            {setEstado('En camino...')}
-                            {setFechaEntrega(p.fecha_entrega)}
+                            
                             <p>Fecha de entrega: </p> {p.fecha} - <p>Estado de la orden: </p> {p.estado} - <p>Dirección de entrega: </p> <strong>{p.direccion}</strong> - <p>Número del cliente: </p> {p.telefono}
                             <p>Tienda: </p> {p.nombreTienda} - <p>Dirección tienda: </p> {p.direccionTienda}
 
-                            <button onClick={() => crear}> Aceptar</button> 
+                            <button onClick={() => crear(p)}> Aceptar orden</button> 
                         </li>
                     ))}
                 </ul>
             ) : (<p> No hay Ordenes disponibles...</p>)
             }
             </>
-            )
-        }
-
+            )}
         </div>
     );
 };

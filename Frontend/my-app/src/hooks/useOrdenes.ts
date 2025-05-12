@@ -1,6 +1,15 @@
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import api from '../api/axios';
 
+
+interface nuevoEnvio {
+    orden_id: number;
+    repartidor_id: number;
+    estado_envio: string;
+    fecha_entrega: Date
+};
+
+
 export function useOrdenes() {  //listar Ordenes
     return useQuery({
         queryKey: ['ordenes'],
@@ -14,8 +23,8 @@ export function useOrdenes() {  //listar Ordenes
 export function useAceptarOrden(){
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async (nuevoEnvio: {orden_id: number, repartidor_id: number, estado_envio: string, fecha_entrega: Date}) => {
-            const respuesta = await api.post('sistema/envios',nuevoEnvio);
+        mutationFn: async ({orden_id, repartidor_id, estado_envio, fecha_entrega}:nuevoEnvio) => {
+            const respuesta = await api.post('sistema/envios',{orden_id,repartidor_id,estado_envio,fecha_entrega});
             return respuesta.data
         },
         onSuccess: () => {
@@ -24,8 +33,4 @@ export function useAceptarOrden(){
     });
 }
 
-export function useActualizarEnvio(){
-    
-
-
-}   
+ 
