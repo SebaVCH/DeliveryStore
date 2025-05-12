@@ -30,7 +30,7 @@ export const Home = () => {
     if(isError)
     {
         setToken(null);
-        navigate('/login');
+        navigate('/Login');
         return null;
     }
 
