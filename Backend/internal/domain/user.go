@@ -4,5 +4,5 @@ type Usuario struct {
 	Email     string `gorm:"primaryKey"`
 	Name      string
 	Password  string   `gorm:"not null"`
-	RoleTypes []string `gorm:"type:text" gorm:"serializer:json"`
+	RoleTypes []string `gorm:"type:text" gorm:"serializer:json"` //Tener un solo rol, admin o user
 }
