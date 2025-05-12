@@ -36,10 +36,11 @@ export const Home = () => {
 
     return (
     <div> 
-        <h2>Mi venta</h2>
+        <h2>Mis ventas</h2>
         <button onClick={()=> navigate('/Producto')}>Ir a los productos</button>
         <button onClick={()=> navigate('/AdminDashboard')}>Ir a Administracion</button>
         <button onClick={()=> navigate('/Repartidores')}>Ver repartidores</button>
+        <button onClick={()=> navigate('/Homegeneral')}>Mis compras</button>
         <button onClick={logout}>Cerrar la sesion 🤑</button>
     </div>
     );
