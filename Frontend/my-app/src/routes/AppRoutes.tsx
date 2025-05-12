@@ -8,6 +8,7 @@ import { Proveedores } from '../pages/Proveedores';
 import { AdminDashboard } from '../pages/AdminDashboard';
 import {Repartidores} from '../pages/Repartidores';
 import {Envios} from '../pages/Envios';
+import {Homegeneral} from '../pages/Homegeneral';
 
 export const AppRoutes = () => {
   return (
@@ -20,6 +21,8 @@ export const AppRoutes = () => {
       <Route path = '/Envios' element={<Envios/>}/>
 
       <Route path='/Home'element={<PrivateRoute> <Home/> </PrivateRoute>}/>
+      <Route path='/Homegeneral'element={<PrivateRoute> <Homegeneral/> </PrivateRoute>}/>
+
 
       <Route path='/Producto' element={<PrivateRoute> <Producto/> </PrivateRoute>}/>
 

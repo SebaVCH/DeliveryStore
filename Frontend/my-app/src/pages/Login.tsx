@@ -12,7 +12,7 @@ export const Login = () => {
 
   const login = useLogin((token) => {
     setToken(token);
-    navigate('/Home');
+    navigate('/Homegeneral');
   },
   (error)=>{
     setErrorMsg(error);
