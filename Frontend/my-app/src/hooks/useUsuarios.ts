@@ -5,7 +5,7 @@ export function useUsuarios(){ //pa listar los usuarios registrados en el sistem
     return useQuery({
         queryKey:['usuarios'],
         queryFn: async () => {
-            const respuesta = await api.get('/admin/users');
+            const respuesta = await api.get('/admin');
             return respuesta.data;
         },
     });
