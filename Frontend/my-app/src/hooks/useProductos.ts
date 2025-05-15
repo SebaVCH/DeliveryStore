@@ -5,7 +5,7 @@ export function useProductos() {     //pa listar los productos
     return useQuery({
         queryKey: ['productos'],
         queryFn: async () => {
-            const respuesta = await api.get('user/productos');
+            const respuesta = await api.get('user/productos/');
             return respuesta.data;
         },
     });

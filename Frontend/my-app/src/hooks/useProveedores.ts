@@ -5,7 +5,7 @@ export function useProveedores() {      //pa listar los proveedores
     return useQuery({
         queryKey:['proveedores'],
         queryFn: async () => {
-            const respuesta = await api.get('/proveedores');
+            const respuesta = await api.get('/proveedores/');
             return respuesta.data;
         },
     });
@@ -15,7 +15,7 @@ export function useCrearProveedor() {   //pa añadir un nuevo proveedor
     const clienteQuery = useQueryClient();
     return useMutation({
         mutationFn: async(nuevoProveedor:{name:string, description: string}) => {
-            const respuesta = await api.post('/proveedores', nuevoProveedor);
+            const respuesta = await api.post('/proveedores/', nuevoProveedor);
             return respuesta.data;
         },
         onSuccess: () => {

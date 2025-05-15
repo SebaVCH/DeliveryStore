@@ -5,7 +5,7 @@ export function useEnvios() {
     return useQuery({
         queryKey: ['envios'],
         queryFn: async () => {
-            const respuesta = await api.get('/sistemas/envios');
+            const respuesta = await api.get('/sistemas/envios/');
             return respuesta.data;
         },
     });

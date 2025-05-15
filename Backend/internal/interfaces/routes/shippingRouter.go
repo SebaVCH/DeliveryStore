@@ -14,9 +14,9 @@ func SetupShippingRouter(router *gin.Engine) {
 	shippingUseCase := usecase.NewShippingUseCase(shippingRepo)
 	shippingController := controllers.NewShippingController(shippingUseCase)
 
-	protected := router.Group("/sistema")
+	protected := router.Group("/sistema/envios")
 	protected.Use(middleware.AuthMiddleware())
-	protected.POST("/envios", shippingController.CreateShipping)
-	protected.GET("/envios", shippingController.GetAllShipping)
-	protected.PUT("/envios/:id", shippingController.UpdateShipping)
+	protected.POST("/", shippingController.CreateShipping)
+	protected.GET("/", shippingController.GetAllShipping)
+	protected.PUT("/:id", shippingController.UpdateShipping)
 }

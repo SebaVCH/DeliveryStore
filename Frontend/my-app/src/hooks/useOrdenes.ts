@@ -14,7 +14,7 @@ export function useOrdenes() {  //listar Ordenes
     return useQuery({
         queryKey: ['ordenes'],
         queryFn: async () => {
-            const respuesta = await api.get('/sistema/ordenes');
+            const respuesta = await api.get('/sistema/ordenes/');
             return respuesta.data;
         },
     });
