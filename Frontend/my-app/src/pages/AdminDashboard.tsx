@@ -7,7 +7,7 @@ import { useProductosMasComprados } from '../hooks/useCarrito';
 export const AdminDashboard = () => {
     const {data: usuarios, isLoading} = useUsuarios();
     const {data: montoTotal, isLoading: isLoadingMonto} = useMontoTotal();
-    const {data: topVendedores, isLoading: isLoadingVentas} = useTopVendedores();
+    const {data: topVendedores, isLoading: isLoadingVendedores} = useTopVendedores();
     const {data: transacciones, isLoading: isLoadingTransac} = useTransacciones();
     const {data: topProductos, isLoading: isLoadingProductos} = useProductosMasComprados();
 
@@ -51,16 +51,52 @@ export const AdminDashboard = () => {
             </>
             )}
 
-            {isLoadingMonto? (
-                <p>Cargando Monto total...</p>
+            {isLoadingVendedores? (
+                <p>Cargando top vendedores...</p>
             ): (
             <>
-                <h2> Monto total transferido en el sistema: </h2>
-                {montoTotal?.length > 0 ? ( 
+                <h2> Top 3 vendedores que más venden: </h2>
+                {topVendedores?.length > 0 ? ( 
                     <ul>
-                        {montoTotal?.map((u: any) => (
-                            <li key={u.monto}>
-                                {u.monto}
+                        {topVendedores?.map((v: any) => (
+                            <li key={v.identificador}>
+                                {v.nombre} - {v.correo}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (<p>No hay compras en el sistema...</p>)
+                }
+            </>
+            )}
+
+            {isLoadingProductos? (
+                <p>Cargando top productos...</p>
+            ): (
+            <>
+                <h2> Top 3 productos más vendidos: </h2>
+                {topProductos?.length > 0 ? ( 
+                    <ul>
+                        {topProductos?.map((p: any) => (
+                            <li key={p.id}>
+                                {p.nombre} - {p.descripcion} -<p>Precio del producto: </p>- {p.precio} -<p>Puntuación promedio del producto: </p>- {p.puntuacion_promedio}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (<p>No hay compras en el sistema...</p>)
+                }
+            </>
+            )}
+
+            {isLoadingTransac? (
+                <p>Cargando transacciones...</p>
+            ): (
+            <>
+                <h2> Todas las transacciones en el sistema: </h2>
+                {transacciones?.length > 0 ? ( 
+                    <ul>
+                        {transacciones?.map((t: any) => (
+                            <li key={t.id}>
+                                {t.nombre_producto} -<p>Fecha de la transacción: </p>- {t.fecha} -<p>Monto total de la transacción: </p>- {t.monto_total} -<p>Correo del vendedor: </p>- {t.vendedor.correo} -<p>Correo del comprador: </p>- {t.comprador.correo}
                             </li>
                         ))}
                     </ul>
