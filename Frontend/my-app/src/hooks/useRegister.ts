@@ -7,6 +7,9 @@ interface Registerdata
     name: string;
     email: string;
     password: string;
+    tipo: number;
+    direccion: string;
+    telefono: string;
 }
 
 interface Registerresponse
@@ -16,15 +19,15 @@ interface Registerresponse
 
 export function useRegister(onSuccess: () => void, onFail:(error:string)=>void) {
     return useMutation<Registerresponse,AxiosError,Registerdata>({
-        mutationFn: async ({name, email, password}) => {
-            const respuesta = await api.post('/register',{name, email, password});
+        mutationFn: async ({name, email, password, tipo, direccion, telefono}) => {
+            const respuesta = await api.post('/register',{name, email, password, tipo, direccion, telefono});
             return respuesta.data;
         },
         onSuccess: () => {
             onSuccess();
         },
         onError:(error) => {
-            const mensaje = (error.response?.data as {message?: string})?.message || 'no se pudo identificar el error xd';
+            const mensaje = (error.response?.data as {message?: string})?.message || 'error al registrar';
             onFail(mensaje);
         }
     })
