@@ -30,7 +30,7 @@ export function useEliminarUsuario() { //pa eliminar la cuenta del sistema
     const clienteQuery = useQueryClient();
     return useMutation({
         mutationFn: async (id: string) => {
-            await api.delete(`/admin/users/${id}`);
+            await api.delete(`/admin/users/${id}`); //REEMPLAZAR POR PATCH PARA CAMBIAR EL BOOLEANO BANEADO
         },
         onSuccess: () => {
             clienteQuery.invalidateQueries({queryKey:['usuarios']});

@@ -1,13 +1,20 @@
 import React, {SyntheticEvent,useState} from 'react';
 import { useUsuarios, useCrearUsuario, useEliminarUsuario} from '../hooks/useUsuarios';
 import { useNavigate } from 'react-router-dom';
+import { useTransacciones, useMontoTotal, useTopVendedores } from '../hooks/useTransaccion';
+import { useProductosMasComprados } from '../hooks/useCarrito';
 
 export const AdminDashboard = () => {
     const {data: usuarios, isLoading} = useUsuarios();
+    const {data: montoTotal, isLoading: isLoadingMonto} = useMontoTotal();
+    const {data: topVendedores, isLoading: isLoadingVentas} = useTopVendedores();
+    const {data: transacciones, isLoading: isLoadingTransac} = useTransacciones();
+    const {data: topProductos, isLoading: isLoadingProductos} = useProductosMasComprados();
+
     const crearUsuario = useCrearUsuario();
     const eliminarUsuario = useEliminarUsuario();
     const navigate = useNavigate();
-
+    
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [contrasenha, setContrasenha] = useState('');
@@ -25,10 +32,48 @@ export const AdminDashboard = () => {
         <div>
             <h1>Administracion de Usuarios</h1>
             <button onClick={() => navigate('/Home')}> volver al perfil</button>
+
+            {isLoadingMonto? (
+                <p>Cargando Monto total...</p>
+            ): (
+            <>
+                <h2> Monto total transferido en el sistema: </h2>
+                {montoTotal?.length > 0 ? ( 
+                    <ul>
+                        {montoTotal?.map((u: any) => (
+                            <li key={u.monto}>
+                                {u.monto}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (<p>No hay compras en el sistema...</p>)
+                }
+            </>
+            )}
+
+            {isLoadingMonto? (
+                <p>Cargando Monto total...</p>
+            ): (
+            <>
+                <h2> Monto total transferido en el sistema: </h2>
+                {montoTotal?.length > 0 ? ( 
+                    <ul>
+                        {montoTotal?.map((u: any) => (
+                            <li key={u.monto}>
+                                {u.monto}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (<p>No hay compras en el sistema...</p>)
+                }
+            </>
+            )}
+
             {isLoading? (
                 <p>Cargando los usuarios...</p>
             ): (
             <>
+
                 <h2> Usuarios Registrados </h2>
                 {usuarios?.length > 0 ? ( 
                     <ul>
@@ -54,6 +99,9 @@ export const AdminDashboard = () => {
 
                 <button type="submit">Agregar</button>
             </form>
+
+
+
         </div>
     );
 };
