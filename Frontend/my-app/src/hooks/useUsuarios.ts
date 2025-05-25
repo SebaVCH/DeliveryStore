@@ -1,6 +1,7 @@
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import api from '../api/axios';
 
+
 export function useUsuarios(){ //pa listar los usuarios registrados en el sistema
     return useQuery({
         queryKey:['usuarios'],
@@ -14,7 +15,7 @@ export function useUsuarios(){ //pa listar los usuarios registrados en el sistem
 export function useCrearUsuario() { //pa añadir una nueva cuenta en el sistema
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async (nuevoUsuario: {name: string; email: string; password: string}) => {
+        mutationFn: async (nuevoUsuario: {nombre: string; correo: string; password: string; tipo: number}) => {
             const respuesta = await api.post('/admin/users', nuevoUsuario);
             return respuesta.data;
         },
