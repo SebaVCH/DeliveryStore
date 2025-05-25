@@ -8,16 +8,17 @@ export const AdminDashboard = () => {
     const eliminarUsuario = useEliminarUsuario();
     const navigate = useNavigate();
 
-    const [nombre, setNombre] = useState('');
-    const [correo, setCorreo] = useState('');
-    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [contrasenha, setContrasenha] = useState('');
+    
 
     const crear = (e:SyntheticEvent) => {
         e.preventDefault();
-        crearUsuario.mutate({name: nombre, email: correo, password: password});
-        setNombre('');
-        setCorreo('');
-        setPassword('');
+        crearUsuario.mutate({nombre: name, correo: email, password: contrasenha, tipo: 3});
+        setName('');
+        setEmail('');
+        setContrasenha('');
     };
 
     return (
@@ -43,13 +44,13 @@ export const AdminDashboard = () => {
             </>
             )}
 
-            <h3>Crear nuevo usuario</h3>
+            <h3>Crear nuevo presidente: </h3>
             <form onSubmit={crear}>
-                <input type = "text" placeholder="Nombre de la cuenta..." value={nombre} onChange={(e)=> setNombre(e.target.value)} required />
+                <input type = "text" placeholder="Nombre de la cuenta..." value={name} onChange={(e)=> setName(e.target.value)} required />
 
-                <input type = "email" placeholder="Correo de la cuenta..." value={correo} onChange={(e)=> setCorreo(e.target.value)} required />
+                <input type = "email" placeholder="Correo de la cuenta..." value={email} onChange={(e)=> setEmail(e.target.value)} required />
 
-                <input type = "password" placeholder="ContraseÃ±a de la cuenta..." value={password} onChange={(e)=> setPassword(e.target.value)} required />
+                <input type = "password" placeholder="ContraseÃ±a de la cuenta..." value={contrasenha} onChange={(e)=> setContrasenha(e.target.value)} required />
 
                 <button type="submit">Agregar</button>
             </form>

@@ -29,7 +29,7 @@ export const Repartidores = () => {
     return (
         <div>
         <h1>Ordenes disponibles:</h1>
-        <button onClick={() => navigate('/Envios')}>mis envios</button>
+        <button onClick={() => navigate('/Envios')}>Mis envios</button>
         {isLoading ? (<p>Cargando ordenes disponibles...</p>)
         : (
             <>
