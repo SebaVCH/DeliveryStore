@@ -6,6 +6,9 @@ export const Register = () => { //Hooks
   const [name, setName] = useState('');
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
+  const [direccion, setDireccion] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [tipo, setTipo] = useState(1); //por defecto 1 pal usuario normal
   const [errorMsg,setErrorMsg] = useState('');
   const navigate = useNavigate();
 
@@ -20,7 +23,7 @@ export const Register = () => { //Hooks
   const enviar = (e: SyntheticEvent) => {
     e.preventDefault();
     setErrorMsg('');
-    register.mutate({name,email,password});
+    register.mutate({name,email,password,direccion,telefono,tipo});
   };
 
   return (
