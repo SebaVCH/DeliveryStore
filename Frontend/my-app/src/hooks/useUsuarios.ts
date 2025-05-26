@@ -15,7 +15,7 @@ export function useUsuarios(){ //pa listar los usuarios registrados en el sistem
 export function useCrearUsuario() { //pa añadir una nueva cuenta en el sistema
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async (nuevoUsuario: {nombre: string; correo: string; password: string; tipo: number}) => {
+        mutationFn: async (nuevoUsuario: {nombre: string; correo: string; password: string; tipo: number; direccion: string; telefono: string}) => {
             const respuesta = await api.post('/admin/users', nuevoUsuario);
             return respuesta.data;
         },

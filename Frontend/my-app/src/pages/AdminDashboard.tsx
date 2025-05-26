@@ -18,14 +18,17 @@ export const AdminDashboard = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [contrasenha, setContrasenha] = useState('');
-    
+    const [direcc, setDireccion] = useState('');
+    const [telefo, setTelefono] = useState('');
 
     const crear = (e:SyntheticEvent) => {
         e.preventDefault();
-        crearUsuario.mutate({nombre: name, correo: email, password: contrasenha, tipo: 3});
+        crearUsuario.mutate({nombre: name, correo: email, password: contrasenha, tipo: 3, direccion: direcc, telefono: telefo});
         setName('');
         setEmail('');
         setContrasenha('');
+        setDireccion('');
+        setTelefono('');
     };
 
     return (
@@ -132,6 +135,10 @@ export const AdminDashboard = () => {
                 <input type = "email" placeholder="Correo de la cuenta..." value={email} onChange={(e)=> setEmail(e.target.value)} required />
 
                 <input type = "password" placeholder="ContraseÃ±a de la cuenta..." value={contrasenha} onChange={(e)=> setContrasenha(e.target.value)} required />
+
+                <input type = "direccion" placeholder="Su dirección..." value={direcc} onChange={(e)=> setDireccion(e.target.value)} required />
+
+                <input type = "telefono" placeholder="Su telefono..." value={telefo} onChange={(e)=> setTelefono(e.target.value)} required />
 
                 <button type="submit">Agregar</button>
             </form>
