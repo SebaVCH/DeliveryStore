@@ -16,6 +16,8 @@ func SetupRouter() *gin.Engine {
 	SetupPresidentRouter(r)
 	SetupOrderRouter(r)
 	SetupShippingRouter(r)
+	SetupCartRouter(r)
+	SetupTransactionRouter(r)
 
 	return r
 }

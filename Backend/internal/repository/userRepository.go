@@ -28,7 +28,7 @@ func NewUserRepository() UserRepository {
 
 func (r *userRepository) GetAllUsers() ([]domain.Usuario, error) {
 	var users []domain.Usuario
-	err := r.db.Find(&users).Error
+	err := r.db.Where("banned = ?", false).Find(&users).Error
 	if err != nil {
 		return nil, err
 	}
@@ -36,8 +36,7 @@ func (r *userRepository) GetAllUsers() ([]domain.Usuario, error) {
 }
 
 func (r *userRepository) DeleteUser(email string) error {
-	var user domain.Usuario
-	err := r.db.Where("email = ?", email).Delete(&user).Error
+	err := r.db.Where("email = ?", email).Update("banned", true).Error
 	if err != nil {
 		return err
 	}
@@ -51,7 +50,13 @@ func (r *userRepository) FindByEmail(email string) (domain.Usuario, error) {
 }
 
 func (r *userRepository) Create(user domain.Usuario) error {
-	return r.db.Create(&user).Error
+	r.db.Create(&user)
+	user.PublicID = user.ID
+	r.db.Save(&user)
+	if r.db.Error != nil {
+		return r.db.Error
+	}
+	return nil
 }
 
 func (r *userRepository) UpdateMyAccount(user domain.Usuario, updates map[string]interface{}) error {

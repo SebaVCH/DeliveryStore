@@ -125,7 +125,7 @@ func (uc *userUseCase) UpdateMyAccount(c *gin.Context) {
 
 	user, err := uc.userRepo.FindByEmail(email.(string))
 	if err != nil {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Usuario no encontrado"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Usuario no encontrado"})
 		return
 	}
 
@@ -172,7 +172,7 @@ func (uc *userUseCase) UpdateMyAccount(c *gin.Context) {
 	}
 
 	if err := uc.userRepo.UpdateMyAccount(user, updates); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Error al actualizar el usuario"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al actualizar el usuario"})
 		return
 	}
 
@@ -199,7 +199,7 @@ func (uc *userUseCase) UpdateAnyAccount(c *gin.Context) {
 
 	user := domain.Usuario{Email: email}
 	if err := uc.userRepo.UpdateAnyAccount(user, updateData); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Error al actualizar el usuario"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al actualizar el usuario"})
 		return
 	}
 

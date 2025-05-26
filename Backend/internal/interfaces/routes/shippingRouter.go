@@ -18,5 +18,6 @@ func SetupShippingRouter(router *gin.Engine) {
 	protected.Use(middleware.AuthMiddleware())
 	protected.POST("/", shippingController.CreateShipping)
 	protected.GET("/", shippingController.GetAllShipping)
-	protected.PUT("/:id", shippingController.UpdateShipping)
+	protected.GET("/:id", shippingController.GetByDeliveryID)
+	protected.PUT("actualizarEnvio/:id", shippingController.UpdateShipping)
 }

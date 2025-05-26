@@ -2,14 +2,15 @@ package repository
 
 import (
 	"github.com/SebaVCH/DeliveryStore/internal/domain"
+	"github.com/SebaVCH/DeliveryStore/internal/infrastructure/database"
 	"gorm.io/gorm"
 )
 
 type ReviewRepository interface {
-	Create(review *domain.Review) error
-	GetByID(id int) (*domain.Review, error)
+	CreateReview(review domain.Review) error
 	GetBySeller(SellerID int) ([]domain.Review, error)
-	GetByBuyer(BuyerID int) ([]domain.Review, error)
+	DeleteReview(id int) error
+	GetAllReviews() ([]domain.Review, error)
 }
 
 type reviewRepository struct {
@@ -17,19 +18,13 @@ type reviewRepository struct {
 }
 
 func NewReviewRepository(db *gorm.DB) ReviewRepository {
-	return &reviewRepository{db: db}
-}
-
-func (r *reviewRepository) Create(review *domain.Review) error {
-	return r.db.Create(review).Error
-}
-
-func (r *reviewRepository) GetByID(id int) (*domain.Review, error) {
-	var review domain.Review
-	if err := r.db.First(&review, id).Error; err != nil {
-		return nil, err
+	return &reviewRepository{
+		db: database.DB,
 	}
-	return &review, nil
+}
+
+func (r *reviewRepository) CreateReview(review domain.Review) error {
+	return r.db.Create(review).Error
 }
 
 func (r *reviewRepository) GetBySeller(SellerID int) ([]domain.Review, error) {
@@ -40,9 +35,14 @@ func (r *reviewRepository) GetBySeller(SellerID int) ([]domain.Review, error) {
 	return reviews, nil
 }
 
-func (r *reviewRepository) GetByBuyer(BuyerID int) ([]domain.Review, error) {
+func (r *reviewRepository) DeleteReview(id int) error {
+	return r.db.Delete(&domain.Review{}, id).Error
+}
+
+func (r *reviewRepository) GetAllReviews() ([]domain.Review, error) {
 	var reviews []domain.Review
-	if err := r.db.Where("buyer_id = ?", BuyerID).Find(&reviews).Error; err != nil {
+	err := r.db.Find(&reviews).Error
+	if err != nil {
 		return nil, err
 	}
 	return reviews, nil

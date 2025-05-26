@@ -59,7 +59,7 @@ func (p productUseCase) GetProductByID(c *gin.Context) {
 		return
 	}
 
-	product,err := p.productRepo.GetProductByID(id)
+	product, err := p.productRepo.GetProductByID(id)
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener producto"})
 		return
@@ -96,7 +96,7 @@ func (p productUseCase) UpdateProduct(c *gin.Context) {
 	}
 
 	if err := p.productRepo.UpdateProduct(id, product); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Error al actualizar producto"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al actualizar producto"})
 		return
 	}
 

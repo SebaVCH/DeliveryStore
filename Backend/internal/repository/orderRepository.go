@@ -9,6 +9,7 @@ import (
 type OrderRepository interface {
 	CreateOrder(order domain.Order) error
 	GetAllOrders() ([]domain.Order, error)
+	SetEliminated(id int) error
 }
 
 type orderRepository struct {
@@ -32,4 +33,8 @@ func (o orderRepository) GetAllOrders() ([]domain.Order, error) {
 		return nil, err
 	}
 	return orders, nil
+}
+
+func (o orderRepository) SetEliminated(id int) error {
+	return o.db.Model(&domain.Order{}).Where("id = ?", id).Update("eliminated", true).Error
 }

@@ -24,3 +24,7 @@ func (ctrl *ShippingController) GetAllShipping(c *gin.Context) {
 func (ctrl *ShippingController) UpdateShipping(c *gin.Context) {
 	ctrl.shippingUseCase.UpdateShipping(c)
 }
+
+func (ctrl *ShippingController) GetByDeliveryID(c *gin.Context) {
+	ctrl.shippingUseCase.GetByDeliveryID(c)
+}

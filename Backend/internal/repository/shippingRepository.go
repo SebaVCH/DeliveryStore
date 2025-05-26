@@ -10,6 +10,7 @@ type ShippingRepository interface {
 	CreateShipping(shipping domain.Shipping) error
 	GetAllShipping() ([]domain.Shipping, error)
 	UpdateShipping(id int, shipping domain.Shipping) error
+	GetByDeliveryID(deliveryID int) ([]domain.Shipping, error)
 }
 
 type shippingRepository struct {
@@ -37,4 +38,13 @@ func (s shippingRepository) GetAllShipping() ([]domain.Shipping, error) {
 
 func (s shippingRepository) UpdateShipping(id int, shipping domain.Shipping) error {
 	return s.db.Model(&shipping).Where("id = ?", id).Updates(shipping).Error
+}
+
+func (s shippingRepository) GetByDeliveryID(deliveryID int) ([]domain.Shipping, error) {
+	var shippings []domain.Shipping
+	err := s.db.Where("deliveryid = ?", deliveryID).Find(&shippings).Error
+	if err != nil {
+		return nil, err
+	}
+	return shippings, nil
 }
