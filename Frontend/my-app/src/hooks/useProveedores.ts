@@ -14,7 +14,7 @@ export function useProveedores() {      //pa listar los proveedores
 export function useCrearProveedor() {   //pa añadir un nuevo proveedor
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async(nuevoProveedor:{name:string, description: string}) => {
+        mutationFn: async(nuevoProveedor:{nombre: string, descripcion: string}) => {
             const respuesta = await api.post('/proveedores/', nuevoProveedor);
             return respuesta.data;
         },

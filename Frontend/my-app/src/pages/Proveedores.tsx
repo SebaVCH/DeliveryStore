@@ -6,12 +6,12 @@ export const Proveedores = () => {
     const crearProv = useCrearProveedor();
     const eliminarProv = useEliminarProveedor();
 
-    const [nombre, setNombre] = useState('');
-    const [descripcion, setDescripcion] = useState('');
+    const [name, setNombre] = useState('');
+    const [description, setDescripcion] = useState('');
 
     const crear = (e: SyntheticEvent) => {
         e.preventDefault();
-        crearProv.mutate({name: nombre,description: descripcion});
+        crearProv.mutate({nombre: name, descripcion: description});
         setNombre('');
         setDescripcion('');
     };
@@ -25,9 +25,9 @@ export const Proveedores = () => {
             {proveedores?.length > 0 ? (
                 <ul>
                     {proveedores?.map((p: any) => (
-                        <li key = {p._id}>
-                            {p.name} - <strong>{p.description}</strong>
-                            <button onClick={() => eliminarProv.mutate(p._id)}> Eliminar</button> 
+                        <li key = {p.id}>
+                            {p.nombre} - <strong>{p.descripcion}</strong>
+                            <button onClick={() => eliminarProv.mutate(p.id)}> Eliminar</button> 
                         </li>
                     ))}
                 </ul>
@@ -38,9 +38,9 @@ export const Proveedores = () => {
             
         <h3>Agregar proveedor</h3>
         <form onSubmit={crear}>
-            <input type = "text" placeholder='Nombre del proveedor...' value={nombre} onChange={(e)=> setNombre(e.target.value)} required/>
+            <input type = "text" placeholder='Nombre del proveedor...' value={name} onChange={(e)=> setNombre(e.target.value)} required/>
 
-            <input type = "text" placeholder='Descripcion del proveedor...' value={descripcion} onChange={(e)=> setDescripcion(e.target.value)} required/>
+            <input type = "text" placeholder='Descripcion del proveedor...' value={description} onChange={(e)=> setDescripcion(e.target.value)} required/>
 
             <button type = "submit"> Agregar</button>
         </form>

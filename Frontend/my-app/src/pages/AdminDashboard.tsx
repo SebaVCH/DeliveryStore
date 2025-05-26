@@ -3,6 +3,8 @@ import { useUsuarios, useCrearUsuario, useEliminarUsuario} from '../hooks/useUsu
 import { useNavigate } from 'react-router-dom';
 import { useTransacciones, useMontoTotal, useTopVendedores } from '../hooks/useTransaccion';
 import { useProductosMasComprados } from '../hooks/useCarrito';
+import { useAuth } from '../context/AuthContext';
+import { useUserProfile } from '../hooks/useUserProfile';
 
 export const AdminDashboard = () => {
     const {data: usuarios, isLoading} = useUsuarios();
@@ -10,6 +12,9 @@ export const AdminDashboard = () => {
     const {data: topVendedores, isLoading: isLoadingVendedores} = useTopVendedores();
     const {data: transacciones, isLoading: isLoadingTransac} = useTransacciones();
     const {data: topProductos, isLoading: isLoadingProductos} = useProductosMasComprados();
+
+    const {data: user, isLoading: cargauser, isError} = useUserProfile();
+    const {token, setToken} = useAuth();
 
     const crearUsuario = useCrearUsuario();
     const eliminarUsuario = useEliminarUsuario();
@@ -20,6 +25,24 @@ export const AdminDashboard = () => {
     const [contrasenha, setContrasenha] = useState('');
     const [direcc, setDireccion] = useState('');
     const [telefo, setTelefono] = useState('');
+
+    if(!token)
+    {
+        navigate('/Login');
+        return null;
+    }
+
+    if(cargauser)
+    {
+        return <div> Cargando... </div>;
+    }
+    
+    if(isError)
+    {
+        setToken(null);
+        navigate('/Login');
+        return null;
+    }
 
     const crear = (e:SyntheticEvent) => {
         e.preventDefault();
@@ -119,7 +142,7 @@ export const AdminDashboard = () => {
                         {usuarios?.map((c: any) => (
                             <li key={c.identificador}>
                                 {c.nombre} - {c.correo}
-                                <button onClick={()=> eliminarUsuario.mutate(c.identificador)}>Eliminar</button>
+                                <button onClick={()=> eliminarUsuario.mutate(c.identificador)}>Banear usuario</button>
                             </li>
                         ))}
                     </ul>

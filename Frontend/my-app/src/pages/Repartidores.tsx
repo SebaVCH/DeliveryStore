@@ -1,30 +1,40 @@
 import React,{SyntheticEvent} from 'react';
 import { useOrdenes, useAceptarOrden} from '../hooks/useOrdenes';
 import { useNavigate } from 'react-router-dom';
+import { useUserProfile } from '../hooks/useUserProfile';
+import { useAuth } from '../context/AuthContext';
 
 export const Repartidores = () => {
     const {data: ordenes, isLoading} = useOrdenes();
+    const {data: user, isLoading: cargauser, isError} = useUserProfile();
+    const {token, setToken} = useAuth();
+
     const aceptarOrden = useAceptarOrden();
-    const repartidor_id = 1; //cambiar esto pal caso de que venga incluido en el back como parte de usuario o parte del json que devuelve el endpoint de ordenes (sapear eso) 
+    
     const navigate = useNavigate();
     
+    if(!token)
+    {
+        navigate('/Login');
+        return null;
+    }
+
+    if(cargauser)
+    {
+        return <div> Cargando... </div>;
+    }
+    
+    if(isError)
+    {
+        setToken(null);
+        navigate('/Login');
+        return null;
+    }
 
     const crear = (e:SyntheticEvent) => {
-            e.preventDefault();
-            aceptarOrden.mutate(
-                {
-                    orden_id: ordenes.id, 
-                    repartidor_id: repartidor_id , 
-                    estado_envio: 'En camino...', 
-                    fecha_entrega: new Date(Date.parse(ordenes.fecha_entrega))
-                },
-                {
-                    onSuccess:() => {
-                        navigate('/Envios');
-                    },
-                }
-            );
-        };
+           
+           
+    };
 
     return (
         <div>
@@ -35,13 +45,13 @@ export const Repartidores = () => {
             <>
             {ordenes?.length > 0 ? (
                 <ul>
-                    {ordenes?.map((p: any) => (
-                        <li key = {p.id}>
+                    {ordenes?.map((o: any) => (
+                        <li key = {o.id}>
                             
-                            <p>Fecha de entrega: </p> {p.fecha} - <p>Estado de la orden: </p> {p.estado} - <p>Dirección de entrega: </p> <strong>{p.direccion}</strong> - <p>Número del cliente: </p> {p.telefono}
-                            <p>Tienda: </p> {p.nombreTienda} - <p>Dirección tienda: </p> {p.direccionTienda}
+                            <p>Fecha de entrega: </p> {o.fecha} - <p>Estado de la orden: </p> {o.estado} - <p>Dirección de entrega: </p> <strong>{o.comprador.direccion}</strong> - <p>Número del cliente: </p> {o.comprador.telefono}
+                            <p>Tienda: </p> {o.vendedor.nombre} - <p>Dirección tienda: </p> {o.vendedor.direccion}
 
-                            <button onClick={() => crear(p)}> Aceptar orden</button> 
+                            <button onClick={() => crear(o)}> Aceptar orden</button> 
                         </li>
                     ))}
                 </ul>
