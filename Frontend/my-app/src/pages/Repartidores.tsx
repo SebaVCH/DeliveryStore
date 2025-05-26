@@ -33,10 +33,10 @@ export const Repartidores = () => {
 
     const aceptar = (orden: any) => {
         aceptarOrden.mutate({
-            id_orden: orden.id, // ID de la orden a marcar como eliminada
-            id_repartidor: user.identificador, // ID del repartidor actual
+            id_orden: orden.id, 
+            id_repartidor: user.identificador, 
             estado: "en camino...",
-            fecha: new Date(),
+            fecha: new Date(), //si se comparan fechas en backend, separar el día de la hora
             id_comprador: orden.comprador.identificador
         });
     };
