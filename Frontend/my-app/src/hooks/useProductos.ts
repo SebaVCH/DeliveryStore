@@ -15,7 +15,7 @@ export function useProductos() {     //pa listar los productos
 export function useCrearProducto (){ //pa crear un producto
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async (nuevoProducto: {name: string, price: number, description: string, method: string}) => {
+        mutationFn: async (nuevoProducto: {nombre: string, precio: number, descripcion: string, entrega: string}) => {
             const respuesta = await api.post('user/productos',nuevoProducto);
             return respuesta.data
         },

@@ -8,14 +8,14 @@ export const Producto = () =>
     const crearProd = useCrearProducto();
     const eliminarPrdo = useEliminarProducto();
     const navigate = useNavigate();
-    const [nombre, setNombre] = useState('');
-    const [precio,setPrecio] = useState('');
-    const [descripcion, setDescripcion] = useState('');
-    const [metodo,setMetodo] = useState('')
+    const [name, setNombre] = useState('');
+    const [price,setPrecio] = useState('');
+    const [description, setDescripcion] = useState('');
+    const [metodoEntrega,setMetodo] = useState('')
     
     const crear = (e: SyntheticEvent) => {
         e.preventDefault();
-        crearProd.mutate({name: nombre, price: Number(precio), description: descripcion, method: metodo});
+        crearProd.mutate({nombre: name, precio: Number(price), descripcion: description, entrega: metodoEntrega});
         setNombre('');
         setPrecio('');
         setDescripcion('');
@@ -32,9 +32,9 @@ export const Producto = () =>
             {productos?.length > 0 ? (
                 <ul>
                     {productos.map((p: any) => (
-                        <li key = {p._id}>
-                            {p.name} - ${p.price} - <strong>{p.method}</strong>
-                            <button onClick={() => eliminarPrdo.mutate(p._id)}> Eliminar</button> 
+                        <li key = {p.id}>
+                            {p.nombre} - ${p.precio} - <strong>{p.entrega}</strong>
+                            <button onClick={() => eliminarPrdo.mutate(p.id)}> Eliminar</button> 
                         </li>
                     ))}
                 </ul>
@@ -45,13 +45,13 @@ export const Producto = () =>
             
         <h3>Agregar producto</h3>
         <form onSubmit={crear}>
-            <input type = "text" placeholder='Nombre del producto...' value={nombre} onChange={(e)=> setNombre(e.target.value)} required/>
+            <input type = "text" placeholder='Nombre del producto...' value={name} onChange={(e)=> setNombre(e.target.value)} required/>
 
-            <input type = "number" placeholder='Precio del producto...' value={precio} onChange={(e)=> setPrecio(e.target.value)} required/>
+            <input type = "number" placeholder='Precio del producto...' value={price} onChange={(e)=> setPrecio(e.target.value)} required/>
 
-            <input type = "text" placeholder='Descripcion del producto...' value={descripcion} onChange={(e)=> setDescripcion(e.target.value)} required/>
+            <input type = "text" placeholder='Descripcion del producto...' value={description} onChange={(e)=> setDescripcion(e.target.value)} required/>
 
-            <select value={metodo} onChange={(e)=> setMetodo(e.target.value)} required>
+            <select value={metodoEntrega} onChange={(e)=> setMetodo(e.target.value)} required>
                 <option value="delivery">Delivery</option>
                 <option value="retiro en tienda">Retiro en tienda</option>
             </select>

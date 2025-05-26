@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister';
 
 export const Register = () => { //Hooks
-  const [name, setName] = useState('');
-  const [email,setEmail] = useState('');
+  const [nombre, setName] = useState('');
+  const [correo,setEmail] = useState('');
   const [password,setPassword] = useState('');
   const [direccion, setDireccion] = useState('');
   const [telefono, setTelefono] = useState('');
@@ -23,7 +23,7 @@ export const Register = () => { //Hooks
   const enviar = (e: SyntheticEvent) => {
     e.preventDefault();
     setErrorMsg('');
-    register.mutate({name,email,password,direccion,telefono,tipo});
+    register.mutate({nombre,correo,password,direccion,telefono,tipo});
   };
 
   return (
@@ -31,12 +31,12 @@ export const Register = () => { //Hooks
         <h1>Registro</h1>
         <form onSubmit={enviar}>
             <label>Ingrese su nombre</label>
-            <input type = "username" name = "username" placeholder = 'Ingrese su nombre de usuario...' required value={name}
+            <input type = "username" name = "username" placeholder = 'Ingrese su nombre de usuario...' required value={nombre}
               onChange={e => setName(e.target.value)}
             />
 
             <label>Correo Electronico: </label>
-            <input type = "email" name = "email" placeholder = 'Ingrese un correo electronico porfavor...' required value={email}
+            <input type = "email" name = "email" placeholder = 'Ingrese un correo electronico porfavor...' required value={correo}
               onChange={e => setEmail(e.target.value)}
 
             />

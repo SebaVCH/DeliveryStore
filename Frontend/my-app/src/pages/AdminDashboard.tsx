@@ -113,10 +113,10 @@ export const AdminDashboard = () => {
                 <h2> Usuarios Registrados </h2>
                 {usuarios?.length > 0 ? ( 
                     <ul>
-                        {usuarios?.map((u:any, indice:number) => (
-                            <li key={u._id || indice}>
-                                {u.name} - {u.email}
-                                <button onClick={()=> eliminarUsuario.mutate(u._id)}>Eliminar</button>
+                        {usuarios?.map((c: any) => (
+                            <li key={c.identificador}>
+                                {c.nombre} - {c.correo}
+                                <button onClick={()=> eliminarUsuario.mutate(c.identificador)}>Eliminar</button>
                             </li>
                         ))}
                     </ul>

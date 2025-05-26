@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLogin } from '../hooks/useLogin';
 
 export const Login = () => {
-  const [email,setEmail] = useState('');
+  const [correo,setEmail] = useState('');
   const [password,setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const {setToken} = useAuth();
@@ -24,7 +24,7 @@ export const Login = () => {
   {
     e.preventDefault();
     setErrorMsg('');
-    login.mutate({email,password});
+    login.mutate({correo,password});
       
   };
 
@@ -34,7 +34,7 @@ export const Login = () => {
         <h1>Login</h1>
         <form onSubmit={submit}>
             <label>Correo: </label>
-            <input type="email" name="email" id = "email" required value = {email}
+            <input type="email" name="email" id = "email" required value = {correo}
               onChange = {e => setEmail(e.target.value)}
                    placeholder = "Ingrese porfavor su correo.."
             />
