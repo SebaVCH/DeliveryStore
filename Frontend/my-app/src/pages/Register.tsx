@@ -44,6 +44,20 @@ export const Register = () => { //Hooks
             <input type = "password" name = "password" placeholder = 'Ingrese una contraseña...' required value={password}
               onChange={e => setPassword(e.target.value)}
             />
+            <label>Direccion: </label>
+            <input type = "text" name = "direccion" placeholder = 'Ingrese una direccion...' required value={direccion}
+              onChange={e => setDireccion(e.target.value)}
+            />
+            <label>Telefono: </label>
+            <input type = "tel" name = "telefono" placeholder = 'Ingrese un telefono...' required value={telefono}
+              onChange={e => setTelefono(e.target.value)}
+            />
+            <label>Tipo de cuenta: </label>
+            <select value={tipo} onChange={e => setTipo(Number(e.target.value))}>
+              <option value={1}>Usuario normal</option>
+              <option value={2}>Repartidor</option>
+            </select>
+
             <button type="submit" disabled = {register.isPending}>
               {register.isPending? 'Registrando...🗿' : 'Registrarse'}
             </button>
