@@ -23,7 +23,7 @@ export function useMontoTotal() {     //mostrar dinero total transferido en el s
 
 export function useTopVendedores() {     //listar los 3 vendedores que más venden
     return useQuery({
-        queryKey: ['vendedores'],
+        queryKey: ['topVendedores'],
         queryFn: async () => {
             const respuesta = await api.get('user/transacciones/topVendedores');
             return respuesta.data;

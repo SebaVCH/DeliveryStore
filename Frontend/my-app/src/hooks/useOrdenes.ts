@@ -21,15 +21,24 @@ export function useOrdenes() {  //listar Ordenes
     });
 }
 
-export function useAceptarOrden(){
+export function useAceptarOrden() {
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async ({id_repartidor, estado, fecha, id_comprador}:nuevoEnvio) => {
-            const respuesta = await api.post('/sistema/envios',{id_repartidor, estado, fecha, id_comprador});
-            return respuesta.data
+        mutationFn: async ({id_orden, id_repartidor, estado, fecha, id_comprador}: 
+        {id_orden: number} & nuevoEnvio) => {
+            //pa crear el envio
+            await api.post('/sistema/envios/', {
+                id_repartidor, 
+                estado, 
+                fecha, 
+                id_comprador
+            });
+            //pa setear la orden como eliminada
+            await api.patch(`/sistema/ordenes/${id_orden}`);
         },
         onSuccess: () => {
-            clienteQuery.invalidateQueries({queryKey:['envios']});
+            clienteQuery.invalidateQueries({queryKey: ['envios']});
+            clienteQuery.invalidateQueries({queryKey: ['ordenes']});
         },
     });
 }

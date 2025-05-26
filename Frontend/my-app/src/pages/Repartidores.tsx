@@ -31,9 +31,14 @@ export const Repartidores = () => {
         return null;
     }
 
-    const crear = (e:SyntheticEvent) => {
-           
-           
+    const aceptar = (orden: any) => {
+        aceptarOrden.mutate({
+            id_orden: orden.id, // ID de la orden a marcar como eliminada
+            id_repartidor: user.identificador, // ID del repartidor actual
+            estado: "en camino...",
+            fecha: new Date(),
+            id_comprador: orden.comprador.identificador
+        });
     };
 
     return (
@@ -51,7 +56,12 @@ export const Repartidores = () => {
                             <p>Fecha de entrega: </p> {o.fecha} - <p>Estado de la orden: </p> {o.estado} - <p>Dirección de entrega: </p> <strong>{o.comprador.direccion}</strong> - <p>Número del cliente: </p> {o.comprador.telefono}
                             <p>Tienda: </p> {o.vendedor.nombre} - <p>Dirección tienda: </p> {o.vendedor.direccion}
 
-                            <button onClick={() => crear(o)}> Aceptar orden</button> 
+                            <button 
+                                onClick={() => aceptar(o)}
+                                disabled={aceptarOrden.isPending}
+                            >
+                                {aceptarOrden.isPending ? "Procesando..." : "Aceptar orden"} 
+                            </button> 
                         </li>
                     ))}
                 </ul>
