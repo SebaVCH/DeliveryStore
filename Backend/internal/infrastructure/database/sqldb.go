@@ -15,9 +15,10 @@ func StartDB() error {
 		return err
 	}
 	if err := DB.AutoMigrate(
-		&domain.Usuario{}, &domain.Product{}, &domain.Supplier{},
-		&domain.Seller{}, &domain.Review{}, &domain.Order{},
-		&domain.DeliveryPerson{}, &domain.Shipping{}, &domain.Supplier{},
+		&domain.Cart{}, &domain.Product{}, &domain.Usuario{},
+		&domain.Order{}, &domain.PRRelation{}, &domain.Review{},
+		&domain.PPRelation{}, &domain.Supplier{}, &domain.Transaction{},
+		&domain.Shipping{},
 	); err != nil {
 		return err
 	}

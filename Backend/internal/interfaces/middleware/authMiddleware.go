@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
+	"strings"
 )
 
 func AuthMiddleware() gin.HandlerFunc {
@@ -13,6 +14,15 @@ func AuthMiddleware() gin.HandlerFunc {
 		tokenString := c.GetHeader("Authorization")
 		if tokenString == "" {
 			c.IndentedJSON(http.StatusUnauthorized, gin.H{"error": "Token Requerido"})
+			c.Abort()
+			return
+		}
+
+		if strings.HasPrefix(tokenString, "Bearer ") {
+			tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+			tokenString = strings.TrimSpace(tokenString)
+		} else {
+			c.IndentedJSON(http.StatusUnauthorized, gin.H{"error": "Formato de token inválido"})
 			c.Abort()
 			return
 		}

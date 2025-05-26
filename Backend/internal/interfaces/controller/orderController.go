@@ -22,3 +22,7 @@ func (ctrl *OrderController) CreateOrder(c *gin.Context) {
 func (ctrl *OrderController) GetAllOrders(c *gin.Context) {
 	ctrl.orderUseCase.GetAllOrders(c)
 }
+
+func (ctrl *OrderController) SetEliminated(c *gin.Context) {
+	ctrl.orderUseCase.SetEliminated(c)
+}

@@ -5,11 +5,13 @@ import (
 	"github.com/SebaVCH/DeliveryStore/internal/repository"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type OrderUseCase interface {
 	CreateOrder(c *gin.Context)
 	GetAllOrders(c *gin.Context)
+	SetEliminated(c *gin.Context)
 }
 
 type orderUseCase struct {
@@ -46,4 +48,20 @@ func (o orderUseCase) GetAllOrders(c *gin.Context) {
 		return
 	}
 	c.IndentedJSON(http.StatusOK, orders)
+}
+
+func (o orderUseCase) SetEliminated(c *gin.Context) {
+	idSTR := c.Param("id")
+	id, err := strconv.Atoi(idSTR)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID inválido"})
+		return
+	}
+
+	err = o.orderRepo.SetEliminated(id)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al eliminar pedido"})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "Pedido eliminado correctamente"})
 }

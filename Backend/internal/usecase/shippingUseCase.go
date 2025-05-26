@@ -12,6 +12,7 @@ type ShippingUseCase interface {
 	CreateShipping(c *gin.Context)
 	GetAllShipping(c *gin.Context)
 	UpdateShipping(c *gin.Context)
+	GetByDeliveryID(c *gin.Context)
 }
 
 type shippingUseCase struct {
@@ -71,4 +72,21 @@ func (s shippingUseCase) UpdateShipping(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{"message": "Envio actualizado correctamente"})
+}
+
+func (s shippingUseCase) GetByDeliveryID(c *gin.Context) {
+	deliveryIDSTR := c.Param("id")
+	deliveryID, err := strconv.Atoi(deliveryIDSTR)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID de entrega inválido"})
+		return
+	}
+
+	shipping, err := s.shippingRepository.GetByDeliveryID(deliveryID)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener envio por ID de entrega"})
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, shipping)
 }
