@@ -15,18 +15,18 @@ export const AppRoutes = () => {
     <Routes>
       <Route path = '/Login' element = {<Login/>}/>
       <Route path = '/Register' element = {<Register/>}/>
-      <Route path = '/AdminDashboard' element={<AdminDashboard/>}/> // cambiar a ruta privada cuando se tengan los datos del backend
-      <Route path = '/Repartidores' element={<Repartidores/>}/> //cambiar a ruta privada cuando se defina lo del repartidor con el coxino en la db
+      <Route path = '/AdminDashboard' element={<PrivateRoute roles={[3]}><AdminDashboard/></PrivateRoute>}/> // cambiar a ruta privada cuando se tengan los datos del backend
+      <Route path = '/Repartidores' element={<PrivateRoute roles={[2]}><Repartidores/></PrivateRoute>}/> //cambiar a ruta privada cuando se defina lo del repartidor con el coxino en la db
 
-      <Route path = '/Envios' element={<Envios/>}/>
+      <Route path = '/Envios' element={<PrivateRoute roles={[2]}><Envios/></PrivateRoute>}/>
 
-      <Route path='/Home'element={<PrivateRoute> <Home/> </PrivateRoute>}/>
-      <Route path='/Homegeneral'element={<PrivateRoute> <Homegeneral/> </PrivateRoute>}/>
+      <Route path='/Home'element={<PrivateRoute roles={[1]}><Home/></PrivateRoute>}/>
+      <Route path='/Homegeneral'element={<PrivateRoute roles={[1]}> <Homegeneral/> </PrivateRoute>}/>
 
 
-      <Route path='/Producto' element={<PrivateRoute> <Producto/> </PrivateRoute>}/>
+      <Route path='/Producto' element={<PrivateRoute roles={[1]}><Producto/></PrivateRoute>}/>
 
-      <Route path='/Proveedores' element={<PrivateRoute> <Proveedores/> </PrivateRoute>}/>
+      <Route path='/Proveedores' element={<PrivateRoute roles={[1]}> <Proveedores/> </PrivateRoute>}/>
     </Routes>
   );
 };
