@@ -21,7 +21,7 @@ export function useCrearUsuario() { //pa añadir una nueva cuenta en el sistema
         },
         onSuccess: () => {
             clienteQuery.invalidateQueries({queryKey:['usuarios']});
-        },
+        }
     });
 }
 
