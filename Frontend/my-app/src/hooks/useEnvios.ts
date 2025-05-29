@@ -2,14 +2,14 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import api from '../api/axios';
 
 interface ActualizacionData{
-    id: number
+    ID: number
 }
 
 export function useEnvios() { //pa listar TODOS los envios 
     return useQuery({
         queryKey: ['envios'],
         queryFn: async () => {
-            const respuesta = await api.get('/sistemas/envios/');
+            const respuesta = await api.get('/sistema/envios/');
             return respuesta.data;
         },
     });
@@ -19,7 +19,7 @@ export function useEnviosRepartidor(identificador: number) {  //pa listar los en
     return useQuery({
         queryKey: ['reserva', identificador],
         queryFn: async () => {
-            const respuesta = await api.get('/sistemas/envios/',{params:{PublicID: identificador}});
+            const respuesta = await api.get('/sistema/envios/',{params:{PublicID: identificador}});
             return respuesta.data;
         }
     });
@@ -28,9 +28,9 @@ export function useEnviosRepartidor(identificador: number) {  //pa listar los en
 export function useActualizarEnvio() {
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async ({id}:ActualizacionData) =>
+        mutationFn: async ({ID}:ActualizacionData) =>
         {   //En backend actualizar estado a "entregado" y fecha a la fecha actual
-            return await api.patch(`/sistemas/envios/actualizarEnvio/${id}`);
+            return await api.patch(`/sistema/envios/actualizarEnvio/${ID}`);
         },
         onSuccess: () => {
             clienteQuery.invalidateQueries({queryKey:['envios']});

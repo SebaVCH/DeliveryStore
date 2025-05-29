@@ -44,7 +44,7 @@ export const Producto = () =>
 
     const crear = (e: SyntheticEvent) => {
         e.preventDefault();
-        crearProd.mutate({name: name, description: description, price: Number(price), is_vegan: Boolean(vegan), is_vegetarian: Boolean(vegetaria), is_gluten_free: Boolean(gluten), calories: Number(caloria), delivery: deliver, seller_id: Number(idVendedor)});
+        crearProd.mutate({Name: name, Description: description, Price: Number(price), IsVegan: Boolean(vegan), IsVegetarian: Boolean(vegetaria), IsGlutenFree: Boolean(gluten), Calories: Number(caloria), Delivery: deliver, SellerID: Number(idVendedor)});
         setNombre('');
         setDescripcion('');
         setPrecio('');
@@ -66,13 +66,13 @@ export const Producto = () =>
             {productos?.length > 0 ? (
                 <ul>
                     {productos.map((p: any) => (
-                        <li key = {p.id}>
-                            {p.nombre} - {p.descripcion} - ${p.precio} - 
-                            Vegano: {p.vegano ? 'Sí' : 'No'} - 
-                            Vegetariano: {p.vegetariano ? 'Sí' : 'No'} - 
-                            Gluten: {p.posee_gluten ? 'Sí' : 'No'} - 
-                            Calorías: {p.calorias} - 
-                            Método de entrega: {p.entrega} - Puntuación: {p.puntuacion_promedio}
+                        <li key = {p.ID}>
+                            {p.Name} - {p.Description} - ${p.Price} - 
+                            Vegano: {p.IsVegan ? 'Sí' : 'No'} - 
+                            Vegetariano: {p.IsVegetarian ? 'Sí' : 'No'} - 
+                            Gluten: {p.IsGlutenFree ? 'Sí' : 'No'} - 
+                            Calorías: {p.calories} - 
+                            Método de entrega: {p.Delivery} - Puntuación: {p.ReviewScore}
                             <button onClick={() => eliminarPrdo.mutate(p.id)}> Eliminar</button>
                              <p>------------</p>
                         </li>

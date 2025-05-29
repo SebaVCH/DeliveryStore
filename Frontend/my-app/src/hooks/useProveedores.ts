@@ -15,7 +15,7 @@ export function useProveedoresVendedor(identificador: number) {     //pa listar 
     return useQuery({
         queryKey: ['proveedores', identificador],
         queryFn: async () => {
-            const respuesta = await api.get('user/proveedores/',{params:{PublicID: identificador}});
+            const respuesta = await api.get('/proveedores/',{params:{PublicID: identificador}});
             return respuesta.data;
         }
     });

@@ -38,20 +38,20 @@ export const Homegeneral = () => {
 
     return (
     <div> 
-        <h2> Bienvenido: {user?.Nombre}, tu correo es: {user?.Correo} </h2> 
+        <h2> Bienvenido: {user?.Name}, tu correo es: {user?.Email} </h2> 
         <h3>Productos en venta</h3>
         {cargaproducto ? (
             <p>cargando productos en venta... 🗣️🗣️</p>
         ) : productos?.length > 0 ? (
             <ul>
                 {productos.map((producto: any) => (
-                    <li key = {producto.id}>
-                        {producto.nombre} - {producto.descripcion} - ${producto.precio} - 
-                            Vegano: {producto.vegano ? 'Sí' : 'No'} - 
-                            Vegetariano: {producto.vegetariano ? 'Sí' : 'No'} - 
-                            Gluten: {producto.posee_gluten ? 'Sí' : 'No'} - 
-                            Calorías: {producto.calorias} - 
-                            Método de entrega: {producto.entrega} - Puntuación: {producto.puntuacion_promedio}
+                    <li key = {producto.ID}>
+                        {producto.Name} - {producto.Description} - ${producto.Price} - 
+                            Vegano: {producto.IsVegan ? 'Sí' : 'No'} - 
+                            Vegetariano: {producto.IsVegetarian ? 'Sí' : 'No'} - 
+                            Gluten: {producto.IsGlutenFree ? 'Sí' : 'No'} - 
+                            Calorías: {producto.Calories} - 
+                            Método de entrega: {producto.Delivery} - Puntuación: {producto.ReviewScore}
                              <p>------------</p>
                     </li>
                 ))}

@@ -2,15 +2,15 @@ import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import api from '../api/axios';
 
 interface DataProducto{
-    name: string;
-    description: string;
-    is_vegan: boolean;
-    is_vegetarian: boolean;
-    is_gluten_free: boolean;
-    price: number;
-    calories: number;
-    seller_id:number;
-    delivery:string;
+    Name: string;
+    Description: string;
+    IsVegan: boolean;
+    IsVegetarian: boolean;
+    IsGlutenFree: boolean;
+    Price: number;
+    Calories: number;
+    SellerID:number;
+    Delivery:string;
 }
 
 export function useProductosVendedor(identificador: number) {     //pa listar solo los productos en venta del usuario.
@@ -37,8 +37,8 @@ export function useProductos() {     //pa listar los productos
 export function useCrearProducto (){ //pa crear un producto
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async ({name, description, is_vegan, is_vegetarian, is_gluten_free, price, calories, seller_id, delivery}: DataProducto) => {
-            const respuesta = await api.post('user/productos/',{name, description, is_vegan, is_vegetarian, is_gluten_free, price, calories,seller_id,delivery});
+        mutationFn: async ({Name, Description, IsVegan, IsVegetarian, IsGlutenFree, Price, Calories, SellerID, Delivery}: DataProducto) => {
+            const respuesta = await api.post('user/productos/',{Name, Description, IsVegan, IsVegetarian, IsGlutenFree, Price, Calories,SellerID,Delivery});
             return respuesta.data
         },
         onSuccess: () => {

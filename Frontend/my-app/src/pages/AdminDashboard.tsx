@@ -85,8 +85,8 @@ export const AdminDashboard = () => {
                 {topVendedores?.length > 0 ? ( 
                     <ul>
                         {topVendedores?.map((v: any) => (
-                            <li key={v.identificador}>
-                                {v.nombre} - {v.correo}
+                            <li key={v.PublicID}>
+                                {v.Name} - {v.Email}
                             </li>
                         ))}
                     </ul>
@@ -103,8 +103,8 @@ export const AdminDashboard = () => {
                 {topProductos?.length > 0 ? ( 
                     <ul>
                         {topProductos?.map((p: any) => (
-                            <li key={p.id}>
-                                {p.nombre} - {p.descripcion} -<p>Precio del producto: </p>- {p.precio} -<p>Puntuación promedio del producto: </p>- {p.puntuacion_promedio}
+                            <li key={p.ID}>
+                                {p.Name} - {p.Description} -<p>Precio del producto: </p>- {p.Price} -<p>Puntuación promedio del producto: </p>- {p.ReviewScore}
                             </li>
                         ))}
                     </ul>
@@ -121,8 +121,8 @@ export const AdminDashboard = () => {
                 {transacciones?.length > 0 ? ( 
                     <ul>
                         {transacciones?.map((t: any) => (
-                            <li key={t.id}>
-                                {t.nombre_producto} -<p>Fecha de la transacción: </p>- {t.fecha} -<p>Monto total de la transacción: </p>- {t.monto_total} -<p>Correo del vendedor: </p>- {t.vendedor.correo} -<p>Correo del comprador: </p>- {t.comprador.correo}
+                            <li key={t.ID}>
+                                {t.Name} -<p>Fecha de la transacción: </p>- {t.Date} -<p>Monto total de la transacción: </p>- {t.monto_total} -<p>Correo del vendedor: </p>- {t.Seller.Email} -<p>Correo del comprador: </p>- {t.Buyer.Email}
                             </li>
                         ))}
                     </ul>
@@ -140,9 +140,9 @@ export const AdminDashboard = () => {
                 {usuarios?.length > 0 ? ( 
                     <ul>
                         {usuarios?.map((c: any) => (
-                            <li key={c.identificador}>
-                                {c.nombre} - {c.correo}
-                                <button onClick={()=> eliminarUsuario.mutate(c.identificador)}>Banear usuario</button>
+                            <li key={c.PublicID}>
+                                {c.Name} - {c.Email}
+                                <button onClick={()=> eliminarUsuario.mutate(c.PublicID)}>Banear usuario</button>
                             </li>
                         ))}
                     </ul>
