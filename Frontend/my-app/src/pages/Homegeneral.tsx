@@ -38,7 +38,7 @@ export const Homegeneral = () => {
 
     return (
     <div> 
-        <h2> Bienvenido: {user?.Nombre}, tu correo es: {user?.Correo} </h2>
+        <h2> Bienvenido: {user?.Nombre}, tu correo es: {user?.Correo} </h2> 
         <h3>Productos en venta</h3>
         {cargaproducto ? (
             <p>cargando productos en venta... 🗣️🗣️</p>
@@ -46,16 +46,20 @@ export const Homegeneral = () => {
             <ul>
                 {productos.map((producto: any) => (
                     <li key = {producto.id}>
-                        <p><strong>Nombre: </strong>{producto.nombre}</p>
-                        <p><strong>Precio: </strong>{producto.precio}</p>
-                        <p><strong>Descripcion: </strong>{producto.descripcion}</p>
+                        {producto.nombre} - {producto.descripcion} - ${producto.precio} - 
+                            Vegano: {producto.vegano ? 'Sí' : 'No'} - 
+                            Vegetariano: {producto.vegetariano ? 'Sí' : 'No'} - 
+                            Gluten: {producto.posee_gluten ? 'Sí' : 'No'} - 
+                            Calorías: {producto.calorias} - 
+                            Método de entrega: {producto.entrega} - Puntuación: {producto.puntuacion_promedio}
+                             <p>------------</p>
                     </li>
                 ))}
             </ul>
         ): (
             <p>no hay productos en venta disponibles..</p>
         )}
-        <button onClick={()=> navigate('/Home')}>Ir a mis ventas</button>
+        <button onClick={()=> navigate('/Home')}>Gestionar tienda</button>
         <button onClick={logout}>Cerrar la sesion 🤑</button>
     </div>
     );
