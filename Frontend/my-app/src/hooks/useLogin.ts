@@ -9,10 +9,6 @@ interface Logindata {
 
 interface Loginresponse {
     token: string;
-    user: {
-        Correo: string;
-        Nombre: string;
-    };
 }
 
 export function useLogin(onSuccess: (token: string)=> void, onFail:(error:string)=> void) {

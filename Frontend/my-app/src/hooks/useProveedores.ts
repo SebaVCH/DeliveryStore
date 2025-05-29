@@ -27,7 +27,7 @@ export function useCrearProveedor() {   //pa añadir un nuevo proveedor
 export function useEliminarProveedor() {
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async (id: string) => {
+        mutationFn: async (id: number) => {
             await api.delete(`/proveedores/${id}`);
         },
         onSuccess:() => {
