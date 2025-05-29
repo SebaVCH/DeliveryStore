@@ -5,10 +5,10 @@ import api from '../api/axios';
 interface nuevoEnvio {
 
     Status: string;
-    Date: string;
+    Date: Date;
     DeliveryID: number;
     BuyerID: number;
-    
+
 };
 
 

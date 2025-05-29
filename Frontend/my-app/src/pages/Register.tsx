@@ -23,7 +23,7 @@ export const Register = () => { //Hooks
   const enviar = (e: SyntheticEvent) => {
     e.preventDefault();
     setErrorMsg('');
-    register.mutate({nombre,correo,password,direccion,telefono,tipo});
+    register.mutate({Name:nombre,Email:correo,Password:password,Address:direccion,Phone:telefono,RoleType:tipo});
   };
 
   return (

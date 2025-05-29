@@ -46,7 +46,7 @@ export const AdminDashboard = () => {
 
     const crear = (e:SyntheticEvent) => {
         e.preventDefault();
-        crearUsuario.mutate({nombre: name, correo: email, password: contrasenha, tipo: 3, direccion: direcc, telefono: telefo});
+        crearUsuario.mutate({Name: name, Email: email, Password: contrasenha, RoleType: 3, Address: direcc, Phone: telefo});
         setName('');
         setEmail('');
         setContrasenha('');

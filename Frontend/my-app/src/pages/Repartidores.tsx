@@ -34,10 +34,10 @@ export const Repartidores = () => {
     const aceptar = (orden: any) => {
         aceptarOrden.mutate({
             id_orden: orden.id, 
-            id_repartidor: user.identificador, 
-            estado: "en camino...",
-            fecha: new Date(), //si se comparan fechas en backend, separar el día de la hora
-            id_comprador: orden.comprador.identificador
+            DeliveryID: user.identificador, 
+            Status: "en camino...",
+            Date: new Date(), //si se comparan fechas en backend, separar el día de la hora
+            BuyerID: orden.comprador.identificador
         });
     };
 

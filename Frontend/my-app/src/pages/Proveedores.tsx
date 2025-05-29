@@ -11,7 +11,7 @@ export const Proveedores = () => {
 
     const crear = (e: SyntheticEvent) => {
         e.preventDefault();
-        crearProv.mutate({nombre: name, descripcion: description});
+        crearProv.mutate({Name: name, Description: description});
         setNombre('');
         setDescripcion('');
     };

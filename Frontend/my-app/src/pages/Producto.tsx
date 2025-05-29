@@ -44,7 +44,7 @@ export const Producto = () =>
 
     const crear = (e: SyntheticEvent) => {
         e.preventDefault();
-        crearProd.mutate({nombre: name, descripcion: description, precio: Number(price), vegano: Boolean(vegan), vegetariano: Boolean(vegetaria), posee_gluten: Boolean(gluten), calorias: Number(caloria), entrega: deliver, id_vendedor: Number(idVendedor)});
+        crearProd.mutate({name: name, description: description, price: Number(price), is_vegan: Boolean(vegan), is_vegetarian: Boolean(vegetaria), is_gluten_free: Boolean(gluten), calories: Number(caloria), delivery: deliver, seller_id: Number(idVendedor)});
         setNombre('');
         setDescripcion('');
         setPrecio('');

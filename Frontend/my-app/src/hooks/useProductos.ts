@@ -9,7 +9,6 @@ interface DataProducto{
     is_gluten_free: boolean;
     price: number;
     calories: number;
-    review_score: number;
     seller_id:number;
     delivery:string;
 }
@@ -38,8 +37,8 @@ export function useProductos() {     //pa listar los productos
 export function useCrearProducto (){ //pa crear un producto
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async ({name, description, is_vegan, is_vegetarian, is_gluten_free, price, calories, review_score, seller_id, delivery}: DataProducto) => {
-            const respuesta = await api.post('user/productos/',{name, description, is_vegan, is_vegetarian, is_gluten_free, price, calories, review_score,seller_id,delivery});
+        mutationFn: async ({name, description, is_vegan, is_vegetarian, is_gluten_free, price, calories, seller_id, delivery}: DataProducto) => {
+            const respuesta = await api.post('user/productos/',{name, description, is_vegan, is_vegetarian, is_gluten_free, price, calories,seller_id,delivery});
             return respuesta.data
         },
         onSuccess: () => {

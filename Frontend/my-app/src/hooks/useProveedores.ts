@@ -38,7 +38,7 @@ export function useEliminarProveedor() {
     const clienteQuery = useQueryClient();
     return useMutation({
         mutationFn: async (id: number) => {
-            await api.delete(`/proveedores/${id}`);
+            await api.patch(`/proveedores/${id}`);
         },
         onSuccess:() => {
             clienteQuery.invalidateQueries({queryKey:['proveedores']});
