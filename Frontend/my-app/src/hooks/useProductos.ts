@@ -15,7 +15,7 @@ interface DataProducto{
 
 export function useProductosVendedor(rutUser: string) {     //pa listar solo los productos en venta del usuario.
     return useQuery({
-        queryKey: ['reserva', rutUser],
+        queryKey: ['productos', rutUser],
         queryFn: async () => {
             const respuesta = await api.get('user/productos/',{params:{rut_cliente: rutUser}});
             return respuesta.data;
