@@ -33,7 +33,7 @@ export const Repartidores = () => {
 
     const aceptar = (orden: any) => {
         aceptarOrden.mutate({
-            id_orden: orden.id, 
+            ID: orden.id, 
             DeliveryID: user.identificador, 
             Status: "en camino...",
             Date: new Date(), //si se comparan fechas en backend, separar el día de la hora

@@ -3,8 +3,8 @@ import api from '../api/axios';
 import { AxiosError } from 'axios';
 
 interface Logindata {
-    correo: string;
-    password: string;
+    Email: string;
+    Password: string;
 }
 
 interface Loginresponse {
@@ -13,8 +13,8 @@ interface Loginresponse {
 
 export function useLogin(onSuccess: (token: string)=> void, onFail:(error:string)=> void) {
     return useMutation<Loginresponse,AxiosError,Logindata>({
-        mutationFn: async ({correo,password}: Logindata): Promise<Loginresponse> => {
-            const respuesta = await api.post('/login', {correo,password});
+        mutationFn: async ({Email,Password}: Logindata): Promise<Loginresponse> => {
+            const respuesta = await api.post('/login', {Email,Password});
             console.log(respuesta.data);
             return respuesta.data;
         },
