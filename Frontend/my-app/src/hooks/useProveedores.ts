@@ -15,7 +15,7 @@ export function useProveedoresVendedor(identificador: number) {     //pa listar 
     return useQuery({
         queryKey: ['proveedores', identificador],
         queryFn: async () => {
-            const respuesta = await api.get('user/proveedores/',{params:{id_vendedor: identificador}});
+            const respuesta = await api.get('user/proveedores/',{params:{PublicID: identificador}});
             return respuesta.data;
         }
     });
@@ -24,7 +24,7 @@ export function useProveedoresVendedor(identificador: number) {     //pa listar 
 export function useCrearProveedor() {   //pa añadir un nuevo proveedor
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async(nuevoProveedor:{nombre: string, descripcion: string}) => {
+        mutationFn: async(nuevoProveedor:{Name: string, Description: string}) => {
             const respuesta = await api.post('/proveedores/', nuevoProveedor);
             return respuesta.data;
         },

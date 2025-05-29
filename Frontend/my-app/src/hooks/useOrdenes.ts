@@ -3,12 +3,12 @@ import api from '../api/axios';
 
 
 interface nuevoEnvio {
-    
-    
+
     Status: string;
     Date: string;
     DeliveryID: number;
     BuyerID: number;
+    
 };
 
 

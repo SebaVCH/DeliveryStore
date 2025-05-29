@@ -19,7 +19,7 @@ export function useEnviosRepartidor(identificador: number) {  //pa listar los en
     return useQuery({
         queryKey: ['reserva', identificador],
         queryFn: async () => {
-            const respuesta = await api.get('/sistemas/envios/',{params:{id_repartidor: identificador}});
+            const respuesta = await api.get('/sistemas/envios/',{params:{PublicID: identificador}});
             return respuesta.data;
         }
     });
