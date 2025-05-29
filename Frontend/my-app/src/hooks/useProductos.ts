@@ -13,11 +13,11 @@ interface DataProducto{
     id_vendedor: number;
 }
 
-export function useProductosVendedor(rutUser: string) {     //pa listar solo los productos en venta del usuario.
+export function useProductosVendedor(identificador: number) {     //pa listar solo los productos en venta del usuario.
     return useQuery({
-        queryKey: ['productos', rutUser],
+        queryKey: ['productos', identificador],
         queryFn: async () => {
-            const respuesta = await api.get('user/productos/',{params:{rut_cliente: rutUser}});
+            const respuesta = await api.get('user/productos/',{params:{id_vendedor: identificador}});
             return respuesta.data;
         }
     });
@@ -51,7 +51,7 @@ export function useCrearProducto (){ //pa crear un producto
 export function useEliminarProducto(){   //pa eliminar un producto
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async (id: string) => {
+        mutationFn: async (id: number) => {
             await api.patch(`user/productos/${id}`);
         },
         onSuccess: () => {

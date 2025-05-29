@@ -15,11 +15,11 @@ export function useEnvios() { //pa listar TODOS los envios
     });
 }
 
-export function useEnviosRepartidor(id: string) {  //pa listar los envios del repartidor
+export function useEnviosRepartidor(identificador: number) {  //pa listar los envios del repartidor
     return useQuery({
-        queryKey: ['reserva', id],
+        queryKey: ['reserva', identificador],
         queryFn: async () => {
-            const respuesta = await api.get('/sistemas/envios/',{params:{identificador: id}});
+            const respuesta = await api.get('/sistemas/envios/',{params:{id_repartidor: identificador}});
             return respuesta.data;
         }
     });
