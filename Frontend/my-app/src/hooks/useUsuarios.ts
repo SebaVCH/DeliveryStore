@@ -29,7 +29,7 @@ export function useCrearUsuario() { //pa añadir una nueva cuenta en el sistema
 export function useEliminarUsuario() { //pa eliminar la cuenta del sistema
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async (id: string) => {
+        mutationFn: async (id: number) => {
             await api.patch(`/admin/usuarios/${id}`); //REEMPLAZAR POR PATCH PARA CAMBIAR EL BOOLEANO BANEADO
         },
         onSuccess: () => {

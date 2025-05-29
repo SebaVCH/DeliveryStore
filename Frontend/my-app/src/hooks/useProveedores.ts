@@ -11,6 +11,16 @@ export function useProveedores() {      //pa listar los proveedores
     });
 }
 
+export function useProveedoresVendedor(identificador: number) {     //pa listar solo los proveedores del usuario.
+    return useQuery({
+        queryKey: ['proveedores', identificador],
+        queryFn: async () => {
+            const respuesta = await api.get('user/proveedores/',{params:{id_vendedor: identificador}});
+            return respuesta.data;
+        }
+    });
+}
+
 export function useCrearProveedor() {   //pa añadir un nuevo proveedor
     const clienteQuery = useQueryClient();
     return useMutation({
@@ -20,7 +30,7 @@ export function useCrearProveedor() {   //pa añadir un nuevo proveedor
         },
         onSuccess: () => {
             clienteQuery.invalidateQueries({queryKey:['proveedores']});
-        },
+        }
     });
 }
 
@@ -32,7 +42,7 @@ export function useEliminarProveedor() {
         },
         onSuccess:() => {
             clienteQuery.invalidateQueries({queryKey:['proveedores']});
-        },
+        }
     });
 }
 
