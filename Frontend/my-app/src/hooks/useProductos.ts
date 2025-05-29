@@ -17,7 +17,7 @@ export function useProductosVendedor(identificador: number) {     //pa listar so
     return useQuery({
         queryKey: ['productos', identificador],
         queryFn: async () => {
-            const respuesta = await api.get('user/productos/',{params:{PublicID: identificador}});
+            const respuesta = await api.get('/user/productos/',{params:{PublicID: identificador}});
             return respuesta.data;
         }
     });
@@ -27,7 +27,7 @@ export function useProductos() {     //pa listar los productos
     return useQuery({
         queryKey: ['productos'],
         queryFn: async () => {
-            const respuesta = await api.get('user/productos/');
+            const respuesta = await api.get('/user/productos/');
             return respuesta.data;
         },
     });
@@ -38,7 +38,7 @@ export function useCrearProducto (){ //pa crear un producto
     const clienteQuery = useQueryClient();
     return useMutation({
         mutationFn: async ({Name, Description, IsVegan, IsVegetarian, IsGlutenFree, Price, Calories, SellerID, Delivery}: DataProducto) => {
-            const respuesta = await api.post('user/productos/',{Name, Description, IsVegan, IsVegetarian, IsGlutenFree, Price, Calories,SellerID,Delivery});
+            const respuesta = await api.post('/user/productos/',{Name, Description, IsVegan, IsVegetarian, IsGlutenFree, Price, Calories,SellerID,Delivery});
             return respuesta.data
         },
         onSuccess: () => {
@@ -52,7 +52,7 @@ export function useEliminarProducto(){   //pa eliminar un producto
     const clienteQuery = useQueryClient();
     return useMutation({
         mutationFn: async (id: number) => {
-            await api.patch(`user/productos/${id}`);
+            await api.patch(`/user/productos/${id}`);
         },
         onSuccess: () => {
             clienteQuery.invalidateQueries({queryKey:['productos']});

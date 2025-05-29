@@ -10,7 +10,7 @@ api.interceptors.request.use((config) => {
     const token = sessionStorage.getItem('token');
     if(token)
     {
-        config.headers.Authorization = `${token}`; //sapear el back pa incluir el bearer
+        config.headers.Authorization = `Bearer ${token}`; //sapear el back pa incluir el bearer
     }
     return config;
 });

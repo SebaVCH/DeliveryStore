@@ -35,7 +35,7 @@ export function useAceptarOrden() {
                 BuyerID
             });
             //pa setear la orden como eliminada
-            await api.patch(`/sistema/ordenes/${ID}`);
+            await api.patch(`/sistema/ordenes/${ID}`);  
         },
         onSuccess: () => {
             clienteQuery.invalidateQueries({queryKey: ['envios']});

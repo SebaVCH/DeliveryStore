@@ -8,7 +8,7 @@ export const Producto = () =>
 {
     const { data: user, isLoading: cargauser, isError} = useUserProfile();
     const {token, setToken} = useAuth();
-    const {data: productos,isLoading: cargaproducto} = useProductosVendedor(user.identificador);
+    const {data: productos,isLoading: cargaproducto} = useProductosVendedor(user.PublicID);
     const crearProd = useCrearProducto();
     const eliminarPrdo = useEliminarProducto();
     const navigate = useNavigate();
@@ -53,7 +53,7 @@ export const Producto = () =>
         setGluten('');
         setCalorias('');
         setEntrega('');
-        setVendedor(user.identificador);
+        setVendedor(user.PublicID);
     };      
 
   return (
@@ -71,9 +71,9 @@ export const Producto = () =>
                             Vegano: {p.IsVegan ? 'Sí' : 'No'} - 
                             Vegetariano: {p.IsVegetarian ? 'Sí' : 'No'} - 
                             Gluten: {p.IsGlutenFree ? 'Sí' : 'No'} - 
-                            Calorías: {p.calories} - 
+                            Calorías: {p.Calories} - 
                             Método de entrega: {p.Delivery} - Puntuación: {p.ReviewScore}
-                            <button onClick={() => eliminarPrdo.mutate(p.id)}> Eliminar</button>
+                            <button onClick={() => eliminarPrdo.mutate(p.ID)}> Eliminar</button>
                              <p>------------</p>
                         </li>
                     ))}
@@ -95,17 +95,6 @@ export const Producto = () =>
                 <option value="delivery">Delivery</option>
                 <option value="retiro en tienda">Retiro en tienda</option>
             </select>
-
-            <div>
-                <label>
-                    <input 
-                        type="checkbox" 
-                        checked={isComestible} 
-                        onChange={(e) => setIsComestible(e.target.checked)} 
-                    />
-                    Su producto es comestible?
-                </label>
-            </div>
 
             <div style={{margin: '10px 0'}}>
                     <label>

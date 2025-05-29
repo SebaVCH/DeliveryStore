@@ -4,7 +4,7 @@ import React from 'react';
 export const Noautorizado = () => {
     return (
         <div>
-            <h1>Acceso Denegado 😈😈</h1>
+            <h1><strong>Acceso Denegado 😈😈</strong></h1>
             <p>no tienes permiso para acceder a esta pagina</p>
         </div>
     );

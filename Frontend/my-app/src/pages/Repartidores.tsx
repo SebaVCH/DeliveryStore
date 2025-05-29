@@ -5,9 +5,9 @@ import { useUserProfile } from '../hooks/useUserProfile';
 import { useAuth } from '../context/AuthContext';
 
 export const Repartidores = () => {
+    const {token, setToken} = useAuth();
     const {data: ordenes, isLoading} = useOrdenes();
     const {data: user, isLoading: cargauser, isError} = useUserProfile();
-    const {token, setToken} = useAuth();
 
     const aceptarOrden = useAceptarOrden();
     
@@ -52,7 +52,6 @@ export const Repartidores = () => {
                 <ul>
                     {ordenes?.map((o: any) => (
                         <li key = {o.ID}>
-                            
                             <p>Fecha de entrega: </p> {o.Date} - <p>Estado de la orden: </p> {o.Status} - <p>Dirección de entrega: </p> <strong>{o.Buyer.Address}</strong> - <p>Número del cliente: </p> {o.Buyer.Phone}
                             <p>Tienda: </p> {o.Seller.Name} - <p>Dirección tienda: </p> {o.Seller.Address}
 

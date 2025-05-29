@@ -57,7 +57,7 @@ export const AdminDashboard = () => {
     return (
         <div>
             <h1>Administracion de Usuarios</h1>
-            <button onClick={() => navigate('/Home')}> volver al perfil</button>
+            <button onClick={() => navigate('/Homegeneral')}> volver al perfil</button>
 
             {isLoadingMonto? (
                 <p>Cargando Monto total...</p>

@@ -9,6 +9,7 @@ import { AdminDashboard } from '../pages/AdminDashboard';
 import {Repartidores} from '../pages/Repartidores';
 import {Envios} from '../pages/Envios';
 import {Homegeneral} from '../pages/Homegeneral';
+import { Noautorizado } from '../pages/Noautorizado';
 
 export const AppRoutes = () => {
   return (
@@ -21,9 +22,9 @@ export const AppRoutes = () => {
       <Route path = '/Envios' element={<PrivateRoute roles={[2]}><Envios/></PrivateRoute>}/>
 
       <Route path='/Home'element={<PrivateRoute roles={[1]}><Home/></PrivateRoute>}/>
-      <Route path='/Homegeneral'element={<PrivateRoute roles={[1]}> <Homegeneral/> </PrivateRoute>}/>
+      <Route path='/Homegeneral'element={<PrivateRoute> <Homegeneral/> </PrivateRoute>}/>
 
-
+      <Route path='/Noautorizado' element={<Noautorizado/>}/>
       <Route path='/Producto' element={<PrivateRoute roles={[1]}><Producto/></PrivateRoute>}/>
 
       <Route path='/Proveedores' element={<PrivateRoute roles={[1]}> <Proveedores/> </PrivateRoute>}/>
