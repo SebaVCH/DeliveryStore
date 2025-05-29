@@ -14,6 +14,7 @@ type ProductUseCase interface {
 	GetProductByID(c *gin.Context)
 	RemoveProduct(c *gin.Context)
 	UpdateProduct(c *gin.Context)
+	GetProductsBySellerID(c *gin.Context)
 }
 
 type productUseCase struct {
@@ -44,6 +45,20 @@ func (p productUseCase) CreateProduct(c *gin.Context) {
 
 func (p productUseCase) GetAllProducts(c *gin.Context) {
 	products, err := p.productRepo.GetAllProducts()
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener productos"})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, products)
+}
+func (p productUseCase) GetProductsBySellerID(c *gin.Context) {
+	idSTR := c.Param("id")
+	id, err := strconv.Atoi(idSTR)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID inválido"})
+		return
+	}
+	products, err := p.productRepo.GetProductsBySellerID(id)
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener productos"})
 		return

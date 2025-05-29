@@ -36,7 +36,7 @@ func (r *cartRepository) GetTopProducts() ([]domain.Product, error) {
 	var topProducts []domain.Product
 	err := r.db.Table("products").
 		Joins("JOIN carts ON carts.id_product = products.id").
-		Where("carts.payed = ?", true).
+		Where("carts.payed = ? AND products.eliminated = ?", true, false).
 		Select("products.*, SUM(carts.quantity) as total_quantity").
 		Group("products.id").
 		Order("total_quantity DESC").
