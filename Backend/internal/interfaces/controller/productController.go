@@ -25,9 +25,6 @@ func (ctrl *ProductController) GetAllProducts(c *gin.Context) {
 func (ctrl *ProductController) GetProductsBySellerID(c *gin.Context) {
 	ctrl.productUseCase.GetProductsBySellerID(c)
 }
-func (ctrl *ProductController) GetProductsBySellerID(c *gin.Context) {
-	ctrl.productUseCase.GetProductsBySellerID(c)
-}
 
 func (ctrl *ProductController) RemoveProduct(c *gin.Context) {
 	ctrl.productUseCase.RemoveProduct(c)
