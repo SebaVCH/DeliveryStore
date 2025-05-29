@@ -31,7 +31,7 @@ export const Register = () => { //Hooks
         <h1>Registro</h1>
         <form onSubmit={enviar}>
             <label>Ingrese su nombre</label>
-            <input type = "username" name = "username" placeholder = 'Ingrese su nombre de usuario...' required value={nombre}
+            <input type = "text" name = "username" placeholder = 'Ingrese su nombre de usuario...' required value={nombre}
               onChange={e => setName(e.target.value)}
             />
 
@@ -49,7 +49,7 @@ export const Register = () => { //Hooks
               onChange={e => setDireccion(e.target.value)}
             />
             <label>Telefono: </label>
-            <input type = "tel" name = "telefono" placeholder = 'Ingrese un telefono...' required value={telefono}
+            <input type = "text" name = "telefono" placeholder = 'Ingrese un telefono...' required value={telefono}
               onChange={e => setTelefono(e.target.value)}
             />
             <label>Tipo de cuenta: </label>

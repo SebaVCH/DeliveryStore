@@ -159,9 +159,9 @@ export const AdminDashboard = () => {
 
                 <input type = "password" placeholder="ContraseÃ±a de la cuenta..." value={contrasenha} onChange={(e)=> setContrasenha(e.target.value)} required />
 
-                <input type = "direccion" placeholder="Su dirección..." value={direcc} onChange={(e)=> setDireccion(e.target.value)} required />
+                <input type = "text" placeholder="Su dirección..." value={direcc} onChange={(e)=> setDireccion(e.target.value)} required />
 
-                <input type = "telefono" placeholder="Su telefono..." value={telefo} onChange={(e)=> setTelefono(e.target.value)} required />
+                <input type = "text" placeholder="Su telefono..." value={telefo} onChange={(e)=> setTelefono(e.target.value)} required />
 
                 <button type="submit">Agregar</button>
             </form>
