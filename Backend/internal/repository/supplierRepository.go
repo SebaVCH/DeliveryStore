@@ -44,8 +44,7 @@ func (s supplierRepository) CreateSupplier(supplier domain.Supplier) error {
 }
 
 func (s supplierRepository) DeleteSupplier(id int) error {
-	var supplier domain.Supplier
-	err := s.db.Where("id = ?", id).Delete(&supplier).Error
+	err := s.db.Model(&domain.Supplier{}).Where("id = ?", id).Update("eliminated", true).Error
 	return err
 }
 

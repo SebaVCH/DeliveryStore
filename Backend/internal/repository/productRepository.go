@@ -8,7 +8,6 @@ import (
 
 type ProductRepository interface {
 	GetAllProducts() ([]domain.Product, error)
-	GetProductByID(id int) (domain.Product, error)
 	GetProductsBySellerID(id int) ([]domain.Product, error)
 	CreateProduct(product domain.Product) error
 	UpdateProduct(id int, product domain.Product) error
@@ -27,7 +26,7 @@ func NewProductRepository() ProductRepository {
 
 func (p productRepository) GetAllProducts() ([]domain.Product, error) {
 	var products []domain.Product
-	err := p.db.Where("eliminated = ?", false).Find(&products).Error
+	err := p.db.Preload("Seller").Where("eliminated = ?", false).Find(&products).Error
 	if err != nil {
 		return nil, err
 	}
@@ -37,16 +36,7 @@ func (p productRepository) GetAllProducts() ([]domain.Product, error) {
 func (p productRepository) GetProductsBySellerID(id int) ([]domain.Product, error) {
 	var products []domain.Product
 	err := p.db.Where("eliminated = ? AND seller_id = ?", false, id).Find(&products).Error
-	if err != nil {
-		return nil, err
-	}
-	return products, nil
-}
-
-func (p productRepository) GetProductByID(id int) (domain.Product, error) {
-	var product domain.Product
-	err := p.db.Where("id = ?", id).First(&product).Error
-	return product, err
+	return products, err
 }
 
 func (p productRepository) CreateProduct(product domain.Product) error {
@@ -58,6 +48,6 @@ func (p productRepository) UpdateProduct(id int, product domain.Product) error {
 }
 
 func (p productRepository) DeleteProduct(id int) error {
-	err := p.db.Where("id = ?", id).Update("eliminated", true).Error
+	err := p.db.Model(&domain.Product{}).Where("id = ?", id).Update("eliminated", true).Error
 	return err
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type TransactionRepository interface {
-	CreateTransaction(transaction domain.Transaction) error
+	CreateTransaction(transaction *domain.Transaction) error
 	GetAllTransactions() ([]domain.Transaction, error)
 	GetTransactionTotalAmount() (float64, error)
 	GetTransactionTopSellers() ([]domain.Usuario, error)
@@ -23,13 +23,28 @@ func NewTransactionRepository() TransactionRepository {
 	}
 }
 
-func (r *transactionRepository) CreateTransaction(transaction domain.Transaction) error {
-	return r.db.Create(&transaction).Error
+func (r *transactionRepository) CreateTransaction(transaction *domain.Transaction) error {
+	if err := r.db.Create(&transaction).Error; err != nil {
+		return err
+	}
+
+	var seller domain.Usuario
+	if err := r.db.Where("id = ?", transaction.SellerID).First(&seller).Error; err != nil {
+		return err
+	}
+	transaction.Seller = seller
+	var buyer domain.Usuario
+	if err := r.db.Where("id = ?", transaction.BuyerID).First(&buyer).Error; err != nil {
+		return err
+	}
+	transaction.Buyer = buyer
+
+	return nil
 }
 
 func (r *transactionRepository) GetAllTransactions() ([]domain.Transaction, error) {
 	var transactions []domain.Transaction
-	err := r.db.Find(&transactions).Error
+	err := r.db.Preload("Buyer").Preload("Seller").Find(&transactions).Error
 	return transactions, err
 }
 

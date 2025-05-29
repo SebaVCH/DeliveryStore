@@ -11,28 +11,38 @@ export function useProveedores() {      //pa listar los proveedores
     });
 }
 
+export function useProveedoresVendedor(identificador: number) {     //pa listar solo los proveedores del usuario.
+    return useQuery({
+        queryKey: ['proveedores', identificador],
+        queryFn: async () => {
+            const respuesta = await api.get('/proveedores/',{params:{PublicID: identificador}});
+            return respuesta.data;
+        }
+    });
+}
+
 export function useCrearProveedor() {   //pa añadir un nuevo proveedor
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async(nuevoProveedor:{nombre: string, descripcion: string}) => {
+        mutationFn: async(nuevoProveedor:{Name: string, Description: string}) => {
             const respuesta = await api.post('/proveedores/', nuevoProveedor);
             return respuesta.data;
         },
         onSuccess: () => {
             clienteQuery.invalidateQueries({queryKey:['proveedores']});
-        },
+        }
     });
 }
 
 export function useEliminarProveedor() {
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async (id: string) => {
-            await api.delete(`/proveedores/${id}`);
+        mutationFn: async (id: number) => {
+            await api.patch(`/proveedores/${id}`);
         },
         onSuccess:() => {
             clienteQuery.invalidateQueries({queryKey:['proveedores']});
-        },
+        }
     });
 }
 

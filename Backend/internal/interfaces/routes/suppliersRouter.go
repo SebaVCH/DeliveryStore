@@ -19,6 +19,6 @@ func SetupSupplierRouter(router *gin.Engine) {
 	protected.GET("/", suppliersController.GetAllSuppliers)
 	protected.GET("/:id", suppliersController.GetSupplierByID)
 	protected.PUT("/:id", suppliersController.UpdateSupplier)
-	protected.DELETE("/:id", suppliersController.RemoveSupplier)
+	protected.PATCH("/:id", suppliersController.RemoveSupplier)
 
 }

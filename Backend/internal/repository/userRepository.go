@@ -12,7 +12,7 @@ type UserRepository interface {
 	UpdateMyAccount(user domain.Usuario, updates map[string]interface{}) error
 	Exists(email string) bool
 	GetAllUsers() ([]domain.Usuario, error)
-	DeleteUser(email string) error
+	DeleteUser(id string) error
 	UpdateAnyAccount(user domain.Usuario, updates map[string]interface{}) error
 }
 
@@ -35,8 +35,8 @@ func (r *userRepository) GetAllUsers() ([]domain.Usuario, error) {
 	return users, nil
 }
 
-func (r *userRepository) DeleteUser(email string) error {
-	err := r.db.Where("email = ?", email).Update("banned", true).Error
+func (r *userRepository) DeleteUser(id string) error {
+	err := r.db.Model(&domain.Usuario{}).Where("id = ?", id).Update("banned", true).Error
 	if err != nil {
 		return err
 	}
@@ -70,5 +70,5 @@ func (r *userRepository) Exists(email string) bool {
 }
 
 func (r *userRepository) UpdateAnyAccount(user domain.Usuario, updates map[string]interface{}) error {
-	return r.db.Model(&user).Updates(updates).Error
+	return r.db.Model(&domain.Usuario{}).Where("email = ?", user.Email).Updates(updates).Error
 }

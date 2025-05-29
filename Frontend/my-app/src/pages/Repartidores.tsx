@@ -5,9 +5,9 @@ import { useUserProfile } from '../hooks/useUserProfile';
 import { useAuth } from '../context/AuthContext';
 
 export const Repartidores = () => {
+    const {token, setToken} = useAuth();
     const {data: ordenes, isLoading} = useOrdenes();
     const {data: user, isLoading: cargauser, isError} = useUserProfile();
-    const {token, setToken} = useAuth();
 
     const aceptarOrden = useAceptarOrden();
     
@@ -33,11 +33,11 @@ export const Repartidores = () => {
 
     const aceptar = (orden: any) => {
         aceptarOrden.mutate({
-            id_orden: orden.id, 
-            id_repartidor: user.identificador, 
-            estado: "en camino...",
-            fecha: new Date(), //si se comparan fechas en backend, separar el día de la hora
-            id_comprador: orden.comprador.identificador
+            ID: orden.ID, 
+            DeliveryID: user.PublicID, 
+            Status: "en camino...",
+            Date: new Date(), //si se comparan fechas en backend, separar el día de la hora
+            BuyerID: orden.BuyerID
         });
     };
 
@@ -51,10 +51,9 @@ export const Repartidores = () => {
             {ordenes?.length > 0 ? (
                 <ul>
                     {ordenes?.map((o: any) => (
-                        <li key = {o.id}>
-                            
-                            <p>Fecha de entrega: </p> {o.fecha} - <p>Estado de la orden: </p> {o.estado} - <p>Dirección de entrega: </p> <strong>{o.comprador.direccion}</strong> - <p>Número del cliente: </p> {o.comprador.telefono}
-                            <p>Tienda: </p> {o.vendedor.nombre} - <p>Dirección tienda: </p> {o.vendedor.direccion}
+                        <li key = {o.ID}>
+                            <p>Fecha de entrega: </p> {o.Date} - <p>Estado de la orden: </p> {o.Status} - <p>Dirección de entrega: </p> <strong>{o.Buyer.Address}</strong> - <p>Número del cliente: </p> {o.Buyer.Phone}
+                            <p>Tienda: </p> {o.Seller.Name} - <p>Dirección tienda: </p> {o.Seller.Address}
 
                             <button 
                                 onClick={() => aceptar(o)}

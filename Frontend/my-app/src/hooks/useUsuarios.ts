@@ -6,7 +6,7 @@ export function useUsuarios(){ //pa listar los usuarios registrados en el sistem
     return useQuery({
         queryKey:['usuarios'],
         queryFn: async () => {
-            const respuesta = await api.get('/admin');
+            const respuesta = await api.get('/admin/users');
             return respuesta.data;
         },
     });
@@ -15,8 +15,8 @@ export function useUsuarios(){ //pa listar los usuarios registrados en el sistem
 export function useCrearUsuario() { //pa añadir una nueva cuenta en el sistema
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async (nuevoUsuario: {nombre: string; correo: string; password: string; tipo: number; direccion: string; telefono: string}) => {
-            const respuesta = await api.post('/admin/usuarios', nuevoUsuario);
+        mutationFn: async (nuevoUsuario: {Name: string; Email: string; Password: string; RoleType: number; Address: string; Phone: string}) => {
+            const respuesta = await api.post('/admin/users', nuevoUsuario);
             return respuesta.data;
         },
         onSuccess: () => {
@@ -29,8 +29,8 @@ export function useCrearUsuario() { //pa añadir una nueva cuenta en el sistema
 export function useEliminarUsuario() { //pa eliminar la cuenta del sistema
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async (id: string) => {
-            await api.patch(`/admin/usuarios/${id}`); //REEMPLAZAR POR PATCH PARA CAMBIAR EL BOOLEANO BANEADO
+        mutationFn: async (id: number) => {
+            await api.patch(`/admin/users/${id}`); //REEMPLAZAR POR PATCH PARA CAMBIAR EL BOOLEANO BANEADO
         },
         onSuccess: () => {
             clienteQuery.invalidateQueries({queryKey:['usuarios']});

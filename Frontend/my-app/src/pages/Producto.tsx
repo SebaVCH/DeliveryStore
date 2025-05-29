@@ -8,7 +8,7 @@ export const Producto = () =>
 {
     const { data: user, isLoading: cargauser, isError} = useUserProfile();
     const {token, setToken} = useAuth();
-    const {data: productos,isLoading: cargaproducto} = useProductosVendedor(user.identificador);
+    const {data: productos,isLoading: cargaproducto} = useProductosVendedor(user.PublicID);
     const crearProd = useCrearProducto();
     const eliminarPrdo = useEliminarProducto();
     const navigate = useNavigate();
@@ -44,7 +44,7 @@ export const Producto = () =>
 
     const crear = (e: SyntheticEvent) => {
         e.preventDefault();
-        crearProd.mutate({nombre: name, descripcion: description, precio: Number(price), vegano: Boolean(vegan), vegetariano: Boolean(vegetaria), posee_gluten: Boolean(gluten), calorias: Number(caloria), entrega: deliver, id_vendedor: Number(idVendedor)});
+        crearProd.mutate({Name: name, Description: description, Price: Number(price), IsVegan: Boolean(vegan), IsVegetarian: Boolean(vegetaria), IsGlutenFree: Boolean(gluten), Calories: Number(caloria), Delivery: deliver, SellerID: Number(idVendedor)});
         setNombre('');
         setDescripcion('');
         setPrecio('');
@@ -53,7 +53,7 @@ export const Producto = () =>
         setGluten('');
         setCalorias('');
         setEntrega('');
-        setVendedor(user.identificador);
+        setVendedor(user.PublicID);
     };      
 
   return (
@@ -66,14 +66,14 @@ export const Producto = () =>
             {productos?.length > 0 ? (
                 <ul>
                     {productos.map((p: any) => (
-                        <li key = {p.id}>
-                            {p.nombre} - {p.descripcion} - ${p.precio} - 
-                            Vegano: {p.vegano ? 'Sí' : 'No'} - 
-                            Vegetariano: {p.vegetariano ? 'Sí' : 'No'} - 
-                            Gluten: {p.posee_gluten ? 'Sí' : 'No'} - 
-                            Calorías: {p.calorias} - 
-                            Método de entrega: {p.entrega} - Puntuación: {p.puntuacion_promedio}
-                            <button onClick={() => eliminarPrdo.mutate(p.id)}> Eliminar</button>
+                        <li key = {p.ID}>
+                            {p.Name} - {p.Description} - ${p.Price} - 
+                            Vegano: {p.IsVegan ? 'Sí' : 'No'} - 
+                            Vegetariano: {p.IsVegetarian ? 'Sí' : 'No'} - 
+                            Gluten: {p.IsGlutenFree ? 'Sí' : 'No'} - 
+                            Calorías: {p.Calories} - 
+                            Método de entrega: {p.Delivery} - Puntuación: {p.ReviewScore}
+                            <button onClick={() => eliminarPrdo.mutate(p.ID)}> Eliminar</button>
                              <p>------------</p>
                         </li>
                     ))}
@@ -95,17 +95,6 @@ export const Producto = () =>
                 <option value="delivery">Delivery</option>
                 <option value="retiro en tienda">Retiro en tienda</option>
             </select>
-
-            <div>
-                <label>
-                    <input 
-                        type="checkbox" 
-                        checked={isComestible} 
-                        onChange={(e) => setIsComestible(e.target.checked)} 
-                    />
-                    Su producto es comestible?
-                </label>
-            </div>
 
             <div style={{margin: '10px 0'}}>
                     <label>

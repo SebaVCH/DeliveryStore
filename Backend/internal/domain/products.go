@@ -11,7 +11,7 @@ type Product struct {
 	Calories     int     `gorm:"not null"`
 	ReviewScore  float64 `gorm:"not null,default:0"`
 	SellerID     int     `gorm:"not null"`
-	User         Usuario `gorm:"foreignKey:SellerID;references:ID;not null"`
+	Seller       Usuario `gorm:"foreignKey:SellerID;references:ID;not null"`
 	Delivery     string  `gorm:"not null"`
 	Eliminated   bool    `gorm:"not null,default:false"`
 }

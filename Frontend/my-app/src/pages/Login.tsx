@@ -12,6 +12,7 @@ export const Login = () => {
 
   const login = useLogin((token) => {
     setToken(token);
+    
     navigate('/Homegeneral');
   },
   (error)=>{
@@ -24,7 +25,7 @@ export const Login = () => {
   {
     e.preventDefault();
     setErrorMsg('');
-    login.mutate({correo,password});
+    login.mutate({Email:correo,Password:password});
       
   };
 

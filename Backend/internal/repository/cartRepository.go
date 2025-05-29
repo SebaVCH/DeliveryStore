@@ -28,7 +28,7 @@ func (r *cartRepository) CreateCart(cart domain.Cart) error {
 
 func (r *cartRepository) GetAllCarts() ([]domain.Cart, error) {
 	var carts []domain.Cart
-	err := r.db.Find(&carts).Error
+	err := r.db.Preload("Buyer").Preload("Product").Find(&carts).Error
 	return carts, err
 }
 

@@ -19,7 +19,7 @@ export const PrivateRoute = ({children, roles}: PropRutaspriv) => {
     if(isLoading) {
         return <div>cargando datos del usuario...</div>
     }
-    if(roles && (!user || !roles.includes(user.tipo)))
+    if(roles && (!user || !roles.includes(user.RoleType)))
     {
         return <Navigate to = '/Noautorizado' replace/>;      //redirecionar la page en caso de no autorizado 401 en front (hacer la page pa q el usuario tenga feedback)
 

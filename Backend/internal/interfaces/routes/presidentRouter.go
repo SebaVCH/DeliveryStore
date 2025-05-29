@@ -18,6 +18,6 @@ func SetupPresidentRouter(router *gin.Engine) {
 	protected.Use(middleware.AuthMiddleware())
 	protected.GET("/users", presidentController.GetAllUsers)
 	protected.POST("/users", presidentController.Register)
-	protected.DELETE("/users/:email", presidentController.Delete)
-	protected.PUT("/users/:email", presidentController.UpdateAnyAccount)
+	protected.PATCH("/users/:id", presidentController.Delete)         //cambiar a patch
+	protected.PUT("/users/:id", presidentController.UpdateAnyAccount) //usar el patch anterior para esta accion ademas de marcar como baneado
 }

@@ -11,7 +11,7 @@ export const Proveedores = () => {
 
     const crear = (e: SyntheticEvent) => {
         e.preventDefault();
-        crearProv.mutate({nombre: name, descripcion: description});
+        crearProv.mutate({Name: name, Description: description});
         setNombre('');
         setDescripcion('');
     };
@@ -25,9 +25,9 @@ export const Proveedores = () => {
             {proveedores?.length > 0 ? (
                 <ul>
                     {proveedores?.map((p: any) => (
-                        <li key = {p.id}>
-                            {p.nombre} - <strong>{p.descripcion}</strong>
-                            <button onClick={() => eliminarProv.mutate(p.id)}> Eliminar</button> 
+                        <li key = {p.ID}>
+                            {p.Name} - <strong>{p.Description}</strong>
+                            <button onClick={() => eliminarProv.mutate(p.ID)}> Eliminar</button> 
                         </li>
                     ))}
                 </ul>

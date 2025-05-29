@@ -3,11 +3,12 @@ import api from '../api/axios';
 
 
 interface nuevoEnvio {
-    
-    id_repartidor: number;
-    estado: string;
-    fecha: Date;
-    id_comprador: number;
+
+    Status: string;
+    Date: Date;
+    DeliveryID: number;
+    BuyerID: number;
+
 };
 
 
@@ -24,17 +25,17 @@ export function useOrdenes() {  //listar Ordenes
 export function useAceptarOrden() {
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async ({id_orden, id_repartidor, estado, fecha, id_comprador}: 
-        {id_orden: number} & nuevoEnvio) => {
+        mutationFn: async ({ID, Status, Date, DeliveryID, BuyerID}: 
+        {ID: number} & nuevoEnvio) => {
             //pa crear el envio
             await api.post('/sistema/envios/', {
-                id_repartidor, 
-                estado, 
-                fecha, 
-                id_comprador
+                Status, 
+                Date, 
+                DeliveryID, 
+                BuyerID
             });
             //pa setear la orden como eliminada
-            await api.patch(`/sistema/ordenes/${id_orden}`);
+            await api.patch(`/sistema/ordenes/${ID}`);  
         },
         onSuccess: () => {
             clienteQuery.invalidateQueries({queryKey: ['envios']});

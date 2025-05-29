@@ -11,7 +11,7 @@ import (
 type ProductUseCase interface {
 	CreateProduct(c *gin.Context)
 	GetAllProducts(c *gin.Context)
-	GetProductByID(c *gin.Context)
+	GetProductsBySellerID(c *gin.Context)
 	RemoveProduct(c *gin.Context)
 	UpdateProduct(c *gin.Context)
 	GetProductsBySellerID(c *gin.Context)
@@ -66,7 +66,7 @@ func (p productUseCase) GetProductsBySellerID(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, products)
 }
 
-func (p productUseCase) GetProductByID(c *gin.Context) {
+func (p productUseCase) GetProductsBySellerID(c *gin.Context) {
 	idSTR := c.Param("id")
 	id, err := strconv.Atoi(idSTR)
 	if err != nil {
@@ -74,12 +74,12 @@ func (p productUseCase) GetProductByID(c *gin.Context) {
 		return
 	}
 
-	product, err := p.productRepo.GetProductByID(id)
+	products, err := p.productRepo.GetProductsBySellerID(id)
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener producto"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener productos"})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, product)
+	c.IndentedJSON(http.StatusOK, products)
 }
 
 func (p productUseCase) RemoveProduct(c *gin.Context) {

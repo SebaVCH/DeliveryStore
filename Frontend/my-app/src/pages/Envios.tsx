@@ -7,7 +7,7 @@ import { useUserProfile } from '../hooks/useUserProfile';
 export const Envios = () => {
     const {token, setToken} = useAuth();
     const {data: user, isLoading: cargauser, isError} = useUserProfile();
-    const {data: envios, isLoading} = useEnviosRepartidor(user.identificador);
+    const {data: envios, isLoading} = useEnviosRepartidor(user.PublicID);
     const actualizarEnvio = useActualizarEnvio();
     const navigate = useNavigate();
 
@@ -41,10 +41,10 @@ export const Envios = () => {
                 {envios?.length > 0 ? ( 
                     <ul>
                         {envios.map((envio: any) => (
-                        <li key = {envio.id}>
-                            <p>Repartidor: </p> {user.nombre} - <p>Estado del envio: </p> {envio.estado} - <p>Dirección de entrega: </p> {envio.comprador.direccion} - <p>Teléfono del cliente: </p> {envio.comprador.telefono}
-                            {envio.estado !== 'entregado' && (
-                                <button onClick={()=> actualizarEnvio.mutate(envio.id)}>producto entregado</button>
+                        <li key = {envio.ID}>
+                            <p>Repartidor: </p> {user.Name} - <p>Estado del envio: </p> {envio.Status} - <p>Dirección de entrega: </p> {envio.Buyer.Address} - <p>Teléfono del cliente: </p> {envio.Buyer.Phone}
+                            {envio.Status !== 'entregado' && (
+                                <button onClick={()=> actualizarEnvio.mutate(envio.ID)}>producto entregado</button>
                             )}
                         </li>
                     ))}
