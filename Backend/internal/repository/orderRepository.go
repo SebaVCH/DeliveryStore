@@ -28,7 +28,7 @@ func (o orderRepository) CreateOrder(order domain.Order) error {
 
 func (o orderRepository) GetAllOrders() ([]domain.Order, error) {
 	var orders []domain.Order
-	err := o.db.Find(&orders).Error
+	err := o.db.Preload("Buyer").Preload("Seller").Where("eliminated = ?", false).Find(&orders).Error
 	if err != nil {
 		return nil, err
 	}

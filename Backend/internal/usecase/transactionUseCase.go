@@ -28,7 +28,7 @@ func (uc *transactionUseCase) CreateTransaction(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
-	if err := uc.repo.CreateTransaction(transaction); err != nil {
+	if err := uc.repo.CreateTransaction(&transaction); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}

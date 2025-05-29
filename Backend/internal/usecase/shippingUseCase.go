@@ -61,11 +61,6 @@ func (s shippingUseCase) UpdateShipping(c *gin.Context) {
 
 	var shipping domain.Shipping
 
-	if err := c.ShouldBindJSON(&shipping); err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al actualizar envio"})
-		return
-	}
-
 	if err := s.shippingRepository.UpdateShipping(id, shipping); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al actualizar envio"})
 		return

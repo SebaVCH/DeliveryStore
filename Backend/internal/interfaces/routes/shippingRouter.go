@@ -19,5 +19,5 @@ func SetupShippingRouter(router *gin.Engine) {
 	protected.POST("/", shippingController.CreateShipping)
 	protected.GET("/", shippingController.GetAllShipping)
 	protected.GET("/:id", shippingController.GetByDeliveryID)
-	protected.PUT("actualizarEnvio/:id", shippingController.UpdateShipping)
+	protected.PATCH("actualizarEnvio/:id", shippingController.UpdateShipping)
 }

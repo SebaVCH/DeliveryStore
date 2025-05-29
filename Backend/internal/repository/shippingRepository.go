@@ -4,6 +4,7 @@ import (
 	"github.com/SebaVCH/DeliveryStore/internal/domain"
 	"github.com/SebaVCH/DeliveryStore/internal/infrastructure/database"
 	"gorm.io/gorm"
+	"time"
 )
 
 type ShippingRepository interface {
@@ -29,7 +30,7 @@ func (s shippingRepository) CreateShipping(shipping domain.Shipping) error {
 
 func (s shippingRepository) GetAllShipping() ([]domain.Shipping, error) {
 	var shippings []domain.Shipping
-	err := s.db.Find(&shippings).Error
+	err := s.db.Preload("Delivery").Preload("Buyer").Find(&shippings).Error
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +38,11 @@ func (s shippingRepository) GetAllShipping() ([]domain.Shipping, error) {
 }
 
 func (s shippingRepository) UpdateShipping(id int, shipping domain.Shipping) error {
-	return s.db.Model(&shipping).Where("id = ?", id).Updates(shipping).Error
+	updates := map[string]interface{}{
+		"Status": "entregado",
+		"Date":   time.Now(),
+	}
+	return s.db.Model(&shipping).Where("id = ?", id).Updates(updates).Error
 }
 
 func (s shippingRepository) GetByDeliveryID(deliveryID int) ([]domain.Shipping, error) {

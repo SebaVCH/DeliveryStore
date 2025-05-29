@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"strconv"
 )
 
 type UserUseCase interface {
@@ -30,8 +31,8 @@ func NewUserUseCase(repo repository.UserRepository) UserUseCase {
 }
 
 func (uc *userUseCase) Delete(c *gin.Context) {
-	email := c.Param("email")
-	if err := uc.userRepo.DeleteUser(email); err != nil {
+	id := c.Param("id")
+	if err := uc.userRepo.DeleteUser(id); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al eliminar usuario"})
 		return
 	}
@@ -180,7 +181,8 @@ func (uc *userUseCase) UpdateMyAccount(c *gin.Context) {
 }
 
 func (uc *userUseCase) UpdateAnyAccount(c *gin.Context) {
-	email := c.Param("email")
+	idSTR := c.Param("id")
+	id, _ := strconv.ParseInt(idSTR, 10, 64)
 
 	var updateData map[string]interface{}
 	if err := c.ShouldBindJSON(&updateData); err != nil {
@@ -197,7 +199,7 @@ func (uc *userUseCase) UpdateAnyAccount(c *gin.Context) {
 		return
 	}
 
-	user := domain.Usuario{Email: email}
+	user := domain.Usuario{ID: id}
 	if err := uc.userRepo.UpdateAnyAccount(user, updateData); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al actualizar el usuario"})
 		return

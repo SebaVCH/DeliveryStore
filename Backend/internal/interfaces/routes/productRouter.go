@@ -17,7 +17,7 @@ func SetupProductRouter(router *gin.Engine) {
 	protected.Use(middleware.AuthMiddleware())
 	protected.POST("/", productController.CreateProduct)
 	protected.GET("/", productController.GetAllProducts)
-	protected.GET("/:id", productController.GetProductByID)
+	protected.GET("/:id", productController.GetProductsBySellerID)
 	protected.PUT("/:id", productController.UpdateProduct)
-	protected.DELETE("/:id", productController.RemoveProduct)
+	protected.PATCH("/:id", productController.RemoveProduct)
 }
