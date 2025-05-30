@@ -30,7 +30,7 @@ func (s shippingRepository) CreateShipping(shipping domain.Shipping) error {
 
 func (s shippingRepository) GetAllShipping() ([]domain.Shipping, error) {
 	var shippings []domain.Shipping
-	err := s.db.Preload("Delivery").Preload("Buyer").Find(&shippings).Error
+	err := s.db.Preload("Delivery").Preload("Buyer").Where("status = ?", "en camino...").Find(&shippings).Error
 	if err != nil {
 		return nil, err
 	}
