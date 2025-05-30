@@ -64,16 +64,8 @@ export const AdminDashboard = () => {
             ): (
             <>
                 <h2> Monto total transferido en el sistema: </h2>
-                {montoTotal?.length > 0 ? ( 
-                    <ul>
-                        {montoTotal?.map((u: any) => (
-                            <li key={u.monto}>
-                                {u.monto}
-                            </li>
-                        ))}
-                    </ul>
-                ) : (<p>No hay compras en el sistema...</p>)
-                }
+                {montoTotal.total_amount}
+                
             </>
             )}
 
@@ -122,7 +114,7 @@ export const AdminDashboard = () => {
                     <ul>
                         {transacciones?.map((t: any) => (
                             <li key={t.ID}>
-                                {t.Name} -<p>Fecha de la transacción: </p>- {t.Date} -<p>Monto total de la transacción: </p>- {t.monto_total} -<p>Correo del vendedor: </p>- {t.Seller.Email} -<p>Correo del comprador: </p>- {t.Buyer.Email}
+                                {t.Name} -<p>Fecha de la transacción: </p>- {t.Date} -<p>Monto total de la transacción: </p>- {t.Amount} -<p>Correo del vendedor: </p>- {t.Seller.Email} -<p>Correo del comprador: </p>- {t.Buyer.Email}
                             </li>
                         ))}
                     </ul>
