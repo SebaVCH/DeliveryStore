@@ -70,7 +70,7 @@ export const Producto = () =>
                             {p.Name} - {p.Description} - ${p.Price} - 
                             Vegano: {p.IsVegan ? 'Sí' : 'No'} - 
                             Vegetariano: {p.IsVegetarian ? 'Sí' : 'No'} - 
-                            Gluten: {p.IsGlutenFree ? 'Sí' : 'No'} - 
+                            Libre de Gluten: {p.IsGlutenFree ? 'Sí' : 'No'} - 
                             Calorías: {p.Calories} - 
                             Método de entrega: {p.Delivery} - Puntuación: {p.ReviewScore}
                             <button onClick={() => eliminarPrdo.mutate(p.ID)}> Eliminar</button>
@@ -136,7 +136,7 @@ export const Producto = () =>
                                     checked={gluten === 'true'} 
                                     onChange={(e) => setGluten(e.target.checked ? 'true' : 'false')} 
                                 />
-                                Contiene gluten
+                                Es libre de gluten?
                             </label>
                         </div>
                         <div>
