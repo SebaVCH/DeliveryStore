@@ -13,7 +13,7 @@ export function useTransacciones() {     //pa listar las transacciones
 
 export function useMontoTotal() {     //mostrar dinero total transferido en el sistema
     return useQuery({
-        queryKey: ['calcularMontoTotal'],
+        queryKey: ['montoTotal'],
         queryFn: async () => {
             const respuesta = await api.get('sistema/transacciones/calcularMontoTotal');
             return respuesta.data;

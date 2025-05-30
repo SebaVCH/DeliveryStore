@@ -1,9 +1,6 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import api from '../api/axios';
 
-interface ActualizacionData{
-    ID: number
-}
 
 export function useEnvios() { //pa listar TODOS los envios 
     return useQuery({
@@ -28,7 +25,7 @@ export function useEnviosRepartidor(identificador: number) {  //pa listar los en
 export function useActualizarEnvio() {
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async ({ID}:ActualizacionData) =>
+        mutationFn: async (ID: number) =>
         {   //En backend actualizar estado a "entregado" y fecha a la fecha actual
             return await api.patch(`/sistema/envios/actualizarEnvio/${ID}`);
         },

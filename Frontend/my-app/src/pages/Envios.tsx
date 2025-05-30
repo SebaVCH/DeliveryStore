@@ -43,6 +43,7 @@ export const Envios = () => {
                         {envios.map((envio: any) => (
                         <li key = {envio.ID}>
                             <p>Repartidor: </p> {user.Name} - <p>Estado del envio: </p> {envio.Status} - <p>Dirección de entrega: </p> {envio.Buyer.Address} - <p>Teléfono del cliente: </p> {envio.Buyer.Phone}
+                            {console.log(envio.ID)}
                             {envio.Status !== 'entregado' && (
                                 <button onClick={()=> actualizarEnvio.mutate(envio.ID)}>producto entregado</button>
                             )}
