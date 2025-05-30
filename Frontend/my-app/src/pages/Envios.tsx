@@ -33,7 +33,7 @@ export const Envios = () => {
     return (
         <div>
             <h1>Envios disponibles: </h1>
-            <button onClick={() => navigate('/Home')}>Volver al perfil de ventas</button>
+            <button onClick={() => navigate('/Homegeneral')}>Volver al perfil</button>
             {isLoading? (
                 <p>Cargando los envios...</p>
             ): (
