@@ -50,7 +50,7 @@ export const Repartidores = () => {
             <>
             {ordenes?.length > 0 ? (
                 <ul>
-                    {ordenes?.map((o: any) => (
+                    {ordenes.map((o: any) => (
                         <li key = {o.ID}>
                             <p>Fecha de entrega: </p> {o.Date} - <p>Estado de la orden: </p> {o.Status} - <p>Dirección de entrega: </p> <strong>{o.Buyer.Address}</strong> - <p>Número del cliente: </p> {o.Buyer.Phone}
                             <p>Tienda: </p> {o.Seller.Name} - <p>Dirección tienda: </p> {o.Seller.Address}

@@ -24,7 +24,7 @@ export function useProveedoresVendedor(identificador: number) {     //pa listar 
 export function useCrearProveedor() {   //pa añadir un nuevo proveedor
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async(nuevoProveedor:{Name: string, Description: string}) => {
+        mutationFn: async(nuevoProveedor:{Name: string, Description: string, SellerID: Number}) => {
             const respuesta = await api.post('/proveedores/', nuevoProveedor);
             return respuesta.data;
         },
@@ -46,3 +46,25 @@ export function useEliminarProveedor() {
     });
 }
 
+export function useCrearProductoProveedor() {   //pa añadir una relación nueva entre producto y proveedor.
+    const clienteQuery = useQueryClient();
+    return useMutation({
+        mutationFn: async(nuevaRelacion:{ID: number, ProductID: number}) => {
+            const respuesta = await api.post('/proveedores/', nuevaRelacion);
+            return respuesta.data;
+        },
+        onSuccess: () => {
+            clienteQuery.invalidateQueries({queryKey:['proveedores']});
+        }
+    });
+}
+
+export function useProductoProveedor(identificador: number) {   //pa listar solo los productos de ese proveedor.
+    return useQuery({
+        queryKey: ['proveedores', identificador],
+        queryFn: async () => {
+            const respuesta = await api.get('/proveedores/productos',{params:{ID: identificador}});
+            return respuesta.data;
+        }
+    });
+}

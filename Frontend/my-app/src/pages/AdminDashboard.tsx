@@ -5,6 +5,9 @@ import { useTransacciones, useMontoTotal, useTopVendedores } from '../hooks/useT
 import { useProductosMasComprados } from '../hooks/useCarrito';
 import { useAuth } from '../context/AuthContext';
 import { useUserProfile } from '../hooks/useUserProfile';
+import { useEnvios, useEnviosEntregados } from '../hooks/useEnvios';
+import { useProductos } from '../hooks/useProductos';
+import { useOrdenesAdmin, useOrdenes } from '../hooks/useOrdenes';
 
 export const AdminDashboard = () => {
     const {data: usuarios, isLoading} = useUsuarios();
@@ -12,6 +15,11 @@ export const AdminDashboard = () => {
     const {data: topVendedores, isLoading: isLoadingVendedores} = useTopVendedores();
     const {data: transacciones, isLoading: isLoadingTransac} = useTransacciones();
     const {data: topProductos, isLoading: isLoadingProductos} = useProductosMasComprados();
+    const {data: envios, isLoading: isLoadingEnvios} = useEnvios();
+    const {data: enviosEntregados, isLoading: isLoadingEntregados} = useEnviosEntregados();
+    const {data: productos, isLoading: isLoadingTodosProductos} = useProductos();
+    const {data: ordenes, isLoading: isLoadingTodasOrdenes} = useOrdenesAdmin();
+    const {data: ordenesVigentes, isLoading: isLoadingOrdenesVigentes} = useOrdenes();
 
     const {data: user, isLoading: cargauser, isError} = useUserProfile();
     const {token, setToken} = useAuth();
@@ -105,6 +113,63 @@ export const AdminDashboard = () => {
             </>
             )}
 
+            <h2>Productos</h2>
+            {isLoadingTodosProductos? (
+                <p>Cargando los productos...</p>
+            ): (
+            <>
+                {productos?.length > 0 ? ( 
+                    <ul>
+                        {productos.map((producto: any) => (
+                        <li key = {producto.ID}>
+                            {producto.Name} - {producto.Description} -<p>Precio del producto: </p>- {producto.Price} -<p>Puntuación promedio del producto: </p>- {producto.ReviewScore} -<p>Cantidad vendida: </p>{producto.Amount}
+                            {console.log(producto.ID)}
+                        </li>
+                    ))}
+                    </ul>
+                ) : (<p>No hay envios entregados.</p>)
+                }
+            </>
+            )}
+
+            <h2>Envios vigentes </h2>
+            {isLoadingEnvios? (
+                <p>Cargando los envios...</p>
+            ): (
+            <>
+                {envios?.length > 0 ? ( 
+                    <ul>
+                        {envios.map((envio: any) => (
+                        <li key = {envio.ID}>
+                            <p>Repartidor: </p> {envio.Delivery.Name} - <p>Estado del envio: </p> {envio.Status} - <p>Dirección de entrega: </p> {envio.Buyer.Address} - <p>Teléfono del cliente: </p> {envio.Buyer.Phone}
+                            {console.log(envio.ID)}
+                        </li>
+                    ))}
+                    </ul>
+                ) : (<p>No hay envios vigentes.</p>)
+                }
+            </>
+            )}
+
+            <h2>Envios entregados </h2>
+            {isLoadingEntregados? (
+                <p>Cargando los envios...</p>
+            ): (
+            <>
+                {enviosEntregados?.length > 0 ? ( 
+                    <ul>
+                        {enviosEntregados.map((envio: any) => (
+                        <li key = {envio.ID}>
+                            <p>Repartidor: </p> {envio.Delivery.Name} - <p>Estado del envio: </p> {envio.Status} - <p>Dirección de entrega: </p> {envio.Buyer.Address} - <p>Teléfono del cliente: </p> {envio.Buyer.Phone}
+                            {console.log(envio.ID)}
+                        </li>
+                    ))}
+                    </ul>
+                ) : (<p>No hay envios entregados.</p>)
+                }
+            </>
+            )}
+
             {isLoadingTransac? (
                 <p>Cargando transacciones...</p>
             ): (
@@ -112,13 +177,51 @@ export const AdminDashboard = () => {
                 <h2> Todas las transacciones en el sistema: </h2>
                 {transacciones?.length > 0 ? ( 
                     <ul>
-                        {transacciones?.map((t: any) => (
+                        {transacciones.map((t: any) => (
                             <li key={t.ID}>
                                 {t.Name} -<p>Fecha de la transacción: </p>- {t.Date} -<p>Monto total de la transacción: </p>- {t.Amount} -<p>Correo del vendedor: </p>- {t.Seller.Email} -<p>Correo del comprador: </p>- {t.Buyer.Email}
                             </li>
                         ))}
                     </ul>
                 ) : (<p>No hay compras en el sistema...</p>)
+                }
+            </>
+            )}
+
+            {isLoadingTodasOrdenes? (
+                <p>Cargando ordenes...</p>
+            ): (
+            <>
+                <h2> Ordenes pasadas: </h2>
+                {ordenes?.length > 0 ? ( 
+                    <ul>
+                        {ordenes.map((orden: any) => (
+                            <li key={orden.ID}>
+                                <p>Fecha de entrega: </p> {orden.Date} - <p>Estado de la orden: </p> {orden.Status} - <p>Dirección de entrega: </p> <strong>{orden.Buyer.Address}</strong> - <p>Número del cliente: </p> {orden.Buyer.Phone}
+                                <p>Tienda: </p> {orden.Seller.Name} - <p>Dirección tienda: </p> {orden.Seller.Address}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (<p>No hay ordenes en el sistema.</p>)
+                }
+            </>
+            )}
+
+            {isLoadingOrdenesVigentes? (
+                <p>Cargando ordenes...</p>
+            ): (
+            <>
+                <h2> Ordenes vigentes: </h2>
+                {ordenesVigentes?.length > 0 ? ( 
+                    <ul>
+                        {ordenesVigentes.map((orden: any) => (
+                            <li key={orden.ID}>
+                                <p>Fecha de entrega: </p> {orden.Date} - <p>Estado de la orden: </p> {orden.Status} - <p>Dirección de entrega: </p> <strong>{orden.Buyer.Address}</strong> - <p>Número del cliente: </p> {orden.Buyer.Phone}
+                                <p>Tienda: </p> {orden.Seller.Name} - <p>Dirección tienda: </p> {orden.Seller.Address}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (<p>No hay ordenes en el sistema.</p>)
                 }
             </>
             )}
@@ -131,7 +234,7 @@ export const AdminDashboard = () => {
                 <h2> Usuarios Registrados </h2>
                 {usuarios?.length > 0 ? ( 
                     <ul>
-                        {usuarios?.map((c: any) => (
+                        {usuarios.map((c: any) => (
                             <li key={c.PublicID}>
                                 {c.Name} - {c.Email}
                                 <button onClick={()=> eliminarUsuario.mutate(c.PublicID)}>Banear usuario</button>

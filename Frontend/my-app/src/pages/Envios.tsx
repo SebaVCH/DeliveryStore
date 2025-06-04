@@ -1,5 +1,5 @@
 import React from 'react';
-import {useEnviosRepartidor,useActualizarEnvio} from '../hooks/useEnvios';
+import {useEnviosRepartidor,useEnviosRepartidorEntregados,useActualizarEnvio} from '../hooks/useEnvios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useUserProfile } from '../hooks/useUserProfile';
@@ -8,6 +8,7 @@ export const Envios = () => {
     const {token, setToken} = useAuth();
     const {data: user, isLoading: cargauser, isError} = useUserProfile();
     const {data: envios, isLoading} = useEnviosRepartidor(user.PublicID);
+    const {data: enviosEntregados, isLoading: CargaEntregados} = useEnviosRepartidorEntregados(user.PublicID);
     const actualizarEnvio = useActualizarEnvio();
     const navigate = useNavigate();
 
@@ -50,7 +51,26 @@ export const Envios = () => {
                         </li>
                     ))}
                     </ul>
-                ) : (<p>No hay envios aun...</p>)
+                ) : (<p>No hay envios disponibles.</p>)
+                }
+            </>
+            )}
+            
+            <h2>Envios entregados: </h2>
+            {CargaEntregados? (
+                <p>Cargando los envios...</p>
+            ): (
+            <>
+                {enviosEntregados?.length > 0 ? ( 
+                    <ul>
+                        {enviosEntregados.map((envio: any) => (
+                        <li key = {envio.ID}>
+                            <p>Repartidor: </p> {user.Name} - <p>Estado del envio: </p> {envio.Status} - <p>Dirección de entrega: </p> {envio.Buyer.Address} - <p>Teléfono del cliente: </p> {envio.Buyer.Phone}
+                            {console.log(envio.ID)}
+                        </li>
+                    ))}
+                    </ul>
+                ) : (<p>No hay envios entregados.</p>)
                 }
             </>
             )}
