@@ -18,13 +18,21 @@ func NewShippingController(useCase usecase.ShippingUseCase) *ShippingController 
 func (ctrl *ShippingController) CreateShipping(c *gin.Context) {
 	ctrl.shippingUseCase.CreateShipping(c)
 }
-func (ctrl *ShippingController) GetAllShipping(c *gin.Context) {
-	ctrl.shippingUseCase.GetAllShipping(c)
-}
+
 func (ctrl *ShippingController) UpdateShipping(c *gin.Context) {
 	ctrl.shippingUseCase.UpdateShipping(c)
 }
 
-func (ctrl *ShippingController) GetByDeliveryID(c *gin.Context) {
-	ctrl.shippingUseCase.GetByDeliveryID(c)
+func (ctrl *ShippingController) GetCompletedByDeliveryID(c *gin.Context) {
+	ctrl.shippingUseCase.GetCompletedByDeliveryID(c)
+}
+func (ctrl *ShippingController) GetIncompletedByDeliveryID(c *gin.Context) {
+	ctrl.shippingUseCase.GetIncompletedByDeliveryID(c)
+}
+
+func (ctrl *ShippingController) UndeliveredShipments(c *gin.Context) {
+	ctrl.shippingUseCase.UndeliveredShipments(c)
+}
+func (ctrl *ShippingController) DeliveredShipments(c *gin.Context) {
+	ctrl.shippingUseCase.DeliveredShipments(c)
 }

@@ -10,9 +10,11 @@ import (
 
 type ShippingUseCase interface {
 	CreateShipping(c *gin.Context)
-	GetAllShipping(c *gin.Context)
 	UpdateShipping(c *gin.Context)
-	GetByDeliveryID(c *gin.Context)
+	GetCompletedByDeliveryID(c *gin.Context)
+	GetIncompletedByDeliveryID(c *gin.Context)
+	UndeliveredShipments(c *gin.Context)
+	DeliveredShipments(c *gin.Context)
 }
 
 type shippingUseCase struct {
@@ -40,8 +42,18 @@ func (s shippingUseCase) CreateShipping(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{"message": "Envio creado correctamente"})
 }
 
-func (s shippingUseCase) GetAllShipping(c *gin.Context) {
-	shippings, err := s.shippingRepository.GetAllShipping()
+func (s shippingUseCase) UndeliveredShipments(c *gin.Context) {
+	shippings, err := s.shippingRepository.UndeliveredShipments()
+
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener envios"})
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, shippings)
+}
+func (s shippingUseCase) DeliveredShipments(c *gin.Context) {
+	shippings, err := s.shippingRepository.DeliveredShipments()
 
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener envios"})
@@ -69,7 +81,7 @@ func (s shippingUseCase) UpdateShipping(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{"message": "Envio actualizado correctamente"})
 }
 
-func (s shippingUseCase) GetByDeliveryID(c *gin.Context) {
+func (s shippingUseCase) GetCompletedByDeliveryID(c *gin.Context) {
 	deliveryIDSTR := c.Param("id")
 	deliveryID, err := strconv.Atoi(deliveryIDSTR)
 	if err != nil {
@@ -77,7 +89,23 @@ func (s shippingUseCase) GetByDeliveryID(c *gin.Context) {
 		return
 	}
 
-	shipping, err := s.shippingRepository.GetByDeliveryID(deliveryID)
+	shipping, err := s.shippingRepository.GetCompletedByDeliveryID(deliveryID)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener envio por ID de entrega"})
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, shipping)
+}
+func (s shippingUseCase) GetIncompletedByDeliveryID(c *gin.Context) {
+	deliveryIDSTR := c.Param("id")
+	deliveryID, err := strconv.Atoi(deliveryIDSTR)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID de entrega inválido"})
+		return
+	}
+
+	shipping, err := s.shippingRepository.GetIncompletedByDeliveryID(deliveryID)
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener envio por ID de entrega"})
 		return

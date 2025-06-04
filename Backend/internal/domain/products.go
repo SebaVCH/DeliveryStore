@@ -14,4 +14,5 @@ type Product struct {
 	Seller       Usuario `gorm:"foreignKey:SellerID;references:ID;not null"`
 	Delivery     string  `gorm:"not null"`
 	Eliminated   bool    `gorm:"not null,default:false"`
+	QuantitySold int     `gorm:"not null,default:0"`
 }

@@ -4,13 +4,14 @@ import (
 	"github.com/SebaVCH/DeliveryStore/internal/domain"
 	"github.com/SebaVCH/DeliveryStore/internal/infrastructure/database"
 	"gorm.io/gorm"
+	"strconv"
 )
 
 type TransactionRepository interface {
 	CreateTransaction(transaction *domain.Transaction) error
 	GetAllTransactions() ([]domain.Transaction, error)
 	GetTransactionTotalAmount() (float64, error)
-	GetTransactionTopSellers() ([]domain.Usuario, error)
+	GetTransactionTopSellers(quantity string) ([]domain.Usuario, error)
 }
 
 type transactionRepository struct {
@@ -44,7 +45,7 @@ func (r *transactionRepository) CreateTransaction(transaction *domain.Transactio
 
 func (r *transactionRepository) GetAllTransactions() ([]domain.Transaction, error) {
 	var transactions []domain.Transaction
-	err := r.db.Preload("Buyer").Preload("Seller").Find(&transactions).Error
+	err := r.db.Preload("Buyer").Preload("Seller").Preload("Product").Find(&transactions).Error
 	return transactions, err
 }
 
@@ -54,17 +55,25 @@ func (r *transactionRepository) GetTransactionTotalAmount() (float64, error) {
 	return total, err
 }
 
-func (r *transactionRepository) GetTransactionTopSellers() ([]domain.Usuario, error) {
+func (r *transactionRepository) GetTransactionTopSellers(quantity string) ([]domain.Usuario, error) {
 	var users []domain.Usuario
 
-	err := r.db.Table("transactions").
+	query := r.db.Table("transactions").
 		Select("usuarios.*, COUNT(transactions.id) as total_transactions, SUM(transactions.amount) as total_amount").
 		Joins("JOIN usuarios ON usuarios.id = transactions.seller_id").
 		Where("usuarios.banned = ?", false).
 		Group("usuarios.id").
-		Order("total_amount DESC").
-		Limit(3).
-		Find(&users).Error
+		Order("total_amount DESC")
+
+	if quantity != "all" {
+		value, err := strconv.Atoi(quantity)
+		if err != nil {
+			return nil, err
+		}
+		query = query.Limit(value)
+	}
+
+	err := query.Find(&users).Error
 
 	return users, err
 }

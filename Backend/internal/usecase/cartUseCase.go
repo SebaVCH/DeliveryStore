@@ -46,9 +46,14 @@ func (uc *cartUseCase) GetAllCarts(c *gin.Context) {
 }
 
 func (uc *cartUseCase) GetTopProducts(c *gin.Context) {
-	topProducts, err := uc.repo.GetTopProducts()
+	quantity := c.Param("quantity")
+	if quantity == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Cantidad inválida"})
+		return
+	}
+	topProducts, err := uc.repo.GetTopProducts(quantity)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Cantidad inválida"})
 		return
 	}
 	c.JSON(http.StatusOK, topProducts)

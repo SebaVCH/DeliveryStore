@@ -9,9 +9,11 @@ import (
 
 type ShippingRepository interface {
 	CreateShipping(shipping domain.Shipping) error
-	GetAllShipping() ([]domain.Shipping, error)
 	UpdateShipping(id int, shipping domain.Shipping) error
-	GetByDeliveryID(deliveryID int) ([]domain.Shipping, error)
+	UndeliveredShipments() ([]domain.Shipping, error)
+	DeliveredShipments() ([]domain.Shipping, error)
+	GetIncompletedByDeliveryID(deliveryID int) ([]domain.Shipping, error)
+	GetCompletedByDeliveryID(deliveryID int) ([]domain.Shipping, error)
 }
 
 type shippingRepository struct {
@@ -28,9 +30,18 @@ func (s shippingRepository) CreateShipping(shipping domain.Shipping) error {
 	return s.db.Create(&shipping).Error
 }
 
-func (s shippingRepository) GetAllShipping() ([]domain.Shipping, error) {
+func (s shippingRepository) UndeliveredShipments() ([]domain.Shipping, error) {
 	var shippings []domain.Shipping
 	err := s.db.Preload("Delivery").Preload("Buyer").Where("status = ?", "en camino...").Find(&shippings).Error
+	if err != nil {
+		return nil, err
+	}
+	return shippings, nil
+}
+
+func (s shippingRepository) DeliveredShipments() ([]domain.Shipping, error) {
+	var shippings []domain.Shipping
+	err := s.db.Preload("Delivery").Preload("Buyer").Where("status = ?", "entregado").Find(&shippings).Error
 	if err != nil {
 		return nil, err
 	}
@@ -45,9 +56,17 @@ func (s shippingRepository) UpdateShipping(id int, shipping domain.Shipping) err
 	return s.db.Model(&shipping).Where("id = ?", id).Updates(updates).Error
 }
 
-func (s shippingRepository) GetByDeliveryID(deliveryID int) ([]domain.Shipping, error) {
+func (s shippingRepository) GetCompletedByDeliveryID(deliveryID int) ([]domain.Shipping, error) {
 	var shippings []domain.Shipping
-	err := s.db.Where("deliveryid = ?", deliveryID).Find(&shippings).Error
+	err := s.db.Preload("Delivery").Preload("Buyer").Where("status = ? AND delivery_id = ?", "entregado", deliveryID).Find(&shippings).Error
+	if err != nil {
+		return nil, err
+	}
+	return shippings, nil
+}
+func (s shippingRepository) GetIncompletedByDeliveryID(deliveryID int) ([]domain.Shipping, error) {
+	var shippings []domain.Shipping
+	err := s.db.Preload("Delivery").Preload("Buyer").Where("status = ? AND delivery_id = ?", "en camino...", deliveryID).Find(&shippings).Error
 	if err != nil {
 		return nil, err
 	}

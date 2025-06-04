@@ -10,10 +10,12 @@ import (
 
 type SupplierUseCase interface {
 	GetAll(c *gin.Context)
-	GetByID(c *gin.Context)
+	GetSuppliersBySellerID(c *gin.Context)
 	CreateSupplier(c *gin.Context)
 	DeleteSupplier(c *gin.Context)
 	UpdateSupplier(c *gin.Context)
+	CreateSupplierProduct(c *gin.Context)
+	GetSupplierProducts(c *gin.Context)
 }
 
 type supplierUseCase struct {
@@ -34,8 +36,22 @@ func (s supplierUseCase) GetAll(c *gin.Context) {
 	}
 	c.IndentedJSON(http.StatusOK, suppliers)
 }
+func (s supplierUseCase) GetSupplierProducts(c *gin.Context) {
+	idSTR := c.Param("id")
+	id, err := strconv.Atoi(idSTR)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID inválido"})
+		return
+	}
+	supplierProducts, err := s.supplierRepo.GetSupplierProducts(id)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener los productos de proveedor"})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, supplierProducts)
+}
 
-func (s supplierUseCase) GetByID(c *gin.Context) {
+func (s supplierUseCase) GetSuppliersBySellerID(c *gin.Context) {
 	idSTR := c.Param("id")
 	id, err := strconv.Atoi(idSTR)
 	if err != nil {
@@ -43,7 +59,7 @@ func (s supplierUseCase) GetByID(c *gin.Context) {
 		return
 	}
 
-	supplier, err := s.supplierRepo.GetByID(id)
+	supplier, err := s.supplierRepo.GetSuppliersBySellerID(id)
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener proveedor"})
 		return
@@ -61,6 +77,22 @@ func (s supplierUseCase) CreateSupplier(c *gin.Context) {
 
 	if err := s.supplierRepo.CreateSupplier(supplier); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al crear proveedor"})
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "Proveedor creado correctamente"})
+}
+
+func (s supplierUseCase) CreateSupplierProduct(c *gin.Context) {
+	var supplierProduct domain.PSRelation
+
+	if err := c.ShouldBindJSON(&supplierProduct); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al crear producto de un proveedor"})
+		return
+	}
+
+	if err := s.supplierRepo.CreateSupplierProduct(supplierProduct); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al crear producto de un proveedor"})
 		return
 	}
 

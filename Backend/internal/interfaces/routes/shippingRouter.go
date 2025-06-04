@@ -17,7 +17,9 @@ func SetupShippingRouter(router *gin.Engine) {
 	protected := router.Group("/sistema/envios")
 	protected.Use(middleware.AuthMiddleware())
 	protected.POST("/", shippingController.CreateShipping)
-	protected.GET("/", shippingController.GetAllShipping)
-	protected.GET("/:id", shippingController.GetByDeliveryID)
+	protected.GET("/", shippingController.UndeliveredShipments)
+	protected.GET("/entregados", shippingController.DeliveredShipments)
+	protected.GET("/entregados/:id", shippingController.GetCompletedByDeliveryID)
+	protected.GET("/:id", shippingController.GetIncompletedByDeliveryID)
 	protected.PATCH("actualizarEnvio/:id", shippingController.UpdateShipping)
 }

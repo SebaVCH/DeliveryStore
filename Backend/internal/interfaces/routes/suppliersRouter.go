@@ -16,8 +16,10 @@ func SetupSupplierRouter(router *gin.Engine) {
 	protected := router.Group("/proveedores")
 	protected.Use(middleware.AuthMiddleware())
 	protected.POST("/", suppliersController.CreateSupplier)
+	protected.POST("/productos", suppliersController.CreateSupplierProduct)
+	protected.GET("/productos/:id", suppliersController.GetSupplierProducts)
 	protected.GET("/", suppliersController.GetAllSuppliers)
-	protected.GET("/:id", suppliersController.GetSupplierByID)
+	protected.GET("/:id", suppliersController.GetSuppliersBySellerID)
 	protected.PUT("/:id", suppliersController.UpdateSupplier)
 	protected.PATCH("/:id", suppliersController.RemoveSupplier)
 

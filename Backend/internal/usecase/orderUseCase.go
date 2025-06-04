@@ -12,6 +12,7 @@ type OrderUseCase interface {
 	CreateOrder(c *gin.Context)
 	GetAllOrders(c *gin.Context)
 	SetEliminated(c *gin.Context)
+	GetNotEliminatedOrders(c *gin.Context)
 }
 
 type orderUseCase struct {
@@ -43,6 +44,16 @@ func (o orderUseCase) CreateOrder(c *gin.Context) {
 func (o orderUseCase) GetAllOrders(c *gin.Context) {
 	var orders []domain.Order
 	orders, err := o.orderRepo.GetAllOrders()
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener pedidos"})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, orders)
+}
+
+func (o orderUseCase) GetNotEliminatedOrders(c *gin.Context) {
+	var orders []domain.Order
+	orders, err := o.orderRepo.GetNotEliminatedOrders()
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener pedidos"})
 		return

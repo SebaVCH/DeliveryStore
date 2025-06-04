@@ -16,6 +16,7 @@ func SetupOrderRouter(router *gin.Engine) {
 	protected := router.Group("/sistema/ordenes")
 	protected.Use(middleware.AuthMiddleware())
 	protected.POST("/", orderController.CreateOrder)
-	protected.GET("/", orderController.GetAllOrders)
+	protected.GET("/", orderController.GetNotEliminatedOrders)
+	protected.GET("/todo", orderController.GetAllOrders)
 	protected.PATCH("/:id", orderController.SetEliminated)
 }

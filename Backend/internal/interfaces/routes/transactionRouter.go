@@ -15,7 +15,7 @@ func SetupTransactionRouter(router *gin.Engine) {
 	protected := router.Group("/sistema/transacciones")
 	protected.POST("/", transactionController.CreateTransaction)
 	protected.GET("/", transactionController.GetAllTransactions)
-	protected.GET("/topVendedores", transactionController.GetTransactionTopSellers)
+	protected.GET("/topVendedores/:quantity", transactionController.GetTransactionTopSellers)
 	protected.GET("/calcularMontoTotal", transactionController.GetTransactionTotalAmount)
 
 }

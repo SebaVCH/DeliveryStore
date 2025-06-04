@@ -10,6 +10,7 @@ type OrderRepository interface {
 	CreateOrder(order domain.Order) error
 	GetAllOrders() ([]domain.Order, error)
 	SetEliminated(id int) error
+	GetNotEliminatedOrders() ([]domain.Order, error)
 }
 
 type orderRepository struct {
@@ -27,6 +28,15 @@ func (o orderRepository) CreateOrder(order domain.Order) error {
 }
 
 func (o orderRepository) GetAllOrders() ([]domain.Order, error) {
+	var orders []domain.Order
+	err := o.db.Preload("Buyer").Preload("Seller").Find(&orders).Error
+	if err != nil {
+		return nil, err
+	}
+	return orders, nil
+}
+
+func (o orderRepository) GetNotEliminatedOrders() ([]domain.Order, error) {
 	var orders []domain.Order
 	err := o.db.Preload("Buyer").Preload("Seller").Where("eliminated = ?", false).Find(&orders).Error
 	if err != nil {

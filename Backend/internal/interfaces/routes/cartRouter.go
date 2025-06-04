@@ -15,7 +15,7 @@ func SetupCartRouter(router *gin.Engine) {
 
 	protected := router.Group("/sistema/carrito")
 	protected.Use(middleware.AuthMiddleware())
-	protected.GET("/topProductos", cartController.GetTopProducts)
+	protected.GET("/topProductos/:quantity", cartController.GetTopProducts)
 	protected.GET("/", cartController.GetAllCarts)
 	protected.POST("/", cartController.CreateCart)
 }

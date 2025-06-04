@@ -54,9 +54,14 @@ func (uc *transactionUseCase) GetTransactionTotalAmount(c *gin.Context) {
 }
 
 func (uc *transactionUseCase) GetTransactionTopSellers(c *gin.Context) {
-	users, err := uc.repo.GetTransactionTopSellers()
+	quantity := c.Param("quantity")
+	if quantity == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Cantidad inválida"})
+		return
+	}
+	users, err := uc.repo.GetTransactionTopSellers(quantity)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Cantidad inválida"})
 		return
 	}
 	c.JSON(http.StatusOK, users)

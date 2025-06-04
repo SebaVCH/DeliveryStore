@@ -23,8 +23,8 @@ func (ctrl *SupplierController) GetAllSuppliers(c *gin.Context) {
 	ctrl.supplierUseCase.GetAll(c)
 }
 
-func (ctrl *SupplierController) GetSupplierByID(c *gin.Context) {
-	ctrl.supplierUseCase.GetByID(c)
+func (ctrl *SupplierController) GetSuppliersBySellerID(c *gin.Context) {
+	ctrl.supplierUseCase.GetSuppliersBySellerID(c)
 }
 
 func (ctrl *SupplierController) RemoveSupplier(c *gin.Context) {
@@ -32,4 +32,12 @@ func (ctrl *SupplierController) RemoveSupplier(c *gin.Context) {
 }
 func (ctrl *SupplierController) UpdateSupplier(c *gin.Context) {
 	ctrl.supplierUseCase.UpdateSupplier(c)
+}
+
+func (ctrl *SupplierController) CreateSupplierProduct(c *gin.Context) {
+	ctrl.supplierUseCase.CreateSupplierProduct(c)
+}
+
+func (ctrl *SupplierController) GetSupplierProducts(c *gin.Context) {
+	ctrl.supplierUseCase.GetSupplierProducts(c)
 }

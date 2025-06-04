@@ -26,3 +26,7 @@ func (ctrl *OrderController) GetAllOrders(c *gin.Context) {
 func (ctrl *OrderController) SetEliminated(c *gin.Context) {
 	ctrl.orderUseCase.SetEliminated(c)
 }
+
+func (ctrl *OrderController) GetNotEliminatedOrders(c *gin.Context) {
+	ctrl.orderUseCase.GetNotEliminatedOrders(c)
+}

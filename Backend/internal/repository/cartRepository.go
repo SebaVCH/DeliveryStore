@@ -4,12 +4,13 @@ import (
 	"github.com/SebaVCH/DeliveryStore/internal/domain"
 	"github.com/SebaVCH/DeliveryStore/internal/infrastructure/database"
 	"gorm.io/gorm"
+	"strconv"
 )
 
 type CartRepository interface {
 	CreateCart(cart domain.Cart) error
 	GetAllCarts() ([]domain.Cart, error)
-	GetTopProducts() ([]domain.Product, error)
+	GetTopProducts(quantity string) ([]domain.Product, error)
 }
 
 type cartRepository struct {
@@ -32,16 +33,25 @@ func (r *cartRepository) GetAllCarts() ([]domain.Cart, error) {
 	return carts, err
 }
 
-func (r *cartRepository) GetTopProducts() ([]domain.Product, error) {
+func (r *cartRepository) GetTopProducts(quantity string) ([]domain.Product, error) {
 	var topProducts []domain.Product
-	err := r.db.Table("products").
+
+	query := r.db.Table("products").
 		Joins("JOIN carts ON carts.id_product = products.id").
 		Where("carts.payed = ? AND products.eliminated = ?", true, false).
 		Select("products.*, SUM(carts.quantity) as total_quantity").
 		Group("products.id").
-		Order("total_quantity DESC").
-		Limit(10).
-		Find(&topProducts).Error
+		Order("total_quantity DESC")
+
+	if quantity != "all" {
+		value, err := strconv.Atoi(quantity)
+		if err != nil {
+			return nil, err
+		}
+		query = query.Limit(value)
+	}
+
+	err := query.Preload("Seller").Find(&topProducts).Error
 
 	return topProducts, err
 }
