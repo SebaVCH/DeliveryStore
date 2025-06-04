@@ -12,11 +12,21 @@ interface nuevoEnvio {
 };
 
 
-export function useOrdenes() {  //listar Ordenes
+export function useOrdenes() {  //listar Ordenes pendientes.
     return useQuery({
         queryKey: ['ordenes'],
         queryFn: async () => {
             const respuesta = await api.get('/sistema/ordenes/');
+            return respuesta.data;
+        },
+    });
+}
+
+export function useOrdenesAdmin() {  //listar todas las ordenes entregadas.
+    return useQuery({
+        queryKey: ['ordenes'],
+        queryFn: async () => {
+            const respuesta = await api.get('/sistema/ordenes/todo/');
             return respuesta.data;
         },
     });

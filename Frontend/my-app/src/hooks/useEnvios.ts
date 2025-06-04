@@ -2,7 +2,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import api from '../api/axios';
 
 
-export function useEnvios() { //pa listar TODOS los envios 
+export function useEnvios() { //pa listar TODOS los envios PENDIENTES.
     return useQuery({
         queryKey: ['envios'],
         queryFn: async () => {
@@ -12,11 +12,31 @@ export function useEnvios() { //pa listar TODOS los envios
     });
 }
 
-export function useEnviosRepartidor(identificador: number) {  //pa listar los envios del repartidor
+export function useEnviosEntregados() { //pa listar TODOS los envios ENTREGADOS
+    return useQuery({
+        queryKey: ['envios'],
+        queryFn: async () => {
+            const respuesta = await api.get('/sistema/envios/entregados');
+            return respuesta.data;
+        },
+    });
+}
+
+export function useEnviosRepartidor(identificador: number) {  //pa listar los envios vigentes del repartidor
     return useQuery({
         queryKey: ['reserva', identificador],
         queryFn: async () => {
             const respuesta = await api.get('/sistema/envios/',{params:{PublicID: identificador}});
+            return respuesta.data;
+        }
+    });
+}
+
+export function useEnviosRepartidorEntregados(identificador: number) {  //pa listar los envios entregados del repartidor.
+    return useQuery({
+        queryKey: ['reserva', identificador],
+        queryFn: async () => {
+            const respuesta = await api.get('/sistema/envios/entregados/',{params:{PublicID: identificador}});
             return respuesta.data;
         }
     });

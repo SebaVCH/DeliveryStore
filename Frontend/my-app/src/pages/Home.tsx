@@ -39,8 +39,6 @@ export const Home = () => {
         <h2>Mis ventas</h2>
         <button onClick={()=> navigate('/Producto')}>Ver mis productos en venta</button>
         <button onClick={()=> navigate('/Proveedores')}>Ver mis proveedores</button>
-        <button onClick={()=> navigate('/AdminDashboard')}>Vista de admin</button>
-        <button onClick={()=> navigate('/Repartidores')}>Vista de repartidor</button>
         <button onClick={()=> navigate('/Homegeneral')}>Seguir comprando</button>
         <button onClick={logout}>Cerrar la sesion 🤑</button>
     </div>
