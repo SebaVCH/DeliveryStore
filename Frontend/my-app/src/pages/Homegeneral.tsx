@@ -10,9 +10,11 @@ export const Homegeneral = () => {
     const { data: user, isLoading: cargauser, isError} = useUserProfile();
     const {data: productos, isLoading: cargaproducto} = useProductos();
     //filtros: 
-    const [dietFilter, setDietFilter] = useState<string>('');
-    const [priceFilter, setPriceFilter] = useState<string>('');
-    const [caloriesFilter, setCaloriesFilter] = useState<string>('');
+    const [filters, setFilters] = useState({
+        diet: '',
+        price: '',
+        calories: ''
+    });
 
     if(!token)
     {
@@ -42,32 +44,43 @@ export const Homegeneral = () => {
 
     const filteredProducts = productos?.filter((producto: any) => {
         // filtro por características
-        if (dietFilter === 'veganos' && !producto.IsVegan) return false;
-        if (dietFilter === 'vegetarianos' && !producto.IsVegetarian) return false;
-        if (dietFilter === 'sin gluten' && !producto.IsGlutenFree) return false;
+        if (filters.diet === 'veganos' && !producto.IsVegan) return false;
+        if (filters.diet === 'vegetarianos' && !producto.IsVegetarian) return false;
+        if (filters.diet === 'sin gluten' && !producto.IsGlutenFree) return false;
 
-        // filtro por rango de precio
-        if (priceFilter === 'menos de $4999' && producto.Price > 4999) return false;
-        if (priceFilter === 'entre $5000 y $14999' && (producto.Price <= 4999 || producto.Price > 14999)) return false;
-        if (priceFilter === 'más de $15000' && producto.Price <= 14999) return false;
+        // filtro por rango de precio - CORREGIDO los valores
+        if (filters.price === 'menos de $4999' && producto.Price > 4999) return false;
+        if (filters.price === 'entre $5000 y $14999' && (producto.Price <= 4999 || producto.Price > 14999)) return false;
+        if (filters.price === 'más de $15000' && producto.Price <= 14999) return false;
 
-        // filtro por rango de calorías
-        if (caloriesFilter === 'menos de 200' && producto.Calories > 200) return false;
-        if (caloriesFilter === 'entre 200 y 400' && (producto.Calories <= 199 || producto.Calories > 400)) return false;
-        if (caloriesFilter === 'más de 400' && producto.Calories <= 399) return false;
+        // filtro por rango de calorías - CORREGIDO los valores
+        if (filters.calories === 'menos de 200' && producto.Calories > 200) return false;
+        if (filters.calories === 'entre 200 y 400' && (producto.Calories <= 199 || producto.Calories > 400)) return false;
+        if (filters.calories === 'más de 400' && producto.Calories <= 399) return false;
 
         return true;
     });
 
+    const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFilters(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
     const clearFilters = () => {
-        setDietFilter('');
-        setPriceFilter('');
-        setCaloriesFilter('');
+        setFilters({
+            diet: '',
+            price: '',
+            calories: ''
+        });
     };
 
     return (
     <div> 
-        <h2> Bienvenid@: {user?.Name}</h2> 
+        <h2> Bienvenid@: {user?.Name} Tu saldo es: ${user?.Balance}</h2> 
+        
 
         {user.RoleType === 1 && (
             <>
@@ -75,37 +88,41 @@ export const Homegeneral = () => {
 
                 <div style={{ marginBottom: '20px', display: 'flex', gap: '15px' }}>
                     <select 
-                        value={dietFilter}
-                        onChange={(e) => setDietFilter(e.target.value)}
-                        style={{ padding: '5px' }}
+                    name="diet"
+                    value={filters.diet}
+                    onChange={handleFilterChange}
+                    style={{ padding: '5px' }}
                     >
-                        <option value="">Todos los productos</option>
-                        <option value="veganos">Productos veganos</option>
-                        <option value="vegetarianos">Productos vegetarianos</option>
-                        <option value="sin gluten">Productos sin gluten</option>
+                    <option value="">Todos los productos</option>
+                    <option value="veganos">Productos veganos</option>
+                    <option value="vegetarianos">Productos vegetarianos</option>
+                    <option value="sin gluten">Productos sin gluten</option>
                     </select>
 
-                        <select 
-                            value={priceFilter}
-                            onChange={(e) => setPriceFilter(e.target.value)}
-                            style={{ padding: '5px' }}
-                        >
-                            <option value="">Todos los precios</option>
-                            <option value="baratos">Menos de $10</option>
-                            <option value="medios">$10 - $20</option>
-                            <option value="caros">Más de $20</option>
-                        </select>
+                    <select 
+                    name="price"
+                    value={filters.price}
+                    onChange={handleFilterChange}
+                    style={{ padding: '5px' }}
+                    >
+                    <option value="">Todos los precios</option>
+                    <option value="menos de $4999">menos de $4999</option>
+                    <option value="entre $5000 y $14999">entre $5000 y $14999</option>
+                    <option value="más de $15000">más de $15000</option>
+                    </select>
 
-                        <select 
-                            value={caloriesFilter}
-                            onChange={(e) => setCaloriesFilter(e.target.value)}
-                            style={{ padding: '5px' }}
-                        >
-                            <option value="">Todas las calorías</option>
-                            <option value="bajas">Menos de 200 cal</option>
-                            <option value="moderadas">200 - 400 cal</option>
-                            <option value="altas">Más de 400 cal</option>
-                        </select>
+                    <select 
+                    name="calories"
+                    value={filters.calories}
+                    onChange={handleFilterChange}
+                    style={{ padding: '5px' }}
+                    >
+                    <option value="">Ningún rango</option>
+                    <option value="menos de 200">Menos de 200 cal</option>
+                    <option value="entre 200 y 400">200 - 400 cal</option>
+                    <option value="más de 400">Más de 400 cal</option>
+                    </select>
+
 
                         <button 
                             onClick={clearFilters}

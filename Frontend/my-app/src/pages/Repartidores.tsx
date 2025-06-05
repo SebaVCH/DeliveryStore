@@ -52,8 +52,9 @@ export const Repartidores = () => {
                 <ul>
                     {ordenes.map((o: any) => (
                         <li key = {o.ID}>
-                            <p>Fecha de entrega: </p> {o.Date} - <p>Estado de la orden: </p> {o.Status} - <p>Dirección de entrega: </p> <strong>{o.Buyer.Address}</strong> - <p>Número del cliente: </p> {o.Buyer.Phone}
-                            <p>Tienda: </p> {o.Seller.Name} - <p>Dirección tienda: </p> {o.Seller.Address}
+                            <p>Fecha de entrega: {o.Date} - Estado de la orden: {o.Status}</p>
+                            <p>Dirección de entrega: <strong>{o.Buyer.Address}</strong> - Número del cliente: {o.Buyer.Phone}</p>
+                            <p>Tienda: {o.Seller.Name} - Dirección tienda: {o.Seller.Address}</p>
 
                             <button 
                                 onClick={() => aceptar(o)}

@@ -63,7 +63,7 @@ export function useEliminarProveedor() {
 export function useCrearProductoProveedor() {   //pa añadir una relación nueva entre producto y proveedor.
     const clienteQuery = useQueryClient();
     return useMutation({
-        mutationFn: async(nuevaRelacion:{ID: number, ProductID: number}) => {
+        mutationFn: async(nuevaRelacion:{SupplierID: number, ProductID: number}) => {
             const respuesta = await api.post('/proveedores/productos', nuevaRelacion);
             return respuesta.data;
         },
@@ -79,7 +79,7 @@ export function useProductoProveedor(identificador: number) {   //pa listar solo
         queryKey: ['proveedores', identificador],
         queryFn: async () => {
             console.log(identificador);
-            const respuesta = await api.get(`/proveedores/productos${identificador}`);
+            const respuesta = await api.get(`/proveedores/productos/${identificador}`);
             console.log(identificador);
             return respuesta.data;
         }
