@@ -40,7 +40,12 @@ func (uc *userUseCase) Delete(c *gin.Context) {
 }
 
 func (uc *userUseCase) GetAllUsers(c *gin.Context) {
-	users, err := uc.userRepo.GetAllUsers()
+	quantity := c.Param("quantity")
+	if quantity == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Cantidad inválida"})
+		return
+	}
+	users, err := uc.userRepo.GetAllUsers(quantity)
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al obtener usuarios"})
 		return

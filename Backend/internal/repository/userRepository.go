@@ -4,6 +4,7 @@ import (
 	"github.com/SebaVCH/DeliveryStore/internal/domain"
 	"github.com/SebaVCH/DeliveryStore/internal/infrastructure/database"
 	"gorm.io/gorm"
+	"strconv"
 )
 
 type UserRepository interface {
@@ -11,7 +12,7 @@ type UserRepository interface {
 	Create(user domain.Usuario) error
 	UpdateMyAccount(user domain.Usuario, updates map[string]interface{}) error
 	Exists(email string) bool
-	GetAllUsers() ([]domain.Usuario, error)
+	GetAllUsers(quantity string) ([]domain.Usuario, error)
 	DeleteUser(id string) error
 	UpdateAnyAccount(user domain.Usuario, updates map[string]interface{}) error
 }
@@ -26,9 +27,20 @@ func NewUserRepository() UserRepository {
 	}
 }
 
-func (r *userRepository) GetAllUsers() ([]domain.Usuario, error) {
+func (r *userRepository) GetAllUsers(quantity string) ([]domain.Usuario, error) {
 	var users []domain.Usuario
-	err := r.db.Where("banned = ?", false).Find(&users).Error
+	query := r.db.Where("banned = ?", false)
+
+	if quantity != "all" {
+		value, err := strconv.Atoi(quantity)
+		if err != nil {
+			return nil, err
+		}
+		query = query.Limit(value)
+	}
+
+	err := query.Find(&users).Error
+
 	if err != nil {
 		return nil, err
 	}

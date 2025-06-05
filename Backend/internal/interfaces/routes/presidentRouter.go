@@ -16,7 +16,7 @@ func SetupPresidentRouter(router *gin.Engine) {
 
 	protected := router.Group("/admin")
 	protected.Use(middleware.AuthMiddleware())
-	protected.GET("/users", presidentController.GetAllUsers)
+	protected.GET("/users/:quantity", presidentController.GetAllUsers)
 	protected.POST("/users", presidentController.Register)
 	protected.PATCH("/users/:id", presidentController.Delete)
 	protected.PUT("/users/:id", presidentController.UpdateAnyAccount)
