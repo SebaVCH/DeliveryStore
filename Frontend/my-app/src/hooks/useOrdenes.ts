@@ -50,7 +50,9 @@ export function useAceptarOrden() {
                 Date, 
                 DeliveryID, 
                 BuyerID
+                
             });
+            console.log(DeliveryID);
             //pa setear la orden como eliminada
             await api.patch(`/sistema/ordenes/${ID}`);  
         },
