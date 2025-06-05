@@ -30,29 +30,29 @@ export const Register = () => { //Hooks
     <div>
         <h1>Registro</h1>
         <form onSubmit={enviar}>
-            <label>Ingrese su nombre</label>
+            <label>Ingrese su nombre: </label>
             <input type = "text" name = "username" placeholder = 'Ingrese su nombre de usuario...' required value={nombre}
               onChange={e => setName(e.target.value)}
             />
 
-            <label>Correo Electronico: </label>
+            <label> Correo Electronico: </label>
             <input type = "email" name = "email" placeholder = 'Ingrese un correo electronico porfavor...' required value={correo}
               onChange={e => setEmail(e.target.value)}
 
             />
-            <label>Contraseña: </label>
+            <label> Contraseña: </label>
             <input type = "password" name = "password" placeholder = 'Ingrese una contraseña...' required value={password}
               onChange={e => setPassword(e.target.value)}
             />
-            <label>Direccion: </label>
+            <label> Direccion: </label>
             <input type = "text" name = "direccion" placeholder = 'Ingrese una direccion...' required value={direccion}
               onChange={e => setDireccion(e.target.value)}
             />
-            <label>Telefono: </label>
+            <label> Telefono: </label>
             <input type = "text" name = "telefono" placeholder = 'Ingrese un telefono...' required value={telefono}
               onChange={e => setTelefono(e.target.value)}
             />
-            <label>Tipo de cuenta: </label>
+            <label> Tipo de cuenta: </label>
             <select value={tipo} onChange={e => setTipo(Number(e.target.value))}>
               <option value={1}>Usuario normal</option>
               <option value={2}>Repartidor</option>

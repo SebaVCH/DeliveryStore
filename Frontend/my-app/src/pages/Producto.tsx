@@ -55,7 +55,9 @@ export const Producto = () =>
         setGluten('');
         setCalorias('');
         setEntrega('');
+        console.log(user.PublicID);
         setVendedor(user.PublicID);
+        console.log(user.PublicID);
     };
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,6 +148,7 @@ export const Producto = () =>
             <input type = "text" placeholder='Descripcion del producto...' value={description} onChange={(e)=> setDescripcion(e.target.value)} required/>
 
             <select value={deliver} onChange={(e)=> setEntrega(e.target.value)} required>
+                <option value="">seleccione</option>
                 <option value="delivery">Delivery</option>
                 <option value="retiro en tienda">Retiro en tienda</option>
             </select>
