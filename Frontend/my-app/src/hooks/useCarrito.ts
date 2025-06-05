@@ -12,13 +12,12 @@ export function useCarritos() {     //pa listar los carritos
     });
 }
 
-export function useProductosMasComprados() {     //pa listar los 3 productos mas comprados
+export function useProductosMasComprados(cantidad: string) {     //pa listar los 3 productos mas comprados
     return useQuery({
-        queryKey: ['topProductos'],
+        queryKey: ['topProductos', cantidad],
         queryFn: async () => {
-            const respuesta = await api.get('sistema/carrito/topProductos');
+            const respuesta = await api.get('sistema/carrito/topProductos', {params: { quantity: cantidad }});
             return respuesta.data;
         },
     });
 }
-

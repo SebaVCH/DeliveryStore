@@ -10,19 +10,22 @@ import { useProductos } from '../hooks/useProductos';
 import { useOrdenesAdmin, useOrdenes } from '../hooks/useOrdenes';
 
 export const AdminDashboard = () => {
-    const {data: usuarios, isLoading} = useUsuarios();
+    
+    const {token, setToken} = useAuth();
+    const {data: user, isLoading: cargauser, isError} = useUserProfile();
+    const [cantidadUsuarios, setCantidadUsuarios] = useState<string>('all');
+    const [cantidadVendedores, setCantidadVendedores] = useState<string>('3');
+    const [cantidadProductos, setCantidadProductos] = useState<string>('3');
+    const {data: usuarios, isLoading} = useUsuarios(cantidadUsuarios);
     const {data: montoTotal, isLoading: isLoadingMonto} = useMontoTotal();
-    const {data: topVendedores, isLoading: isLoadingVendedores} = useTopVendedores();
+    const {data: topVendedores, isLoading: isLoadingVendedores} = useTopVendedores(cantidadVendedores);
     const {data: transacciones, isLoading: isLoadingTransac} = useTransacciones();
-    const {data: topProductos, isLoading: isLoadingProductos} = useProductosMasComprados();
+    const {data: topProductos, isLoading: isLoadingProductos} = useProductosMasComprados(cantidadProductos);
     const {data: envios, isLoading: isLoadingEnvios} = useEnvios();
     const {data: enviosEntregados, isLoading: isLoadingEntregados} = useEnviosEntregados();
     const {data: productos, isLoading: isLoadingTodosProductos} = useProductos();
     const {data: ordenes, isLoading: isLoadingTodasOrdenes} = useOrdenesAdmin();
     const {data: ordenesVigentes, isLoading: isLoadingOrdenesVigentes} = useOrdenes();
-
-    const {data: user, isLoading: cargauser, isError} = useUserProfile();
-    const {token, setToken} = useAuth();
 
     const crearUsuario = useCrearUsuario();
     const eliminarUsuario = useEliminarUsuario();
@@ -33,6 +36,7 @@ export const AdminDashboard = () => {
     const [contrasenha, setContrasenha] = useState('');
     const [direcc, setDireccion] = useState('');
     const [telefo, setTelefono] = useState('');
+
 
     if(!token)
     {
@@ -81,7 +85,19 @@ export const AdminDashboard = () => {
                 <p>Cargando top vendedores...</p>
             ): (
             <>
-                <h2> Top 3 vendedores que más venden: </h2>
+                <h2> Top vendedores: </h2>
+                <div style={{marginBottom: '10px'}}>
+                    <input 
+                        type="number" 
+                        placeholder="Cantidad o 'all'" 
+                        value={cantidadVendedores}
+                        onChange={(e) => setCantidadVendedores(e.target.value)}
+                        style={{marginRight: '10px'}}
+                    />
+                    <button onClick={() => setCantidadVendedores('all')}>
+                        Mostrar todos
+                    </button>
+                </div>
                 {topVendedores?.length > 0 ? ( 
                     <ul>
                         {topVendedores?.map((v: any) => (
@@ -99,7 +115,19 @@ export const AdminDashboard = () => {
                 <p>Cargando top productos...</p>
             ): (
             <>
-                <h2> Top 3 productos más vendidos: </h2>
+                <h2> Top productos: </h2>
+                <div style={{marginBottom: '10px'}}>
+                    <input 
+                        type="number" 
+                        placeholder="Cantidad o 'all'" 
+                        value={cantidadProductos}
+                        onChange={(e) => setCantidadProductos(e.target.value)}
+                        style={{marginRight: '10px'}}
+                    />
+                    <button onClick={() => setCantidadProductos('all')}>
+                        Mostrar todos
+                    </button>
+                </div>
                 {topProductos?.length > 0 ? ( 
                     <ul>
                         {topProductos?.map((p: any) => (
@@ -230,8 +258,19 @@ export const AdminDashboard = () => {
                 <p>Cargando los usuarios...</p>
             ): (
             <>
-
                 <h2> Usuarios Registrados </h2>
+                <div style={{marginBottom: '10px'}}>
+                    <input 
+                        type="number" 
+                        placeholder="Cantidad o 'all'" 
+                        value={cantidadUsuarios}
+                        onChange={(e) => setCantidadUsuarios(e.target.value)}
+                        style={{marginRight: '10px'}}
+                    />
+                    <button onClick={() => setCantidadUsuarios('all')}>
+                        Mostrar todos
+                    </button>
+                </div>
                 {usuarios?.length > 0 ? ( 
                     <ul>
                         {usuarios.map((c: any) => (

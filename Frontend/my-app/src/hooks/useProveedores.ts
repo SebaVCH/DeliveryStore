@@ -50,7 +50,7 @@ export function useCrearProductoProveedor() {   //pa añadir una relación nueva
     const clienteQuery = useQueryClient();
     return useMutation({
         mutationFn: async(nuevaRelacion:{ID: number, ProductID: number}) => {
-            const respuesta = await api.post('/proveedores/', nuevaRelacion);
+            const respuesta = await api.post('/proveedores/productos', nuevaRelacion);
             return respuesta.data;
         },
         onSuccess: () => {

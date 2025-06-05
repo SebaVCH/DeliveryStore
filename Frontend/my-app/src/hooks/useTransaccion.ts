@@ -21,11 +21,11 @@ export function useMontoTotal() {     //mostrar dinero total transferido en el s
     });
 }
 
-export function useTopVendedores() {     //listar los 3 vendedores que más venden
+export function useTopVendedores(cantidad: string) {     //listar los 3 vendedores que más venden
     return useQuery({
-        queryKey: ['topVendedores'],
+        queryKey: ['topVendedores', cantidad],
         queryFn: async () => {
-            const respuesta = await api.get('sistema/transacciones/topVendedores');
+            const respuesta = await api.get('sistema/transacciones/topVendedores', {params: { quantity: cantidad }});
             return respuesta.data;
         },
     });

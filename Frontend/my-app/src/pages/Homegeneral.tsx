@@ -11,6 +11,8 @@ export const Homegeneral = () => {
     const {data: productos, isLoading: cargaproducto} = useProductos();
     //filtros: 
     const [dietFilter, setDietFilter] = useState<string>('');
+    const [priceFilter, setPriceFilter] = useState<string>('');
+    const [caloriesFilter, setCaloriesFilter] = useState<string>('');
 
     if(!token)
     {
@@ -44,13 +46,28 @@ export const Homegeneral = () => {
         if (dietFilter === 'vegetarianos' && !producto.IsVegetarian) return false;
         if (dietFilter === 'sin gluten' && !producto.IsGlutenFree) return false;
 
+        // filtro por rango de precio
+        if (priceFilter === 'menos de $4999' && producto.Price > 4999) return false;
+        if (priceFilter === 'entre $5000 y $14999' && (producto.Price <= 4999 || producto.Price > 14999)) return false;
+        if (priceFilter === 'más de $15000' && producto.Price <= 14999) return false;
+
+        // filtro por rango de calorías
+        if (caloriesFilter === 'menos de 200' && producto.Calories > 200) return false;
+        if (caloriesFilter === 'entre 200 y 400' && (producto.Calories <= 199 || producto.Calories > 400)) return false;
+        if (caloriesFilter === 'más de 400' && producto.Calories <= 399) return false;
+
         return true;
     });
 
+    const clearFilters = () => {
+        setDietFilter('');
+        setPriceFilter('');
+        setCaloriesFilter('');
+    };
 
     return (
     <div> 
-        <h2> Bienvenido: {user?.Name}, tu correo es: {user?.Email} </h2> 
+        <h2> Bienvenid@: {user?.Name}</h2> 
 
         {user.RoleType === 1 && (
             <>
@@ -68,14 +85,34 @@ export const Homegeneral = () => {
                         <option value="sin gluten">Productos sin gluten</option>
                     </select>
 
-                    <button 
-                        onClick={() => {
-                            setDietFilter('');
-                        }}
-                        style={{ padding: '5px 10px' }}
-                    >
-                        Limpiar filtros
-                    </button>
+                        <select 
+                            value={priceFilter}
+                            onChange={(e) => setPriceFilter(e.target.value)}
+                            style={{ padding: '5px' }}
+                        >
+                            <option value="">Todos los precios</option>
+                            <option value="baratos">Menos de $10</option>
+                            <option value="medios">$10 - $20</option>
+                            <option value="caros">Más de $20</option>
+                        </select>
+
+                        <select 
+                            value={caloriesFilter}
+                            onChange={(e) => setCaloriesFilter(e.target.value)}
+                            style={{ padding: '5px' }}
+                        >
+                            <option value="">Todas las calorías</option>
+                            <option value="bajas">Menos de 200 cal</option>
+                            <option value="moderadas">200 - 400 cal</option>
+                            <option value="altas">Más de 400 cal</option>
+                        </select>
+
+                        <button 
+                            onClick={clearFilters}
+                            style={{ padding: '5px 10px' }}
+                        >
+                            Limpiar filtros
+                        </button>
                 </div>
 
 
@@ -96,7 +133,7 @@ export const Homegeneral = () => {
                         ))}
                     </ul>
                 ): (
-                    <p>no hay productos en venta disponibles..</p>
+                    <p>No hay productos que coincidan con los filtros seleccionados.</p>
                 )}
                 <button onClick={()=> navigate('/Home')}>Gestionar tienda</button>            
             </>

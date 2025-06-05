@@ -14,6 +14,9 @@ export const Proveedores = () => {
     const [mostrarSelectProducto, setMostrarSelectProducto] = useState(false);
     const [productoSeleccionado, setProductoSeleccionado] = useState('');
 
+    const [filterCount, setFilterCount] = useState<number | null>(null);
+    const [filterError, setFilterError] = useState('');
+
     const crearProv = useCrearProveedor();
     const crearProductoProveedor = useCrearProductoProveedor();
     const eliminarProv = useEliminarProveedor();
@@ -65,6 +68,41 @@ export const Proveedores = () => {
         }
     };
 
+    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (value === '') {
+            setFilterCount(null);
+            setFilterError('');
+            return;
+        }
+
+        const num = parseInt(value);
+        if (isNaN(num)) {
+            setFilterError('Por favor ingrese un número válido');
+            return;
+        }
+
+        if (num <= 0) {
+            setFilterError('El número debe ser mayor a 0');
+            return;
+        }
+
+        if (proveedores && num > proveedores.length) {
+            setFilterError(`No tienes suficientes proveedores (máximo ${proveedores.length})`);
+            return;
+        }
+
+        setFilterCount(num);
+        setFilterError('');
+    };
+
+    const resetFilter = () => {
+        setFilterCount(null);
+        setFilterError('');
+    };
+
+    const filteredProveedores = filterCount ? proveedores?.slice(0, filterCount) : proveedores;
+
     const ProductosProveedor = ({ proveedorId }: { proveedorId: number }) => {
     const { data: productos, isLoading } = useProductoProveedor(proveedorId);
 
@@ -88,38 +126,54 @@ export const Proveedores = () => {
     return (
         <div>
         <h1>Tus Proveedores</h1>
+        <div style={{margin: '20px 0'}}>
+                <h3>Filtrar proveedores</h3>
+                <div>
+                    <input 
+                        type="number" 
+                        placeholder='Cantidad de proveedores a mostrar...'
+                        value={filterCount || ''}
+                        onChange={handleFilterChange}
+                        min="1"
+                    />
+                    <button onClick={resetFilter} style={{marginLeft: '10px'}}>
+                        Reiniciar filtro
+                    </button>
+                </div>
+                {filterError && <p style={{color: 'red'}}>{filterError}</p>}
+        </div>
         {isLoading ? (<p>Cargando proveedores...</p>)
-            : (
-            <>
-                {proveedores?.length > 0 ? (
-                    <ul>
-                        {proveedores?.map((p: any) => (
-                            <li key={p.ID}>
-                                <div style={{marginBottom: '10px'}}>
-                                    {p.Name} - <strong>{p.Description}</strong>
-                                    <button 
-                                        onClick={() => eliminarProv.mutate(p.ID)}
-                                        style={{marginLeft: '10px'}}
-                                    >
-                                        Eliminar
-                                    </button>
-                                    <button 
-                                        onClick={() => abrirSelectProducto(p.ID)}
-                                        style={{marginLeft: '10px'}}
-                                    >
-                                        Agregar Producto
-                                    </button>
-                                    
-                                    {/* Lista de productos del proveedor */}
-                                    <ProductosProveedor proveedorId={p.ID} />
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (<p> No hay proveedores</p>)
-                }
-            </>
-        )}
+                : (
+                <>
+                    {filteredProveedores?.length > 0 ? (
+                        <ul>
+                            {filteredProveedores?.map((p: any) => (
+                                <li key={p.ID}>
+                                    <div style={{marginBottom: '10px'}}>
+                                        {p.Name} - <strong>{p.Description}</strong>
+                                        <button 
+                                            onClick={() => eliminarProv.mutate(p.ID)}
+                                            style={{marginLeft: '10px'}}
+                                        >
+                                            Eliminar
+                                        </button>
+                                        <button 
+                                            onClick={() => abrirSelectProducto(p.ID)}
+                                            style={{marginLeft: '10px'}}
+                                        >
+                                            Agregar Producto
+                                        </button>
+                                        
+                                        {/* Lista de productos del proveedor */}
+                                        <ProductosProveedor proveedorId={p.ID} />
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (<p> No hay proveedores</p>)
+                    }
+                </>
+            )}
 
         {mostrarSelectProducto && (
                 <div style={{
