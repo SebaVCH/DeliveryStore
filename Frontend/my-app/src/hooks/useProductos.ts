@@ -18,7 +18,7 @@ export function useProductosVendedor(identificador: number) {     //pa listar so
     return useQuery({
         queryKey: ['productos', identificador],
         queryFn: async () => {
-            const respuesta = await api.get('/user/productos/',{params:{PublicID: identificador}});
+            const respuesta = await api.get(`/user/productos/${identificador}`);
             return respuesta.data;
         }
     });

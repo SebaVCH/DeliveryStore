@@ -17,7 +17,7 @@ export const Proveedores = () => {
     const navigate = useNavigate();
     const [name, setNombre] = useState('');
     const [description, setDescripcion] = useState('');
-    const [idComprador, setIdComprador] = useState('');
+    const [idVendedor, setIdVendedor] = useState('');
 
     if(!token)
     {
@@ -39,10 +39,10 @@ export const Proveedores = () => {
 
     const crear = (e: SyntheticEvent) => {
         e.preventDefault();
-        crearProv.mutate({Name: name, Description: description, SellerID: Number(idComprador)});
+        crearProv.mutate({Name: name, Description: description, SellerID: Number(idVendedor)});
         setNombre('');
         setDescripcion('');
-        setIdComprador(user.id);
+        setIdVendedor(user.PublicID);
     };
 
 

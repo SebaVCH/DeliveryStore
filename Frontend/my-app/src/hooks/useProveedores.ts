@@ -22,7 +22,7 @@ export function useProveedoresVendedor(identificador: number) {     //pa listar 
                 identificador = user.PublicID
                 console.log(identificador);
             }
-            const respuesta = await api.get('/proveedores/',{params:{PublicID: identificador}});
+            const respuesta = await api.get(`/proveedores/${identificador}`);
             console.log(respuesta.data)
             return respuesta.data;
         }
@@ -79,7 +79,7 @@ export function useProductoProveedor(identificador: number) {   //pa listar solo
         queryKey: ['proveedores', identificador],
         queryFn: async () => {
             console.log(identificador);
-            const respuesta = await api.get('/proveedores/productos',{params:{ID: identificador}});
+            const respuesta = await api.get(`/proveedores/productos${identificador}`);
             console.log(identificador);
             return respuesta.data;
         }

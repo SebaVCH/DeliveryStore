@@ -26,7 +26,7 @@ export function useEnviosRepartidor(identificador: number) {  //pa listar los en
     return useQuery({
         queryKey: ['reserva', identificador],
         queryFn: async () => {
-            const respuesta = await api.get('/sistema/envios/',{params:{PublicID: identificador}});
+            const respuesta = await api.get(`/sistema/envios/${identificador}`);
             return respuesta.data;
         }
     });
@@ -36,7 +36,7 @@ export function useEnviosRepartidorEntregados(identificador: number) {  //pa lis
     return useQuery({
         queryKey: ['reserva', identificador],
         queryFn: async () => {
-            const respuesta = await api.get('/sistema/envios/entregados/',{params:{PublicID: identificador}});
+            const respuesta = await api.get(`/sistema/envios/entregados/${identificador}`);
             return respuesta.data;
         }
     });
