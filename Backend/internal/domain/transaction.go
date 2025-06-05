@@ -4,7 +4,7 @@ import "time"
 
 type Transaction struct {
 	ID        int       `gorm:"primaryKey"`
-	Amount    float64   `gorm:"not null"`
+	Amount    float64   `gorm:"not null,default:0"`
 	Date      time.Time `gorm:"not null"`
 	BuyerID   int       `gorm:"not null"`
 	Buyer     Usuario   `gorm:"foreignKey:BuyerID;references:ID"`

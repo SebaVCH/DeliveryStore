@@ -34,7 +34,7 @@ func (s shippingUseCase) CreateShipping(c *gin.Context) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al crear envio"})
 		return
 	}
-	shipping.DeliveryID = 0
+
 	if err := s.shippingRepository.CreateShipping(shipping); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al crear envio"})
 		return
