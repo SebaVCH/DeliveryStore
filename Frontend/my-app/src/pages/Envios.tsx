@@ -33,7 +33,7 @@ export const Envios = () => {
 
     return (
         <div>
-            <h1>Envios disponibles: </h1>
+            <h1>Envios actuales: </h1>
             <button onClick={() => navigate('/Homegeneral')}>Volver al perfil</button>
             {isLoading? (
                 <p>Cargando los envios...</p>
@@ -43,7 +43,7 @@ export const Envios = () => {
                     <ul>
                         {envios.map((envio: any) => (
                         <li key = {envio.ID}>
-                            <p>Repartidor: </p> {user.Name} - <p>Estado del envio: </p> {envio.Status} - <p>Dirección de entrega: </p> {envio.Buyer.Address} - <p>Teléfono del cliente: </p> {envio.Buyer.Phone}
+                            <p>Repartidor: </p> {envio.Delivery.Name} - <p>Estado del envio: </p> {envio.Status} - <p>Dirección de entrega: </p> {envio.Buyer.Address} - <p>Teléfono del cliente: </p> {envio.Buyer.Phone}
                             {console.log(envio.ID)}
                             {envio.Status !== 'entregado' && (
                                 <button onClick={()=> actualizarEnvio.mutate(envio.ID)}>producto entregado</button>
@@ -65,8 +65,7 @@ export const Envios = () => {
                     <ul>
                         {enviosEntregados.map((envio: any) => (
                         <li key = {envio.ID}>
-                            <p>Repartidor: </p> {user.Name} - <p>Estado del envio: </p> {envio.Status} - <p>Dirección de entrega: </p> {envio.Buyer.Address} - <p>Teléfono del cliente: </p> {envio.Buyer.Phone}
-                            {console.log(envio.ID)}
+                            <p>Repartidor: </p> {envio.Delivery.Name} - <p>Estado del envio: </p> {envio.Status} - <p>Dirección de entrega: </p> {envio.Buyer.Address} - <p>Teléfono del cliente: </p> {envio.Buyer.Phone}
                         </li>
                     ))}
                     </ul>

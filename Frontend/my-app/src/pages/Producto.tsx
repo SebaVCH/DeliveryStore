@@ -23,6 +23,8 @@ export const Producto = () =>
     const [idVendedor,setVendedor] = useState('');
 
     const [isComestible, setIsComestible] = useState(false);
+    const [filterCount, setFilterCount] = useState<number | null>(null);
+    const [filterError, setFilterError] = useState('');
 
     if(!token)
     {
@@ -53,35 +55,89 @@ export const Producto = () =>
         setGluten('');
         setCalorias('');
         setEntrega('');
+        console.log(user.PublicID);
         setVendedor(user.PublicID);
-    };      
+        console.log(user.PublicID);
+    };
 
-  return (
+    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (value === '') {
+            setFilterCount(null);
+            setFilterError('');
+            return;
+        }
+
+        const num = parseInt(value);
+        if (isNaN(num)) {
+            setFilterError('Por favor ingrese un número válido');
+            return;
+        }
+
+        if (num <= 0) {
+            setFilterError('El número debe ser mayor a 0');
+            return;
+        }
+
+        if (productos && num > productos.length) {
+            setFilterError(`No tienes suficientes productos (máximo ${productos.length})`);
+            return;
+        }
+
+        setFilterCount(num);
+        setFilterError('');
+    };
+
+    const resetFilter = () => {
+        setFilterCount(null);
+        setFilterError('');
+    };
+
+    const filteredProducts = filterCount ? productos?.slice(0, filterCount) : productos;
+
+    return (
     <div>
         <h1>Mis productos en venta</h1>
-        {cargaproducto ? (<p>Cargando productos...</p>)
-        : (
-        <>
-            <h2>Productos en Venta</h2>
-            {productos?.length > 0 ? (
-                <ul>
-                    {productos.map((p: any) => (
-                        <li key = {p.ID}>
-                            {p.Name} - {p.Description} - ${p.Price} - 
-                            Vegano: {p.IsVegan ? 'Sí' : 'No'} - 
-                            Vegetariano: {p.IsVegetarian ? 'Sí' : 'No'} - 
-                            Libre de Gluten: {p.IsGlutenFree ? 'Sí' : 'No'} - 
-                            Calorías: {p.Calories} - 
-                            Método de entrega: {p.Delivery} - Puntuación: {p.ReviewScore}
-                            <button onClick={() => eliminarPrdo.mutate(p.ID)}> Eliminar</button>
-                             <p>------------</p>
-                        </li>
-                    ))}
-                </ul>
-            ) : (<p> No hay productos</p>)
-            }
-        </>
-        )}
+            <div style={{margin: '20px 0'}}>
+                <h3>Filtrar productos</h3>
+                <div>
+                    <input 
+                        type="number" 
+                        placeholder='Cantidad de productos a mostrar...'
+                        value={filterCount || ''}
+                        onChange={handleFilterChange}
+                        min="1"
+                    />
+                    <button onClick={resetFilter} style={{marginLeft: '10px'}}>
+                        Reiniciar filtro
+                    </button>
+                </div>
+                {filterError && <p style={{color: 'red'}}>{filterError}</p>}
+            </div>
+
+            {cargaproducto ? (<p>Cargando productos...</p>)
+            : (
+            <>
+                <h2>Productos en Venta {filterCount ? `(Mostrando ${filterCount} de ${productos?.length})` : ''}</h2>
+                {filteredProducts?.length > 0 ? (
+                    <ul>
+                        {filteredProducts.map((p: any) => (
+                            <li key = {p.ID}>
+                                {p.Name} - {p.Description} - ${p.Price} - 
+                                Vegano: {p.IsVegan ? 'Sí' : 'No'} - 
+                                Vegetariano: {p.IsVegetarian ? 'Sí' : 'No'} - 
+                                Libre de Gluten: {p.IsGlutenFree ? 'Sí' : 'No'} - 
+                                Calorías: {p.Calories} - 
+                                Método de entrega: {p.Delivery} - Puntuación: {p.ReviewScore}
+                                <button onClick={() => eliminarPrdo.mutate(p.ID)}> Eliminar</button>
+                                <p>------------</p>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (<p> No hay productos</p>)
+                }
+            </>
+            )}
             
         <h3>Vender nuevo producto: </h3>
         <form onSubmit={crear}>
@@ -92,6 +148,7 @@ export const Producto = () =>
             <input type = "text" placeholder='Descripcion del producto...' value={description} onChange={(e)=> setDescripcion(e.target.value)} required/>
 
             <select value={deliver} onChange={(e)=> setEntrega(e.target.value)} required>
+                <option value="">seleccione</option>
                 <option value="delivery">Delivery</option>
                 <option value="retiro en tienda">Retiro en tienda</option>
             </select>

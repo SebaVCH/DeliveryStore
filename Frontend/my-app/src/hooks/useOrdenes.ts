@@ -1,5 +1,6 @@
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import api from '../api/axios';
+import { useUserProfile } from './useUserProfile';
 
 
 interface nuevoEnvio {
@@ -34,9 +35,15 @@ export function useOrdenesAdmin() {  //listar todas las ordenes entregadas.
 
 export function useAceptarOrden() {
     const clienteQuery = useQueryClient();
+    const {data: user} = useUserProfile();
     return useMutation({
         mutationFn: async ({ID, Status, Date, DeliveryID, BuyerID}: 
         {ID: number} & nuevoEnvio) => {
+            console.log(DeliveryID);
+            if(DeliveryID === 0){
+                DeliveryID = user.PublicID
+                console.log(DeliveryID);
+            }
             //pa crear el envio
             await api.post('/sistema/envios/', {
                 Status, 
