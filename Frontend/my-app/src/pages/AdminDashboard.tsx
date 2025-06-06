@@ -26,6 +26,8 @@ export const AdminDashboard = () => {
     const {data: productos, isLoading: isLoadingTodosProductos} = useProductos();
     const {data: ordenes, isLoading: isLoadingTodasOrdenes} = useOrdenesAdmin();
     const {data: ordenesVigentes, isLoading: isLoadingOrdenesVigentes} = useOrdenes();
+    const [error, setError] = useState<string>(''); 
+    const [inputValue, setInputValue] = useState('');
 
     const crearUsuario = useCrearUsuario();
     const eliminarUsuario = useEliminarUsuario();
@@ -65,6 +67,18 @@ export const AdminDashboard = () => {
         setDireccion('');
         setTelefono('');
     };
+
+    const handleConfirmar = () => {
+    if (inputValue === 'all') {
+        setCantidadUsuarios('all');
+        setError('');
+    } else if (/^\d+$/.test(inputValue)) {
+        setCantidadUsuarios(inputValue);
+        setError('');
+    } else {
+        setError('Por favor ingresa un número o haz clic en "Mostrar todos"');
+    }
+};
 
     return (
         <div>
@@ -249,36 +263,64 @@ export const AdminDashboard = () => {
             </>
             )}
 
-            {isLoading? (
-                <p>Cargando los usuarios...</p>
-            ): (
-            <>
-                <h2> Usuarios Registrados </h2>
-                <div style={{marginBottom: '10px'}}>
-                    <input 
-                        type="number" 
-                        placeholder="Cantidad o 'all'" 
-                        value={cantidadUsuarios}
-                        onChange={(e) => setCantidadUsuarios(e.target.value)}
-                        style={{marginRight: '10px'}}
-                    />
-                    <button onClick={() => setCantidadUsuarios('all')}>
-                        Mostrar todos
-                    </button>
-                </div>
-                {usuarios?.length > 0 ? ( 
-                    <ul>
-                        {usuarios.map((c: any) => (
-                            <li key={c.PublicID}>
-                                {c.Name} - {c.Email}
-                                <button onClick={()=> eliminarUsuario.mutate(c.PublicID)}>Banear usuario</button>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (<p>No hay usuarios registrados...</p>)
-                }
-            </>
-            )}
+                {isLoading ? (
+    <p>Cargando los usuarios...</p>
+    ) : (
+    <>
+        <h2>Usuarios Registrados</h2>
+        <div>
+        <input 
+            type="text" 
+            placeholder="Cantidad o 'all'" 
+            value={inputValue}
+            onChange={(e) => {
+            setInputValue(e.target.value);
+          
+            if (e.target.value && e.target.value !== 'all' && !/^\d*$/.test(e.target.value)) {
+                setError('Solo números o "all"');
+            } else {
+                setError('');
+            }
+            }}
+            style={{flex: 1}}
+        />
+      
+        <button 
+            onClick={handleConfirmar}
+            style={{padding: '5px 15px'}}
+        >
+            Confirmar
+        </button>
+      
+        <button 
+            onClick={() => {
+            setInputValue('');
+            setCantidadUsuarios('all');
+            setError('');
+            }}
+            style={{padding: '5px 15px'}}
+        >
+            Mostrar todos
+        </button>
+        </div>
+    
+        {error && <div style={{color: 'red', marginTop: '5px'}}>{error}</div>}
+
+    
+        <div key={`user-list-${cantidadUsuarios}`}>
+        {usuarios?.length > 0 ? ( 
+            <ul>
+            {usuarios.map((c: any) => (
+                <li key={c.PublicID}>
+                {c.Name} - {c.Email}
+                <button onClick={() => eliminarUsuario.mutate(c.PublicID)}>Banear usuario</button>
+                </li>
+            ))}
+            </ul>
+            ) : (<p>No hay usuarios registrados...</p>)}
+            </div>
+        </>
+        )}
 
 
             <h3>Crear nuevo presidente: </h3>
