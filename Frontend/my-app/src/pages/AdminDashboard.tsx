@@ -26,6 +26,8 @@ export const AdminDashboard = () => {
     const {data: productos, isLoading: isLoadingTodosProductos} = useProductos();
     const {data: ordenes, isLoading: isLoadingTodasOrdenes} = useOrdenesAdmin();
     const {data: ordenesVigentes, isLoading: isLoadingOrdenesVigentes} = useOrdenes();
+    const [error, setError] = useState<string>(''); 
+    const [inputValue, setInputValue] = useState('');
 
     const crearUsuario = useCrearUsuario();
     const eliminarUsuario = useEliminarUsuario();
@@ -65,6 +67,26 @@ export const AdminDashboard = () => {
         setDireccion('');
         setTelefono('');
     };
+
+    const handleSubmit = () => {
+    if (inputValue === 'all') {
+        setCantidadUsuarios('all');
+        setError('');
+    } else if (/^\d+$/.test(inputValue)) {
+        setCantidadUsuarios(inputValue);
+        setError('');
+    } else {
+        setError('Por favor ingresa un número o haz clic en "Mostrar todos"');
+    }};
+
+    const handleCantidadChange = (newValue: string) => {
+    if (newValue === 'all' || /^\d+$/.test(newValue)) {
+    setCantidadUsuarios(newValue);
+    setInputValue(newValue === 'all' ? '' : newValue);
+    setError('');
+    } else {
+    setError('Por favor ingresa un número o haz clic en "Mostrar todos"');
+    }};
 
     return (
         <div>
@@ -253,19 +275,41 @@ export const AdminDashboard = () => {
                 <p>Cargando los usuarios...</p>
             ): (
             <>
-                <h2> Usuarios Registrados </h2>
-                <div style={{marginBottom: '10px'}}>
-                    <input 
-                        type="number" 
-                        placeholder="Cantidad o 'all'" 
-                        value={cantidadUsuarios}
-                        onChange={(e) => setCantidadUsuarios(e.target.value)}
-                        style={{marginRight: '10px'}}
-                    />
-                    <button onClick={() => setCantidadUsuarios('all')}>
-                        Mostrar todos
-                    </button>
-                </div>
+                <h2>Usuarios Registrados</h2>
+            <div style={{marginBottom: '10px'}}>
+            <input 
+                type="text" 
+                placeholder="Cantidad o 'all'" 
+                value={inputValue}
+                onChange={(e) => {
+                    setInputValue(e.target.value);
+                    if (e.target.value && e.target.value !== 'all' && !/^\d*$/.test(e.target.value)) {
+                    setError('Solo números o "all"');
+                    } else {setError('');}
+                }}
+                onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                if (inputValue === 'all') {
+                setCantidadUsuarios('all');
+                setError('');
+                } else if (/^\d+$/.test(inputValue)) {
+                setCantidadUsuarios(inputValue);
+                setError('');
+                } else {
+                setError('Por favor ingresa un número o haz clic en "Mostrar todos"');
+                }
+                }}}
+            />
+      
+                <button onClick={() => {
+                setCantidadUsuarios('all');
+                setInputValue(''); // Limpiamos el input al mostrar todos
+                setError('');
+                }}>
+                Mostrar todos
+            </button>
+            {error && <div style={{color: 'red', marginTop: '5px'}}>{error}</div>}
+            </div>
                 {usuarios?.length > 0 ? ( 
                     <ul>
                         {usuarios.map((c: any) => (

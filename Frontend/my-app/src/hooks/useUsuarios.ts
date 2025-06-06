@@ -8,7 +8,7 @@ export function useUsuarios(cantidad: string){ //pa listar los usuarios registra
         queryFn: async () => {
             const respuesta = await api.get(`/admin/users/${cantidad}`);
             return respuesta.data;
-        },
+        }
     });
 }
 
