@@ -18,4 +18,7 @@ func SetupCartRouter(router *gin.Engine) {
 	protected.GET("/topProductos/:quantity", cartController.GetTopProducts)
 	protected.GET("/", cartController.GetAllCarts)
 	protected.POST("/", cartController.CreateCart)
+	protected.GET("/misCompras/:id", cartController.GetCartsByBuyerID)
+	protected.GET("/calcularMontoFinal/:id", cartController.GetFinalPrice)
+	protected.PATCH("/pagar/:id", cartController.PayTheCart)
 }

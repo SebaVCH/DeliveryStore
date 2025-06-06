@@ -26,3 +26,15 @@ func (cc *cartController) GetAllCarts(c *gin.Context) {
 func (cc *cartController) GetTopProducts(c *gin.Context) {
 	cc.cartUseCase.GetTopProducts(c)
 }
+
+func (cc *cartController) GetCartsByBuyerID(c *gin.Context) {
+	cc.cartUseCase.GetCartsByBuyerID(c)
+}
+
+func (cc *cartController) GetFinalPrice(c *gin.Context) {
+	cc.cartUseCase.GetFinalPrice(c)
+}
+
+func (cc *cartController) PayTheCart(c *gin.Context) {
+	cc.cartUseCase.PayTheCart(c)
+}
