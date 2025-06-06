@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"database/sql"
 	"github.com/SebaVCH/DeliveryStore/internal/domain"
 	"github.com/SebaVCH/DeliveryStore/internal/infrastructure/database"
 	"gorm.io/gorm"
@@ -50,9 +51,9 @@ func (r *transactionRepository) GetAllTransactions() ([]domain.Transaction, erro
 }
 
 func (r *transactionRepository) GetTransactionTotalAmount() (float64, error) {
-	var total float64
+	var total sql.NullFloat64
 	err := r.db.Model(&domain.Transaction{}).Select("SUM(amount)").Find(&total).Error
-	return total, err
+	return total.Float64, err
 }
 
 func (r *transactionRepository) GetTransactionTopSellers(quantity string) ([]domain.Usuario, error) {
