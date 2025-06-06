@@ -132,7 +132,7 @@ export const AdminDashboard = () => {
                     <ul>
                         {topProductos?.map((p: any) => (
                             <li key={p.ID}>
-                                {p.Name} - {p.Description} -<p>Precio del producto: </p>- {p.Price} -<p>Puntuación promedio del producto: </p>- {p.ReviewScore}
+                                <p>{p.Name} - {p.Description} - Precio del producto: {p.Price} - Puntuación promedio del producto: {p.ReviewScore}</p>
                             </li>
                         ))}
                     </ul>
@@ -150,8 +150,7 @@ export const AdminDashboard = () => {
                     <ul>
                         {productos.map((producto: any) => (
                         <li key = {producto.ID}>
-                            {producto.Name} - {producto.Description} -<p>Precio del producto: </p>- {producto.Price} -<p>Puntuación promedio del producto: </p>- {producto.ReviewScore} -<p>Cantidad vendida: </p>{producto.Amount}
-                            {console.log(producto.ID)}
+                            <p>{producto.Name} - {producto.Description} Precio del producto: {producto.Price} - Puntuación promedio del producto: {producto.ReviewScore} - Cantidad vendida: {producto.QuantitySold}</p>
                         </li>
                     ))}
                     </ul>
@@ -169,8 +168,7 @@ export const AdminDashboard = () => {
                     <ul>
                         {envios.map((envio: any) => (
                         <li key = {envio.ID}>
-                            <p>Repartidor: </p> {envio.Delivery.Name} - <p>Estado del envio: </p> {envio.Status} - <p>Dirección de entrega: </p> {envio.Buyer.Address} - <p>Teléfono del cliente: </p> {envio.Buyer.Phone}
-                            {console.log(envio.ID)}
+                            <p>Repartidor: {envio.Delivery.Name} - Estado del envio: {envio.Status} - Dirección de entrega: {envio.Buyer.Address} - Teléfono del cliente: {envio.Buyer.Phone}</p>
                         </li>
                     ))}
                     </ul>
@@ -188,8 +186,7 @@ export const AdminDashboard = () => {
                     <ul>
                         {enviosEntregados.map((envio: any) => (
                         <li key = {envio.ID}>
-                            <p>Repartidor: </p> {envio.Delivery.Name} - <p>Estado del envio: </p> {envio.Status} - <p>Dirección de entrega: </p> {envio.Buyer.Address} - <p>Teléfono del cliente: </p> {envio.Buyer.Phone}
-                            {console.log(envio.ID)}
+                            <p>Repartidor: {envio.Delivery.Name} - Estado del envio: {envio.Status} - Dirección de entrega: {envio.Buyer.Address} - Teléfono del cliente: {envio.Buyer.Phone}</p>
                         </li>
                     ))}
                     </ul>
@@ -207,7 +204,7 @@ export const AdminDashboard = () => {
                     <ul>
                         {transacciones.map((t: any) => (
                             <li key={t.ID}>
-                                {t.Name} -<p>Fecha de la transacción: </p>- {t.Date} -<p>Monto total de la transacción: </p>- {t.Amount} -<p>Correo del vendedor: </p>- {t.Seller.Email} -<p>Correo del comprador: </p>- {t.Buyer.Email}
+                                <p>{t.Name} - Fecha de la transacción: {t.Date} - Monto total de la transacción: {t.Amount} - Correo del vendedor: {t.Seller.Email} - Correo del comprador: {t.Buyer.Email}</p>
                             </li>
                         ))}
                     </ul>
@@ -225,8 +222,7 @@ export const AdminDashboard = () => {
                     <ul>
                         {ordenes.map((orden: any) => (
                             <li key={orden.ID}>
-                                <p>Fecha de entrega: </p> {orden.Date} - <p>Estado de la orden: </p> {orden.Status} - <p>Dirección de entrega: </p> <strong>{orden.Buyer.Address}</strong> - <p>Número del cliente: </p> {orden.Buyer.Phone}
-                                <p>Tienda: </p> {orden.Seller.Name} - <p>Dirección tienda: </p> {orden.Seller.Address}
+                                <p>Fecha de entrega: {orden.Date} - Estado de la orden: {orden.Status} - Dirección de entrega: {orden.Buyer.Address} - Número del cliente: {orden.Buyer.Phone} - Tienda: {orden.Seller.Name} - Dirección tienda: {orden.Seller.Address}</p>
                             </li>
                         ))}
                     </ul>
@@ -244,8 +240,7 @@ export const AdminDashboard = () => {
                     <ul>
                         {ordenesVigentes.map((orden: any) => (
                             <li key={orden.ID}>
-                                <p>Fecha de entrega: </p> {orden.Date} - <p>Estado de la orden: </p> {orden.Status} - <p>Dirección de entrega: </p> <strong>{orden.Buyer.Address}</strong> - <p>Número del cliente: </p> {orden.Buyer.Phone}
-                                <p>Tienda: </p> {orden.Seller.Name} - <p>Dirección tienda: </p> {orden.Seller.Address}
+                                <p>Fecha de entrega: {orden.Date} - Estado de la orden: {orden.Status} - Dirección de entrega: {orden.Buyer.Address} - Número del cliente: {orden.Buyer.Phone} - Tienda: {orden.Seller.Name} - Dirección tienda: {orden.Seller.Address}</p>
                             </li>
                         ))}
                     </ul>

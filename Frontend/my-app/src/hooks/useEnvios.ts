@@ -5,7 +5,7 @@ import { useUserProfile } from './useUserProfile';
 
 export function useEnvios() { //pa listar TODOS los envios PENDIENTES.
     return useQuery({
-        queryKey: ['envios'],
+        queryKey: ['enviosTodos'],
         queryFn: async () => {
             const respuesta = await api.get('/sistema/envios/');
             return respuesta.data;
@@ -15,7 +15,7 @@ export function useEnvios() { //pa listar TODOS los envios PENDIENTES.
 
 export function useEnviosEntregados() { //pa listar TODOS los envios ENTREGADOS
     return useQuery({
-        queryKey: ['envios'],
+        queryKey: ['enviosTodosEntregados'],
         queryFn: async () => {
             const respuesta = await api.get('/sistema/envios/entregados');
             return respuesta.data;

@@ -15,7 +15,7 @@ interface nuevoEnvio {
 
 export function useOrdenes() {  //listar Ordenes pendientes.
     return useQuery({
-        queryKey: ['ordenes'],
+        queryKey: ['ordenesPendientes'],
         queryFn: async () => {
             const respuesta = await api.get('/sistema/ordenes/');
             return respuesta.data;
@@ -25,9 +25,9 @@ export function useOrdenes() {  //listar Ordenes pendientes.
 
 export function useOrdenesAdmin() {  //listar todas las ordenes entregadas.
     return useQuery({
-        queryKey: ['ordenes'],
+        queryKey: ['ordenesEntregadas'],
         queryFn: async () => {
-            const respuesta = await api.get('/sistema/ordenes/todo/');
+            const respuesta = await api.get('/sistema/ordenes/todo');
             return respuesta.data;
         },
     });
