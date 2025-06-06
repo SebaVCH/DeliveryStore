@@ -63,9 +63,9 @@ export const Envios = () => {
             <>
                 {enviosEntregados?.length > 0 ? ( 
                     <ul>
-                        {enviosEntregados.map((envio: any) => (
-                        <li key = {envio.ID}>
-                            <p>Repartidor: </p> {envio.Delivery.Name} - <p>Estado del envio: </p> {envio.Status} - <p>Dirección de entrega: </p> {envio.Buyer.Address} - <p>Teléfono del cliente: </p> {envio.Buyer.Phone}
+                        {enviosEntregados.map((e: any) => (
+                        <li key = {e.ID}>
+                            <p>Repartidor: </p> {e.Delivery.Name} - <p>Estado del envio: </p> {e.Status} - <p>Dirección de entrega: </p> {e.Buyer.Address} - <p>Teléfono del cliente: </p> {e.Buyer.Phone}
                         </li>
                     ))}
                     </ul>
