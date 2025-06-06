@@ -68,7 +68,7 @@ export const AdminDashboard = () => {
         setTelefono('');
     };
 
-    const handleSubmit = () => {
+    const handleConfirmar = () => {
     if (inputValue === 'all') {
         setCantidadUsuarios('all');
         setError('');
@@ -77,16 +77,8 @@ export const AdminDashboard = () => {
         setError('');
     } else {
         setError('Por favor ingresa un número o haz clic en "Mostrar todos"');
-    }};
-
-    const handleCantidadChange = (newValue: string) => {
-    if (newValue === 'all' || /^\d+$/.test(newValue)) {
-    setCantidadUsuarios(newValue);
-    setInputValue(newValue === 'all' ? '' : newValue);
-    setError('');
-    } else {
-    setError('Por favor ingresa un número o haz clic en "Mostrar todos"');
-    }};
+    }
+};
 
     return (
         <div>
@@ -271,58 +263,64 @@ export const AdminDashboard = () => {
             </>
             )}
 
-            {isLoading? (
-                <p>Cargando los usuarios...</p>
-            ): (
-            <>
-                <h2>Usuarios Registrados</h2>
-            <div style={{marginBottom: '10px'}}>
-            <input 
-                type="text" 
-                placeholder="Cantidad o 'all'" 
-                value={inputValue}
-                onChange={(e) => {
-                    setInputValue(e.target.value);
-                    if (e.target.value && e.target.value !== 'all' && !/^\d*$/.test(e.target.value)) {
-                    setError('Solo números o "all"');
-                    } else {setError('');}
-                }}
-                onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                if (inputValue === 'all') {
-                setCantidadUsuarios('all');
+                {isLoading ? (
+    <p>Cargando los usuarios...</p>
+    ) : (
+    <>
+        <h2>Usuarios Registrados</h2>
+        <div>
+        <input 
+            type="text" 
+            placeholder="Cantidad o 'all'" 
+            value={inputValue}
+            onChange={(e) => {
+            setInputValue(e.target.value);
+          
+            if (e.target.value && e.target.value !== 'all' && !/^\d*$/.test(e.target.value)) {
+                setError('Solo números o "all"');
+            } else {
                 setError('');
-                } else if (/^\d+$/.test(inputValue)) {
-                setCantidadUsuarios(inputValue);
-                setError('');
-                } else {
-                setError('Por favor ingresa un número o haz clic en "Mostrar todos"');
-                }
-                }}}
-            />
+            }
+            }}
+            style={{flex: 1}}
+        />
       
-                <button onClick={() => {
-                setCantidadUsuarios('all');
-                setInputValue(''); // Limpiamos el input al mostrar todos
-                setError('');
-                }}>
-                Mostrar todos
-            </button>
-            {error && <div style={{color: 'red', marginTop: '5px'}}>{error}</div>}
+        <button 
+            onClick={handleConfirmar}
+            style={{padding: '5px 15px'}}
+        >
+            Confirmar
+        </button>
+      
+        <button 
+            onClick={() => {
+            setInputValue('');
+            setCantidadUsuarios('all');
+            setError('');
+            }}
+            style={{padding: '5px 15px'}}
+        >
+            Mostrar todos
+        </button>
+        </div>
+    
+        {error && <div style={{color: 'red', marginTop: '5px'}}>{error}</div>}
+
+    
+        <div key={`user-list-${cantidadUsuarios}`}>
+        {usuarios?.length > 0 ? ( 
+            <ul>
+            {usuarios.map((c: any) => (
+                <li key={c.PublicID}>
+                {c.Name} - {c.Email}
+                <button onClick={() => eliminarUsuario.mutate(c.PublicID)}>Banear usuario</button>
+                </li>
+            ))}
+            </ul>
+            ) : (<p>No hay usuarios registrados...</p>)}
             </div>
-                {usuarios?.length > 0 ? ( 
-                    <ul>
-                        {usuarios.map((c: any) => (
-                            <li key={c.PublicID}>
-                                {c.Name} - {c.Email}
-                                <button onClick={()=> eliminarUsuario.mutate(c.PublicID)}>Banear usuario</button>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (<p>No hay usuarios registrados...</p>)
-                }
-            </>
-            )}
+        </>
+        )}
 
 
             <h3>Crear nuevo presidente: </h3>
