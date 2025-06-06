@@ -79,7 +79,7 @@ export const Homegeneral = () => {
 
     return (
     <div> 
-        <h2> Bienvenid@: {user?.Name} Tu saldo es: ${user?.Balance}</h2> 
+        <h2> Bienvenid@: {user?.Name} {user.RoleType === 1 && (<>Tu saldo es: ${user?.Balance}</>)}</h2> 
         
 
         {user.RoleType === 1 && (

@@ -10,7 +10,11 @@ var DB *gorm.DB
 
 func StartDB() error {
 	var err error
+<<<<<<< Updated upstream
 	DB, err = gorm.Open(sqlite.Open("delivery.db"), &gorm.Config{})
+=======
+	DB, err = gorm.Open(sqlite.Open("C:\\Users\\cienc\\OneDrive\\Escritorio\\MUD\\DeliveryStore\\delivery.db"), &gorm.Config{})
+>>>>>>> Stashed changes
 	if err != nil {
 		return err
 	}
