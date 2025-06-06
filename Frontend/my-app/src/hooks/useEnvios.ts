@@ -26,23 +26,24 @@ export function useEnviosEntregados() { //pa listar TODOS los envios ENTREGADOS
 export function useEnviosRepartidor(identificador: number) {  //pa listar los envios vigentes del repartidor
     const {data: user} = useUserProfile();
     return useQuery({
-        queryKey: ['reserva', identificador],
+        queryKey: ['envios',identificador],
         queryFn: async () => {
-            console.log(identificador);
+            //console.log(identificador);
             if(identificador === 0){
                 identificador = user.PublicID
                 console.log(identificador);
             }
             const respuesta = await api.get(`/sistema/envios/${identificador}`);
+            //console.log(respuesta.data);
             return respuesta.data;
         }
     });
 }
 
-export function useEnviosRepartidorEntregados(identificador: number) {  //pa listar los envios entregados del repartidor.
+export function useEnviosRepartidorEntregados(identificador:number) {  //pa listar los envios entregados del repartidor.
     const {data: user} = useUserProfile();
     return useQuery({
-        queryKey: ['reserva', identificador],
+        queryKey: ['enviosEntregados',identificador],
         queryFn: async () => {
             console.log(identificador);
             if(identificador === 0){
@@ -50,8 +51,10 @@ export function useEnviosRepartidorEntregados(identificador: number) {  //pa lis
                 console.log(identificador);
             }
             const respuesta = await api.get(`/sistema/envios/entregados/${identificador}`);
+            console.log(respuesta.data);
             return respuesta.data;
         }
+        
     });
 }
 
@@ -63,6 +66,7 @@ export function useActualizarEnvio() {
             return await api.patch(`/sistema/envios/actualizarEnvio/${ID}`);
         },
         onSuccess: () => {
+            clienteQuery.invalidateQueries({queryKey:['enviosEntregados']});
             clienteQuery.invalidateQueries({queryKey:['envios']});
         },
     });
