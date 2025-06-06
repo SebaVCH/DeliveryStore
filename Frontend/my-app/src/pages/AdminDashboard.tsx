@@ -285,6 +285,7 @@ export const AdminDashboard = () => {
             </>
             )}
 
+
             <h3>Crear nuevo presidente: </h3>
             <form onSubmit={crear}>
                 <input type = "text" placeholder="Nombre de la cuenta..." value={name} onChange={(e)=> setName(e.target.value)} required />
