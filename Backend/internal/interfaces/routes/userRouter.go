@@ -21,4 +21,5 @@ func SetupUserRouter(router *gin.Engine) {
 	protected.Use(middleware.AuthMiddleware())
 	protected.GET("/profile", userController.Info)
 	protected.PUT("/profile/update", userController.UpdateMyAccount)
+	protected.PATCH("/agregarFondos/:id", userController.AddFunds)
 }

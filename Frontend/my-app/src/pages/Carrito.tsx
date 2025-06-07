@@ -37,7 +37,9 @@ export const Carrito = () => {
                     alert('Pago realizado con éxito');
                 },
                 onError: (error) => {
-                    setErrorPago(error.message);
+                    const mensaje = error.response.data.message
+                    alert(mensaje)
+                    setErrorPago(mensaje);
                 }
             });
         } catch (error) {

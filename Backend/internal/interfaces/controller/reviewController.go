@@ -26,7 +26,3 @@ func (rc *ReviewController) GetAllReviews(c *gin.Context) {
 func (rc *ReviewController) DeleteReview(c *gin.Context) {
 	rc.ReviewUseCase.DeleteReview(c)
 }
-
-func (rc *ReviewController) GetBySeller(c *gin.Context) {
-	rc.ReviewUseCase.GetBySeller(c)
-}

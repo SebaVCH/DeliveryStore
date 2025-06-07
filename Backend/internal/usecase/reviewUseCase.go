@@ -12,7 +12,6 @@ type ReviewUseCase interface {
 	CreateReview(c *gin.Context)
 	GetAllReviews(c *gin.Context)
 	DeleteReview(c *gin.Context)
-	GetBySeller(c *gin.Context)
 }
 
 type reviewUseCase struct {
@@ -63,20 +62,4 @@ func (r reviewUseCase) DeleteReview(c *gin.Context) {
 		return
 	}
 	c.IndentedJSON(http.StatusOK, gin.H{"message": "Reseña eliminada correctamente"})
-}
-
-func (r reviewUseCase) GetBySeller(c *gin.Context) {
-	idSTR := c.Param("id")
-	id, err := strconv.Atoi(idSTR)
-	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID inválido"})
-		return
-	}
-
-	reviews, err := r.reviewRepo.GetBySeller(id)
-	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al eliminar reseña"})
-		return
-	}
-	c.IndentedJSON(http.StatusOK, reviews)
 }

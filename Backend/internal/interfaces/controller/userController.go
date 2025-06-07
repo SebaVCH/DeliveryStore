@@ -42,3 +42,7 @@ func (ctrl *UserController) GetAllUsers(c *gin.Context) {
 func (ctrl *UserController) UpdateAnyAccount(c *gin.Context) {
 	ctrl.userUseCase.UpdateAnyAccount(c)
 }
+
+func (ctrl *UserController) AddFunds(c *gin.Context) {
+	ctrl.userUseCase.AddFunds(c)
+}

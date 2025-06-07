@@ -15,6 +15,7 @@ type UserRepository interface {
 	GetAllUsers(quantity string) ([]domain.Usuario, error)
 	DeleteUser(id string) error
 	UpdateAnyAccount(user domain.Usuario, updates map[string]interface{}) error
+	AddFunds(buyerID string, amount float64) error
 }
 
 type userRepository struct {
@@ -83,4 +84,23 @@ func (r *userRepository) Exists(email string) bool {
 
 func (r *userRepository) UpdateAnyAccount(user domain.Usuario, updates map[string]interface{}) error {
 	return r.db.Model(&domain.Usuario{}).Where("email = ?", user.Email).Updates(updates).Error
+}
+
+func (r *userRepository) AddFunds(buyerID string, amount float64) error {
+	id, err := strconv.Atoi(buyerID)
+	if err != nil {
+		return err
+	}
+
+	var user domain.Usuario
+	if err := r.db.Where("id = ?", id).First(&user).Error; err != nil {
+		return err
+	}
+
+	user.Balance += amount
+	if err := r.db.Save(&user).Error; err != nil {
+		return err
+	}
+
+	return nil
 }

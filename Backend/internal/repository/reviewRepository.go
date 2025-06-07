@@ -8,7 +8,6 @@ import (
 
 type ReviewRepository interface {
 	CreateReview(review domain.Review) error
-	GetBySeller(SellerID int) ([]domain.Review, error)
 	DeleteReview(id int) error
 	GetAllReviews() ([]domain.Review, error)
 }
@@ -17,22 +16,14 @@ type reviewRepository struct {
 	db *gorm.DB
 }
 
-func NewReviewRepository(db *gorm.DB) ReviewRepository {
+func NewReviewRepository() ReviewRepository {
 	return &reviewRepository{
 		db: database.DB,
 	}
 }
 
 func (r *reviewRepository) CreateReview(review domain.Review) error {
-	return r.db.Create(review).Error
-}
-
-func (r *reviewRepository) GetBySeller(SellerID int) ([]domain.Review, error) {
-	var reviews []domain.Review
-	if err := r.db.Where("seller_id = ?", SellerID).Find(&reviews).Error; err != nil {
-		return nil, err
-	}
-	return reviews, nil
+	return r.db.Create(&review).Error
 }
 
 func (r *reviewRepository) DeleteReview(id int) error {
@@ -41,7 +32,7 @@ func (r *reviewRepository) DeleteReview(id int) error {
 
 func (r *reviewRepository) GetAllReviews() ([]domain.Review, error) {
 	var reviews []domain.Review
-	err := r.db.Find(&reviews).Error
+	err := r.db.Preload("Buyer").Find(&reviews).Error
 	if err != nil {
 		return nil, err
 	}

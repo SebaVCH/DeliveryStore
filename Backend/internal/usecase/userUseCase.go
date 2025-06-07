@@ -18,6 +18,7 @@ type UserUseCase interface {
 	Delete(c *gin.Context)
 	GetAllUsers(c *gin.Context)
 	UpdateAnyAccount(c *gin.Context)
+	AddFunds(c *gin.Context)
 }
 
 type userUseCase struct {
@@ -211,4 +212,33 @@ func (uc *userUseCase) UpdateAnyAccount(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{"message": "Usuario actualizado correctamente"})
+}
+
+func (uc *userUseCase) AddFunds(c *gin.Context) {
+	userID := c.Param("id")
+	if userID == "" {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID inválido"})
+		return
+	}
+
+	var input struct {
+		Amount float64 `json:"Amount"`
+	}
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al leer datos"})
+		return
+	}
+
+	if input.Amount <= 0 {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Los fondos deben ser mayores a cero"})
+		return
+	}
+
+	if err := uc.userRepo.AddFunds(userID, input.Amount); err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Error al agregar fondos"})
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "Fondos agregados correctamente"})
 }
