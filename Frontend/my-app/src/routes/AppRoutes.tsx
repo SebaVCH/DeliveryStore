@@ -10,7 +10,7 @@ import {Repartidores} from '../pages/Repartidores';
 import {Envios} from '../pages/Envios';
 import {Homegeneral} from '../pages/Homegeneral';
 import { Noautorizado } from '../pages/Noautorizado';
-
+import {Carrito} from '../pages/Carrito';
 export const AppRoutes = () => {
   return (
     <Routes>
@@ -28,6 +28,8 @@ export const AppRoutes = () => {
       <Route path='/Producto' element={<PrivateRoute roles={[1]}><Producto/></PrivateRoute>}/>
 
       <Route path='/Proveedores' element={<PrivateRoute roles={[1]}> <Proveedores/> </PrivateRoute>}/>
+
+      <Route path='/Carrito' element={<PrivateRoute roles={[1]}> <Carrito/> </PrivateRoute>}/>
     </Routes>
   );
 };
