@@ -54,7 +54,7 @@ export function usePagarCarritos() {
         },
         onSuccess: () => {
             
-            clienteQuery.invalidateQueries({ queryKey: ['carritosSinPagar'] });
+            
             clienteQuery.invalidateQueries({ queryKey: ['precioFinal'] });
         },
         onError: (error: any) => {

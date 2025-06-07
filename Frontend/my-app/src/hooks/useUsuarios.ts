@@ -46,10 +46,23 @@ export function useAgregarSaldo() { //pa sumar plata al saldo
             if(sumar.id === 0){
                 sumar.id = user.PublicID
             }
-            await api.patch(`/admin/users/${sumar.id}`, {Amount: sumar.monto}); 
+            await api.patch(`/agregarFondos/${sumar.id}`, {Amount: sumar.monto}); 
         },
         onSuccess: () => {
             clienteQuery.invalidateQueries({queryKey:['usuariosTodos']});
         },
+    });
+}
+
+export function useCrearValoracion() { //pa crear una valoracion nueva 
+    const clienteQuery = useQueryClient();
+    return useMutation({
+        mutationFn: async (nuevaValoracion: {Rating: number, Comment: string, BuyerID: number, IDProduct: number}) => {
+            const respuesta = await api.post('/review', {nuevaValoracion});
+            return respuesta.data;
+        },
+        onSuccess: () => {
+            clienteQuery.invalidateQueries({queryKey:['usuariosTodos']});
+        }
     });
 }
