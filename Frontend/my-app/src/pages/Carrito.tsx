@@ -27,27 +27,21 @@ export const Carrito = () => {
     const handlePagar = async () => {
         if (!user?.PublicID) return;
     
-        if (user?.Balance < (precioTotal || 0)) {
-        setErrorPago('Saldo insuficiente para realizar esta compra');
-        return;
-        }
+        setErrorPago(null); 
 
-        setErrorPago(null);
-    
         try {
-            await pagarCarritos(user.PublicID);
-        
-        
-            await Promise.all([refetchCarritos(), refetchPrecio()]);
-        
-            alert('¡Pago realizado con éxito!');
-        
+            await pagarCarritos(user.PublicID, {
+                onSuccess: () => {
+                    refetchCarritos();
+                    refetchPrecio();
+                    alert('Pago realizado con éxito');
+                },
+                onError: (error) => {
+                    setErrorPago(error.message);
+                }
+            });
         } catch (error) {
-            if (error instanceof Error) {
-                setErrorPago(error.message);
-            } else {
-                setErrorPago('Ocurrió un error desconocido al procesar el pago');
-            }
+            setErrorPago('Error inesperado al procesar el pago');
         }
     };
 
@@ -103,39 +97,23 @@ export const Carrito = () => {
                             </li>
                         ))}
                     </ul>
-
-                    <div className="checkout-section">
-                        {errorPago && (
-                            <div className="error-message">
-                                {errorPago}
-                            </div>
-                        )}
-                        
-                        <div className="balance-info">
-                            <p>Tu saldo actual: <strong>${user?.Balance.toFixed(2)}</strong></p>
-                            <p>Total de la compra: <strong>${precioTotal?.toFixed(2) || '0.00'}</strong></p>
-                            {user?.Balance < (precioTotal || 0) && (
-                                <p className="balance-warning">
-                                    ¡No tienes suficiente saldo! Por favor recarga tu cuenta.
-                                </p>
-                            )}
-                        </div>
-                        
-                        <button 
-                            className={`btn primary ${isPaying ? 'loading' : ''}`}
-                            onClick={handlePagar}
-                            disabled={isPaying || carritos?.length === 0 || (user?.Balance < (precioTotal || 0))}
+                    <p>Tu saldo actual: <strong>${user.Balance}</strong></p>
+                    <p>Total de la compra: <strong>${typeof precioTotal === 'object' ? precioTotal.message : precioTotal || '0'}</strong></p>
+                    <button
+                        onClick={handlePagar}
+                        disabled={isPaying || carritos?.length === 0}
+                        style={{
+                            padding: '10px 20px',
+                            backgroundColor: isPaying ? '#cccccc' : '#4CAF50',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer'
+                        }}
                         >
-                            {isPaying ? (
-                                <>
-                                    <span className="spinner"></span>
-                                    Procesando pago...
-                                </>
-                            ) : (
-                                'Proceder al pago'
-                            )}
-                        </button>
-                    </div>
+                        {isPaying ? 'Procesando...' : 'Pagar ahora'}
+                    </button>
+
                 </div>
             )}
         </div>

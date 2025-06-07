@@ -49,15 +49,15 @@ export function usePagarCarritos() {
             if(userId === 0){
                 userId = user.PublicID
             }
-            const respuesta = await api.post(`/sistema/carrito/pagar/${userId}`);
-            return respuesta.data;
+            const response = await api.patch(`/sistema/carrito/pagar/${userId}`);
+            return response.data;
         },
         onSuccess: () => {
             
             clienteQuery.invalidateQueries({ queryKey: ['carritosSinPagar'] });
             clienteQuery.invalidateQueries({ queryKey: ['precioFinal'] });
         },
-        onError: (error: AxiosError<ApiError>) => {
+        onError: (error: any) => {
             throw new Error(error.response?.data?.message || 'Error al procesar el pago');
         }
     });
@@ -72,7 +72,8 @@ export function usePrecioFinal(identificador: number) {  //pa mostrar el monto t
                 identificador = user.PublicID
                 console.log(identificador);
             }
-            const respuesta = await api.get(`/sistema/carrito/misCompras/id/calcularMontoFinal/${identificador}`);
+            const respuesta = await api.get(`/sistema/carrito/calcularMontoFinal/${identificador}`);
+            console.log(respuesta.data);
             return respuesta.data;
         }
     });
