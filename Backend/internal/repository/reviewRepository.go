@@ -59,6 +59,21 @@ func (r *reviewRepository) CreateReview(review domain.Review, productID string) 
 		return err
 	}
 
+	var seller domain.Usuario
+	err = r.db.Table("products").Where("id = ?", id).Select("seller_id").Scan(&seller).Error
+	var avgRating float64
+	err = r.db.Table("products").
+		Select("COALESCE(ROUND(AVG(review_score), 1), 0)").
+		Where("seller_id = ?", seller.ID).
+		Scan(&avgRating).Error
+	if err != nil {
+		return err
+	}
+
+	if err := r.db.Model(&seller).Update("review_score", avgRating).Error; err != nil {
+		return err
+	}
+
 	return nil
 }
 

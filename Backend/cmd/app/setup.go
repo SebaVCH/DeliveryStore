@@ -16,7 +16,10 @@ func StartBackend() error {
 	if err := utils.SyncQuantitySold(database.DB); err != nil {
 		return err
 	}
-	if err := utils.SyncRating(database.DB); err != nil {
+	if err := utils.SyncRatingProducts(database.DB); err != nil {
+		return err
+	}
+	if err := utils.SyncRatingSellers(database.DB); err != nil {
 		return err
 	}
 
