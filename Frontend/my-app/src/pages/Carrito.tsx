@@ -3,6 +3,7 @@ import { useUserProfile } from '../hooks/useUserProfile';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import { useCarritosComprador, usePrecioFinal, usePagarCarritos } from '../hooks/useCarrito';
+import { useAgregarSaldo } from '../hooks/useUsuarios';
 
 export const Carrito = () => {
     const { token, setToken } = useAuth();
@@ -12,6 +13,7 @@ export const Carrito = () => {
     const { data: precioTotal, refetch: refetchPrecio } = usePrecioFinal(user.PublicID);
     const { mutate: pagarCarritos, isPending: isPaying } = usePagarCarritos();
     const [errorPago, setErrorPago] = useState<string | null>(null);
+    const agregarSaldo = useAgregarSaldo();
 
     if (!token) {
         navigate('/Login');

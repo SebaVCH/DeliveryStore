@@ -1,9 +1,10 @@
 import React,{SyntheticEvent, useState} from 'react';
 import {useProductos} from '../hooks/useProductos'
-import { useUserProfile } from '../hooks/useUserProfile';
+import { useUserProfile} from '../hooks/useUserProfile';
 import {useNavigate} from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import { useCrearCarrito } from '../hooks/useCarrito';
+
 
 export const Homegeneral = () => {
     const {token, setToken} = useAuth();
@@ -11,7 +12,8 @@ export const Homegeneral = () => {
     const { data: user, isLoading: cargauser, isError} = useUserProfile();
     const {data: productos, isLoading: cargaproducto} = useProductos();
     const { mutate: crearCarrito } = useCrearCarrito();
-
+    
+    
     const [selectedProduct, setSelectedProduct] = useState<any>(null);
     const [quantity, setQuantity] = useState<number>(1);
     const [showModal, setShowModal] = useState<boolean>(false);
