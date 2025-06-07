@@ -112,7 +112,7 @@ func (r *cartRepository) PayTheCart(buyerID string, finalPrice float64) error {
 	}
 
 	for _, cart := range carts {
-		if err := r.db.Model(&domain.Product{}).Where("id = ?", cart.IDProduct).Update("quantity_sold", gorm.Expr("quantity_sold + ?", cart.Quantity)).Error; err != nil {
+		if err := r.db.Model(&domain.Product{}).Where("id = ?", cart.IDProduct).Update("quantity_sold", gorm.Expr("COALESCE(quantity_sold,0) + ?", cart.Quantity)).Error; err != nil {
 			return err
 		}
 	}

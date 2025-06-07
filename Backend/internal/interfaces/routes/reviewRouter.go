@@ -15,7 +15,7 @@ func SetupReviewRouter(router *gin.Engine) {
 
 	protected := router.Group("/review")
 	protected.Use(middleware.AuthMiddleware())
-	protected.POST("/", reviewController.CreateReview)
+	protected.POST("/:id", reviewController.CreateReview)
 	protected.GET("/", reviewController.GetAllReviews)
 	protected.DELETE("/:id", reviewController.DeleteReview)
 }

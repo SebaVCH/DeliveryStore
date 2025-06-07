@@ -16,6 +16,9 @@ func StartBackend() error {
 	if err := utils.SyncQuantitySold(database.DB); err != nil {
 		return err
 	}
+	if err := utils.SyncRating(database.DB); err != nil {
+		return err
+	}
 
 	if err := routes.SetupRouter().Run(":8080"); err != nil {
 		return err

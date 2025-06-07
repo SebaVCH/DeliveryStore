@@ -30,7 +30,7 @@ export function useEliminarUsuario() { //pa eliminar la cuenta del sistema
     const clienteQuery = useQueryClient();
     return useMutation({
         mutationFn: async (id: number) => {
-            await api.patch(`/admin/users/${id}`); 
+            await api.patch(`/admin/users/${id}`);
         },
         onSuccess: () => {
             clienteQuery.invalidateQueries({queryKey:['usuariosTodos']});
@@ -58,7 +58,11 @@ export function useCrearValoracion() { //pa crear una valoracion nueva
     const clienteQuery = useQueryClient();
     return useMutation({
         mutationFn: async (nuevaValoracion: {Rating: number, Comment: string, BuyerID: number, IDProduct: number}) => {
-            const respuesta = await api.post('/review', {nuevaValoracion});
+            const respuesta = await api.post(`/review/${nuevaValoracion.IDProduct}`,{
+                Rating: nuevaValoracion.Rating,
+                Comment: nuevaValoracion.Comment,
+                BuyerID: nuevaValoracion.BuyerID
+            });
             return respuesta.data;
         },
         onSuccess: () => {

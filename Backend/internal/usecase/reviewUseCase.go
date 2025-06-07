@@ -25,6 +25,11 @@ func NewReviewUseCase(repo repository.ReviewRepository) ReviewUseCase {
 }
 
 func (r reviewUseCase) CreateReview(c *gin.Context) {
+	idSTR := c.Param("id")
+	if idSTR == "" {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID inválido"})
+		return
+	}
 	var review domain.Review
 
 	if err := c.ShouldBindJSON(&review); err != nil {
@@ -32,7 +37,7 @@ func (r reviewUseCase) CreateReview(c *gin.Context) {
 		return
 	}
 
-	if err := r.reviewRepo.CreateReview(review); err != nil {
+	if err := r.reviewRepo.CreateReview(review, idSTR); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error al crear reseña"})
 		return
 	}
