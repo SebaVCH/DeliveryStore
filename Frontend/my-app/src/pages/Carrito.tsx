@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCarritosComprador, usePrecioFinal, usePagarCarritos} from '../hooks/useCarrito';
 import { useAgregarSaldo, useCrearValoracion } from '../hooks/useUsuarios';
 import { useCrearTransaccion } from '../hooks/useTransaccion';
+import { useCrearOrden } from '../hooks/useOrdenes';
 
 export const Carrito = () => {
     const { token, setToken } = useAuth();
@@ -19,6 +20,7 @@ export const Carrito = () => {
     const [balanceError, setBalanceError] = useState('');
     const [showAddBalance, setShowAddBalance] = useState(false);
     const crearTransaccion = useCrearTransaccion();
+    const crearOrden = useCrearOrden()
 
     //cosas de transaccion
     const [idComprador, setBuyerID] = useState('');
@@ -57,6 +59,20 @@ export const Carrito = () => {
                 ProductID: carrito.IDProduct,
                 Amount: carrito.FinalPrice
             });
+
+            await crearTransaccion.mutateAsync({
+                BuyerID: user.PublicID,
+                ProductID: carrito.IDProduct,
+                SellerID: carrito.Product.SellerID,
+                Amount: carrito.FinalPrice,
+            })
+
+            await crearOrden.mutateAsync({
+                Status: 'Pendiente',
+                BuyerID: user.PublicID,
+                SellerID: carrito.Product.SellerID
+            });
+
         }
 
         setPaymentSuccess(true);

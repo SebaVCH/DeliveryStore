@@ -4,6 +4,7 @@ import (
 	"github.com/SebaVCH/DeliveryStore/internal/domain"
 	"github.com/SebaVCH/DeliveryStore/internal/infrastructure/database"
 	"gorm.io/gorm"
+	"time"
 )
 
 type OrderRepository interface {
@@ -24,7 +25,17 @@ func NewOrderRepository() OrderRepository {
 }
 
 func (o orderRepository) CreateOrder(order domain.Order) error {
-	return o.db.Create(&order).Error
+	if err := o.db.Create(&order).Error; err != nil {
+		return err
+	}
+
+	order.Date = time.Now()
+	if err := o.db.Save(&order).Error; err != nil {
+		return err
+	}
+
+	return nil
+
 }
 
 func (o orderRepository) GetAllOrders() ([]domain.Order, error) {

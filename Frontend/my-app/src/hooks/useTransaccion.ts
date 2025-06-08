@@ -37,11 +37,11 @@ export function useCrearTransaccion() {
     const {data: user} = useUserProfile();
 
     return useMutation({
-        mutationFn: async (transaccion:{BuyerID: number, ProductID: number, Amount: number}) => {
+        mutationFn: async (transaccion:{BuyerID: number, ProductID: number, Amount: number, SellerID: number}) => {
             if(transaccion.BuyerID === 0){
                 transaccion.BuyerID = user.PublicID
             }
-            const response = await api.post('/sistema/transacciones',transaccion);
+            const response = await api.post('/sistema/transacciones/',transaccion);
             return response.data;
         },
         onSuccess: () => {

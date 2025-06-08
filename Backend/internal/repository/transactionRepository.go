@@ -6,6 +6,7 @@ import (
 	"github.com/SebaVCH/DeliveryStore/internal/infrastructure/database"
 	"gorm.io/gorm"
 	"strconv"
+	"time"
 )
 
 type TransactionRepository interface {
@@ -40,6 +41,10 @@ func (r *transactionRepository) CreateTransaction(transaction *domain.Transactio
 		return err
 	}
 	transaction.Buyer = buyer
+	transaction.Date = time.Now()
+	if err := r.db.Save(&transaction).Error; err != nil {
+		return err
+	}
 
 	return nil
 }

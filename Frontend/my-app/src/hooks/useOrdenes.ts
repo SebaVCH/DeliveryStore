@@ -23,6 +23,23 @@ export function useOrdenes() {  //listar Ordenes pendientes.
     });
 }
 
+export function useCrearOrden() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (nuevaOrden: {
+            Status: string;
+            BuyerID: number;
+            SellerID: number;
+        }) => {
+            const respuesta = await api.post('/sistema/ordenes/', nuevaOrden);
+            return respuesta.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['ordenesPendientes'] });
+        },
+    });
+}
+
 export function useOrdenesAdmin() {  //listar todas las ordenes entregadas.
     return useQuery({
         queryKey: ['ordenesEntregadas'],
@@ -59,6 +76,7 @@ export function useAceptarOrden() {
         onSuccess: () => {
             clienteQuery.invalidateQueries({queryKey: ['envios']});
             clienteQuery.invalidateQueries({queryKey: ['ordenes']});
+            clienteQuery.invalidateQueries({queryKey: ['ordenesPendientes']});
         },
     });
 }
