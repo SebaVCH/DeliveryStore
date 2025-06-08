@@ -146,7 +146,7 @@ export const AdminDashboard = () => {
                     <ul>
                         {topProductos?.map((p: any) => (
                             <li key={p.ID}>
-                                <p>{p.Name} - {p.Description} - Precio del producto: {p.Price} - Puntuación promedio del producto: {p.ReviewScore}</p>
+                                <p>{p.Name} - {p.Description} - Precio del producto: {p.Price} - Puntuación promedio del producto: {p.ReviewScore} - cantidad vendida: {p.QuantitySold}</p>
                             </li>
                         ))}
                     </ul>
