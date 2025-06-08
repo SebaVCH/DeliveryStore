@@ -116,7 +116,7 @@ export const AdminDashboard = () => {
                     <ul>
                         {topVendedores?.map((v: any) => (
                             <li key={v.PublicID}>
-                                {v.Name} - {v.Email}
+                                {v.Name} - {v.Email} - {v.review_score}
                             </li>
                         ))}
                     </ul>
