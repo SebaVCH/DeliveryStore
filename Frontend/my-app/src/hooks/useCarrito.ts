@@ -45,11 +45,11 @@ export function usePagarCarritos() {
     const {data: user} = useUserProfile();
 
     return useMutation({
-        mutationFn: async (userId: number) => {
-            if(userId === 0){
-                userId = user.PublicID
+        mutationFn: async (data:{BuyerID: number, ProductID: number, Amount: number}) => {
+            if(data.BuyerID === 0){
+                data.BuyerID = user.PublicID
             }
-            const response = await api.patch(`/sistema/carrito/pagar/${userId}`);
+            const response = await api.patch(`/sistema/carrito/pagar/${data.BuyerID}`, data);
             return response.data;
         },
         onSuccess: () => {

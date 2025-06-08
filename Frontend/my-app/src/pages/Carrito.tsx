@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import { useCarritosComprador, usePrecioFinal, usePagarCarritos} from '../hooks/useCarrito';
 import { useAgregarSaldo, useCrearValoracion } from '../hooks/useUsuarios';
+import { useCrearTransaccion } from '../hooks/useTransaccion';
 
 export const Carrito = () => {
     const { token, setToken } = useAuth();
@@ -17,6 +18,12 @@ export const Carrito = () => {
     const [amount, setAmount] = useState('');
     const [balanceError, setBalanceError] = useState('');
     const [showAddBalance, setShowAddBalance] = useState(false);
+    const crearTransaccion = useCrearTransaccion();
+
+    //cosas de transaccion
+    const [idComprador, setBuyerID] = useState('');
+    const [idProducto, setProductID] = useState('');
+    const [cantidad, setCantidad] = useState('');
 
     //cosas de valoraciones
     const [showReviewModal, setShowReviewModal] = useState(false);
@@ -37,26 +44,30 @@ export const Carrito = () => {
     };
 
     const handlePagar = async () => {
-        if (!user?.PublicID) return;
-    
-        setErrorPago(null); 
+        if (!user?.PublicID || !carritos || carritos.length === 0) return;
+
+        setErrorPago(null);
+        setPaymentSuccess(false);
 
         try {
-            await pagarCarritos(user.PublicID, {
-                onSuccess: () => {
-                    setPaymentSuccess(true);
-                    setRatings(carritos?.map(() => ({ Rating: 5, Comment: '' })) || []);
-                    setCurrentProductIndex(0);
-                    setShowReviewModal(true);
-                },
-                onError: (error) => {
-                    const mensaje = error.response?.data?.message || 'Error al procesar el pago';
-                    alert(mensaje);
-                    setErrorPago(mensaje);
-                }
+        
+        for (const carrito of carritos) {
+            await pagarCarritos({
+                BuyerID: user.PublicID,
+                ProductID: carrito.IDProduct,
+                Amount: carrito.FinalPrice
             });
-        } catch (error) {
-            setErrorPago('Error inesperado al procesar el pago');
+        }
+
+        setPaymentSuccess(true);
+        setRatings(carritos.map(() => ({ Rating: 5, Comment: '' })));
+        setCurrentProductIndex(0);
+        setShowReviewModal(true);
+        
+        } catch (error : any) {
+            const mensaje = error.response?.data?.message || 'Error al procesar el pago';
+            alert(`Error con el producto: ${mensaje}`);
+            setErrorPago(mensaje);
         }
     };
 
@@ -82,7 +93,7 @@ export const Carrito = () => {
                     alert(`Saldo de $${amount} agregado correctamente`);
                     setAmount('');
                     setShowAddBalance(false);
-                    refetchUser(); // Actualizar el saldo mostrado
+                    refetchUser(); 
                 },
                 onError: (error: any) => {
                     setBalanceError(error?.response?.data?.message || 'Error al agregar saldo');
