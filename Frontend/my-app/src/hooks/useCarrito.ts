@@ -102,6 +102,9 @@ export function useProductosMasComprados(cantidad: string) {     //pa listar los
     return useQuery({
         queryKey: ['topProductos', cantidad],
         queryFn: async () => {
+            if (!cantidad) {
+                return [];
+            }
             const respuesta = await api.get(`sistema/carrito/topProductos/${cantidad}`);
             return respuesta.data;
         },

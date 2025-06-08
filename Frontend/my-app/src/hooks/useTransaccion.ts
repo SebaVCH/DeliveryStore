@@ -26,6 +26,9 @@ export function useTopVendedores(cantidad: string) {     //listar los 3 vendedor
     return useQuery({
         queryKey: ['topVendedores', cantidad],
         queryFn: async () => {
+            if (!cantidad) {
+                return [];
+            }
             const respuesta = await api.get(`sistema/transacciones/topVendedores/${cantidad}`);
             return respuesta.data;
         },
