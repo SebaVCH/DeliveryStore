@@ -67,11 +67,13 @@ export const Carrito = () => {
                 Amount: carrito.FinalPrice,
             })
 
-            await crearOrden.mutateAsync({
-                Status: 'Pendiente',
-                BuyerID: user.PublicID,
-                SellerID: carrito.Product.SellerID
-            });
+            if (carrito.Product.Delivery === 'delivery') {
+                await crearOrden.mutateAsync({
+                    Status: 'Pendiente',
+                    BuyerID: user.PublicID,
+                    SellerID: carrito.Product.SellerID
+                });
+            }
 
         }
 

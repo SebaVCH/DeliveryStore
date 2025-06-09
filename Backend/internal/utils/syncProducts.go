@@ -41,7 +41,7 @@ func SyncRatingProducts(db *gorm.DB) error {
 		err := db.Table("reviews").
 			Select("COALESCE(ROUND(AVG(rating), 1), 0)").
 			Joins("JOIN pr_relations ON reviews.id = pr_relations.review_id").
-			Where("pr_relations.product_id = ?", product.ID).
+			Where("pr_relations.product_id = ? AND rating >= 1", product.ID).
 			Scan(&avgRating).Error
 		if err != nil {
 			return err
@@ -66,7 +66,7 @@ func SyncRatingSellers(db *gorm.DB) error {
 		var avgRating float64
 		err := db.Table("products").
 			Select("COALESCE(ROUND(AVG(review_score), 1), 0)").
-			Where("seller_id = ?", seller.ID).
+			Where("seller_id = ? AND review_score >= 1", seller.ID).
 			Scan(&avgRating).Error
 		if err != nil {
 			return err

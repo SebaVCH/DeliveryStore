@@ -46,7 +46,7 @@ func (r *reviewRepository) CreateReview(review domain.Review, productID string) 
 	err = r.db.Model(&domain.Review{}).
 		Select("COALESCE(ROUND(AVG(rating), 1), 0)").
 		Joins("JOIN pr_relations ON reviews.id = pr_relations.review_id").
-		Where("pr_relations.product_id = ?", id).
+		Where("pr_relations.product_id = ? AND rating >= 1", id).
 		Scan(&avgScore).Error
 	if err != nil {
 		return err
@@ -74,7 +74,7 @@ func (r *reviewRepository) CreateReview(review domain.Review, productID string) 
 	var avgRating float64
 	err = r.db.Table("products").
 		Select("COALESCE(ROUND(AVG(review_score), 1), 0)").
-		Where("seller_id = ?", seller.ID).
+		Where("seller_id = ? AND review_score >= 1", seller.ID).
 		Scan(&avgRating).Error
 	if err != nil {
 		return err

@@ -65,11 +65,11 @@ func (r *transactionRepository) GetTransactionTopSellers(quantity string) ([]dom
 	var users []domain.Usuario
 
 	query := r.db.Table("transactions").
-		Select("usuarios.*, COUNT(transactions.id) as total_transactions, SUM(transactions.amount) as total_amount").
+		Select("usuarios.*, COUNT(transactions.id) as total_transactions").
 		Joins("JOIN usuarios ON usuarios.id = transactions.seller_id").
 		Where("usuarios.banned = ?", false).
 		Group("usuarios.id").
-		Order("total_amount DESC")
+		Order("usuarios.review_score DESC")
 
 	if quantity != "all" {
 		value, err := strconv.Atoi(quantity)
