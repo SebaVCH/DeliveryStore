@@ -208,11 +208,18 @@ export const Homegeneral = () => {
         
 
         { user.RoleType === 2 && (
-            <button onClick={()=> navigate('/Repartidores')}>Vista de repartidor</button>
+            <>
+                <button onClick={()=> navigate('/Repartidores')}>Vista de repartidor</button>
+                <button onClick={logout}> Cerrar sesión </button>
+            </>
+            
         )}
 
         { user.RoleType === 3 && (
-            <button onClick={()=> navigate('/AdminDashboard')}>Vista de admin</button>
+            <>
+                <button onClick={()=> navigate('/AdminDashboard')}>Vista de admin</button>
+                <button onClick={logout}> Cerrar sesión </button>
+            </>
         )}
 
         

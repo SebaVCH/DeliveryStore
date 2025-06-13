@@ -11,6 +11,7 @@ import {Envios} from '../pages/Envios';
 import {Homegeneral} from '../pages/Homegeneral';
 import { Noautorizado } from '../pages/Noautorizado';
 import {Carrito} from '../pages/Carrito';
+import { Cuentaeliminada } from '../pages/Cuentaeliminada';
 export const AppRoutes = () => {
   return (
     <Routes>
@@ -23,7 +24,7 @@ export const AppRoutes = () => {
 
       <Route path='/Home'element={<PrivateRoute roles={[1]}><Home/></PrivateRoute>}/>
       <Route path='/Homegeneral'element={<PrivateRoute> <Homegeneral/> </PrivateRoute>}/>
-
+      <Route path='/Cuentaeliminada' element={<Cuentaeliminada/>}/>
       <Route path='/Noautorizado' element={<Noautorizado/>}/>
       <Route path='/Producto' element={<PrivateRoute roles={[1]}><Producto/></PrivateRoute>}/>
 
