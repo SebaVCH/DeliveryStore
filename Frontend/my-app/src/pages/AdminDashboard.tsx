@@ -8,6 +8,9 @@ import { useUserProfile } from '../hooks/useUserProfile';
 import { useEnvios, useEnviosEntregados } from '../hooks/useEnvios';
 import { useProductos } from '../hooks/useProductos';
 import { useOrdenesAdmin, useOrdenes } from '../hooks/useOrdenes';
+import GraficoCircular from "../components/GraficoCircular";
+import TablaPaginacionGenerica from "../components/TablaPaginacion";
+import PersistentDrawerLeft from "../components/Pestañas";
 
 export const AdminDashboard = () => {
     
@@ -82,264 +85,285 @@ export const AdminDashboard = () => {
 
     return (
         <div>
-            <h1>Administracion de Usuarios</h1>
-            <button onClick={() => navigate('/Homegeneral')}> volver al perfil</button>
+            <div>
+                <PersistentDrawerLeft
+                    sections={{
+                        usuarios: (
+                            <>
+                                {isLoading ? (
+                                    <p>Cargando los usuarios...</p>
+                                ) : (
+                                    <>
+                                        <h2>Usuarios Registrados</h2>
+                                        <TablaPaginacionGenerica
+                                            filas={usuarios || []}
+                                            columnas={[
+                                                { field: 'Name', headerName: 'Nombre', width: 200 },
+                                                { field: 'Email', headerName: 'Correo', width: 250 },
+                                                {
+                                                    field: 'accion',
+                                                    headerName: 'Acción',
+                                                    width: 150,
+                                                    renderCell: (params) => (
+                                                        <button onClick={() => eliminarUsuario.mutate(Number(params.row.PublicID))}>
+                                                            Banear usuario
+                                                        </button>
+                                                    ),
+                                                },
+                                            ]}
+                                            cantidad={cantidadUsuarios}
+                                        />
+                                        <div>
+                                            <input
+                                                type="text"
+                                                placeholder="Cantidad o 'all'"
+                                                value={inputValue}
+                                                onChange={(e) => {
+                                                    setInputValue(e.target.value);
 
-            {isLoadingMonto? (
-                <p>Cargando Monto total...</p>
-            ): (
-            <>
-                <h2> Monto total transferido en el sistema: </h2>
-                {montoTotal.total_amount}
-                
-            </>
-            )}
+                                                    if (e.target.value && e.target.value !== 'all' && !/^\d*$/.test(e.target.value)) {
+                                                        setError('Solo números o "all"');
+                                                    } else {
+                                                        setError('');
+                                                    }
+                                                }}
+                                                style={{flex: 1}}
+                                            />
 
-            {isLoadingVendedores? (
-                <p>Cargando top vendedores...</p>
-            ): (
-            <>
-                <h2> Top vendedores: </h2>
-                <div style={{marginBottom: '10px'}}>
-                    <input 
-                        type="number" 
-                        placeholder="Cantidad o 'all'" 
-                        value={cantidadVendedores}
-                        onChange={(e) => setCantidadVendedores(e.target.value)}
-                        style={{marginRight: '10px'}}
-                    />
-                    <button onClick={() => setCantidadVendedores('all')}>
-                        Mostrar todos
-                    </button>
-                </div>
-                {topVendedores?.length > 0 ? ( 
-                    <ul>
-                        {topVendedores?.map((v: any) => (
-                            <li key={v.PublicID}>
-                                {v.Name} - {v.Email} - Puntuación promedio del vendedor: {v.ReviewScore}
-                            </li>
-                        ))}
-                    </ul>
-                ) : (<p>No hay compras en el sistema...</p>)
-                }
-            </>
-            )}
+                                            <button
+                                                onClick={handleConfirmar}
+                                                style={{padding: '5px 15px'}}
+                                            >
+                                                Confirmar
+                                            </button>
 
-            {isLoadingProductos? (
-                <p>Cargando top productos...</p>
-            ): (
-            <>
-                <h2> Top productos: </h2>
-                <div style={{marginBottom: '10px'}}>
-                    <input 
-                        type="number" 
-                        placeholder="Cantidad o 'all'" 
-                        value={cantidadProductos}
-                        onChange={(e) => setCantidadProductos(e.target.value)}
-                        style={{marginRight: '10px'}}
-                    />
-                    <button onClick={() => setCantidadProductos('all')}>
-                        Mostrar todos
-                    </button>
-                </div>
-                {topProductos?.length > 0 ? ( 
-                    <ul>
-                        {topProductos?.map((p: any) => (
-                            <li key={p.ID}>
-                                <p>{p.Name} - {p.Description} - Precio del producto: {p.Price} - Puntuación promedio del producto: {p.ReviewScore} - cantidad vendida: {p.QuantitySold}</p>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (<p>No hay compras en el sistema...</p>)
-                }
-            </>
-            )}
+                                            <button
+                                                onClick={() => {
+                                                    setInputValue('');
+                                                    setCantidadUsuarios('all');
+                                                    setError('');
+                                                }}
+                                                style={{padding: '5px 15px'}}
+                                            >
+                                                Mostrar todos
+                                            </button>
+                                        </div>
 
-            <h2>Productos</h2>
-            {isLoadingTodosProductos? (
-                <p>Cargando los productos...</p>
-            ): (
-            <>
-                {productos?.length > 0 ? ( 
-                    <ul>
-                        {productos.map((producto: any) => (
-                        <li key = {producto.ID}>
-                            <p>{producto.Name} - {producto.Description} Precio del producto: {producto.Price} - Puntuación promedio del producto: {producto.ReviewScore} - Cantidad vendida: {producto.QuantitySold}</p>
-                        </li>
-                    ))}
-                    </ul>
-                ) : (<p>No hay envios entregados.</p>)
-                }
-            </>
-            )}
+                                        {error && <div style={{color: 'red', marginTop: '5px'}}>{error}</div>}
+                                    </>
+                                )}
+                                <h3>Crear nuevo presidente: </h3>
+                                <form onSubmit={crear}>
+                                    <input type = "text" placeholder="Nombre de la cuenta..." value={name} onChange={(e)=> setName(e.target.value)} required />
 
-            <h2>Envios vigentes </h2>
-            {isLoadingEnvios? (
-                <p>Cargando los envios...</p>
-            ): (
-            <>
-                {envios?.length > 0 ? ( 
-                    <ul>
-                        {envios.map((envio: any) => (
-                        <li key = {envio.ID}>
-                            <p>Repartidor: {envio.Delivery.Name} - Estado del envio: {envio.Status} - Dirección de entrega: {envio.Buyer.Address} - Teléfono del cliente: {envio.Buyer.Phone}</p>
-                        </li>
-                    ))}
-                    </ul>
-                ) : (<p>No hay envios vigentes.</p>)
-                }
-            </>
-            )}
+                                    <input type = "email" placeholder="Correo de la cuenta..." value={email} onChange={(e)=> setEmail(e.target.value)} required />
 
-            <h2>Envios entregados </h2>
-            {isLoadingEntregados? (
-                <p>Cargando los envios...</p>
-            ): (
-            <>
-                {enviosEntregados?.length > 0 ? ( 
-                    <ul>
-                        {enviosEntregados.map((envio: any) => (
-                        <li key = {envio.ID}>
-                            <p>Repartidor: {envio.Delivery.Name} - Estado del envio: {envio.Status} - Dirección de entrega: {envio.Buyer.Address} - Teléfono del cliente: {envio.Buyer.Phone}</p>
-                        </li>
-                    ))}
-                    </ul>
-                ) : (<p>No hay envios entregados.</p>)
-                }
-            </>
-            )}
+                                    <input type = "password" placeholder="ContraseÃ±a de la cuenta..." value={contrasenha} onChange={(e)=> setContrasenha(e.target.value)} required />
 
-            {isLoadingTransac? (
-                <p>Cargando transacciones...</p>
-            ): (
-            <>
-                <h2> Todas las transacciones en el sistema: </h2>
-                {transacciones?.length > 0 ? ( 
-                    <ul>
-                        {transacciones.map((t: any) => (
-                            <li key={t.ID}>
-                                <p>{t.Name} - Fecha de la transacción: {t.Date} - Monto total de la transacción: {t.Amount} - Correo del vendedor: {t.Seller.Email} - Correo del comprador: {t.Buyer.Email}</p>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (<p>No hay compras en el sistema...</p>)
-                }
-            </>
-            )}
+                                    <input type = "text" placeholder="Su dirección..." value={direcc} onChange={(e)=> setDireccion(e.target.value)} required />
 
-            {isLoadingTodasOrdenes? (
-                <p>Cargando ordenes...</p>
-            ): (
-            <>
-                <h2> Ordenes pasadas: </h2>
-                {ordenes?.length > 0 ? ( 
-                    <ul>
-                        {ordenes.map((orden: any) => (
-                            <li key={orden.ID}>
-                                <p>Fecha de entrega: {orden.Date} - Estado de la orden: {orden.Status} - Dirección de entrega: {orden.Buyer.Address} - Número del cliente: {orden.Buyer.Phone} - Tienda: {orden.Seller.Name} - Dirección tienda: {orden.Seller.Address}</p>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (<p>No hay ordenes en el sistema.</p>)
-                }
-            </>
-            )}
+                                    <input type = "text" placeholder="Su telefono..." value={telefo} onChange={(e)=> setTelefono(e.target.value)} required />
 
-            {isLoadingOrdenesVigentes? (
-                <p>Cargando ordenes...</p>
-            ): (
-            <>
-                <h2> Ordenes vigentes: </h2>
-                {ordenesVigentes?.length > 0 ? ( 
-                    <ul>
-                        {ordenesVigentes.map((orden: any) => (
-                            <li key={orden.ID}>
-                                <p>Fecha de entrega: {orden.Date} - Estado de la orden: {orden.Status} - Dirección de entrega: {orden.Buyer.Address} - Número del cliente: {orden.Buyer.Phone} - Tienda: {orden.Seller.Name} - Dirección tienda: {orden.Seller.Address}</p>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (<p>No hay ordenes en el sistema.</p>)
-                }
-            </>
-            )}
+                                    <button type="submit">Agregar</button>
+                                </form>
+                            </>
+                        ),
+                        vendedores: (
+                            <>
+                                {isLoadingVendedores? (
+                                    <p>Cargando top vendedores...</p>
+                                ): (
+                                    <>
+                                        <h2> Top vendedores: </h2>
+                                        <div style={{marginBottom: '10px'}}>
+                                            <input
+                                                type="number"
+                                                placeholder="Cantidad o 'all'"
+                                                value={cantidadVendedores}
+                                                onChange={(e) => setCantidadVendedores(e.target.value)}
+                                                style={{marginRight: '10px'}}
+                                            />
+                                            <button onClick={() => setCantidadVendedores('all')}>
+                                                Mostrar todos
+                                            </button>
+                                        </div>
+                                        <TablaPaginacionGenerica
+                                            filas={topVendedores || []}
+                                            columnas={[
+                                                { field: 'Name', headerName: 'Nombre', width: 200 },
+                                                { field: 'Email', headerName: 'Correo', width: 250 },
+                                                { field: 'ReviewScore', headerName: 'Puntuacion', width: 120 },
+                                            ]}
+                                            cantidad={cantidadVendedores}
+                                            onCantidadChange={setCantidadVendedores}
+                                        />
+                                    </>
+                                )}
+                            </>
+                        ),
+                        productos: (
+                            <>
+                                {isLoadingProductos? (
+                                    <p>Cargando top productos...</p>
+                                ): (
+                                    <>
+                                        <h2> Top productos: </h2>
+                                        {topProductos?.length > 0 && (
+                                            <GraficoCircular
+                                                data={topProductos.map((p: any) => ({
+                                                    label: p.Name,
+                                                    value: p.QuantitySold,
+                                                }))}
+                                                height={250}
+                                                width={250}
+                                            />
+                                        )}
+                                        <TablaPaginacionGenerica
+                                            filas={topProductos || []}
+                                            columnas={[
+                                                { field: 'Name', headerName: 'Nombre', width: 200 },
+                                                { field: 'Description', headerName: 'Descripción', width: 250 },
+                                                { field: 'Price', headerName: 'Precio', width: 120 },
+                                                { field: 'ReviewScore', headerName: 'Puntuación', width: 120 },
+                                                { field: 'QuantitySold', headerName: 'Cantidad Vendida', width: 150 },
+                                            ]}
+                                            cantidad={cantidadProductos}
+                                            onCantidadChange={setCantidadProductos}
+                                        />
+                                        <div style={{marginBottom: '10px'}}>
+                                            <input
+                                                type="number"
+                                                placeholder="Cantidad o 'all'"
+                                                value={cantidadProductos}
+                                                onChange={(e) => setCantidadProductos(e.target.value)}
+                                                style={{marginRight: '10px'}}
+                                            />
+                                            <button onClick={() => setCantidadProductos('all')}>
+                                                Mostrar todos
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
+                            </>
+                        ),
+                        envios: (
+                            <>
+                                <h2>Envios vigentes </h2>
+                                {isLoadingEnvios? (
+                                    <p>Cargando los envios...</p>
+                                ): (
+                                    <>
+                                        <TablaPaginacionGenerica
+                                            filas={envios || []}
+                                            columnas={[
+                                                { field: 'Delivery_Name', headerName: 'Nombre del repartidor', width: 200},
+                                                { field: 'Status', headerName: 'Estado del envio', width: 200 },
+                                                { field: 'Buyer_Address', headerName: 'Dirección de entrega', width: 200 },
+                                                { field: 'Buyer_Phone', headerName: 'Teléfono del cliente', width: 200 },
+                                            ]}
+                                            cantidad= '5'
+                                        />
+                                    </>
+                                )}
 
-                {isLoading ? (
-    <p>Cargando los usuarios...</p>
-    ) : (
-    <>
-        <h2>Usuarios Registrados</h2>
-        <div>
-        <input 
-            type="text" 
-            placeholder="Cantidad o 'all'" 
-            value={inputValue}
-            onChange={(e) => {
-            setInputValue(e.target.value);
-          
-            if (e.target.value && e.target.value !== 'all' && !/^\d*$/.test(e.target.value)) {
-                setError('Solo números o "all"');
-            } else {
-                setError('');
-            }
-            }}
-            style={{flex: 1}}
-        />
-      
-        <button 
-            onClick={handleConfirmar}
-            style={{padding: '5px 15px'}}
-        >
-            Confirmar
-        </button>
-      
-        <button 
-            onClick={() => {
-            setInputValue('');
-            setCantidadUsuarios('all');
-            setError('');
-            }}
-            style={{padding: '5px 15px'}}
-        >
-            Mostrar todos
-        </button>
-        </div>
-    
-        {error && <div style={{color: 'red', marginTop: '5px'}}>{error}</div>}
+                                <h2>Envios entregados </h2>
+                                {isLoadingEntregados? (
+                                    <p>Cargando los envios...</p>
+                                ): (
+                                    <>
+                                        <TablaPaginacionGenerica
+                                            filas={enviosEntregados || []}
+                                            columnas={[
+                                                { field: 'Delivery_Name', headerName: 'Nombre del repartidor', width: 200},
+                                                { field: 'Status', headerName: 'Estado del envio', width: 200 },
+                                                { field: 'Buyer_Address', headerName: 'Dirección de entrega', width: 200 },
+                                                { field: 'Buyer_Phone', headerName: 'Teléfono del cliente', width: 200 },
+                                            ]}
+                                            cantidad= '5'
+                                        />
+                                    </>
+                                )}
+                            </>
+                        ),
+                        ordenes: (
+                            <>
+                                {isLoadingTodasOrdenes? (
+                                    <p>Cargando ordenes...</p>
+                                ): (
+                                    <>
+                                        <h2> Ordenes pasadas: </h2>
+                                        <TablaPaginacionGenerica
+                                            filas={ordenes || []}
+                                            columnas={[
+                                                { field: 'Date', headerName: 'Fecha', width: 200},
+                                                { field: 'Status', headerName: 'Estado del envio', width: 200 },
+                                                { field: 'Buyer_Address', headerName: 'Dirección de entrega', width: 200 },
+                                                { field: 'Buyer_Phone', headerName: 'Teléfono del cliente', width: 200 },
+                                                { field: 'Seller_Name', headerName: 'Tienda', width: 200 },
+                                                { field: 'Seller_Address', headerName: 'Direccion Tienda', width: 200 },
+                                            ]}
+                                            cantidad= '5'
+                                        />
+                                    </>
+                                )}
 
-    
-        <div key={`user-list-${cantidadUsuarios}`}>
-        {usuarios?.length > 0 ? ( 
-            <ul>
-            {usuarios.map((c: any) => (
-                <li key={c.PublicID}>
-                {c.Name} - {c.Email}
-                <button onClick={() => eliminarUsuario.mutate(c.PublicID)}>Banear usuario</button>
-                </li>
-            ))}
-            </ul>
-            ) : (<p>No hay usuarios registrados...</p>)}
+                                {isLoadingOrdenesVigentes? (
+                                    <p>Cargando ordenes...</p>
+                                ): (
+                                    <>
+                                        <h2> Ordenes vigentes: </h2>
+                                        <TablaPaginacionGenerica
+                                            filas={ordenesVigentes || []}
+                                            columnas={[
+                                                { field: 'Date', headerName: 'Fecha', width: 200},
+                                                { field: 'Status', headerName: 'Estado del envio', width: 200 },
+                                                { field: 'Buyer_Address', headerName: 'Dirección de entrega', width: 200 },
+                                                { field: 'Buyer_Phone', headerName: 'Teléfono del cliente', width: 200 },
+                                                { field: 'Seller_Name', headerName: 'Tienda', width: 200 },
+                                                { field: 'Seller_Address', headerName: 'Direccion Tienda', width: 200 },
+                                            ]}
+                                            cantidad= '5'
+                                        />
+                                    </>
+                                )}
+                            </>
+                        ),
+                        transacciones: (
+                            <>
+                                <h2>Transacciones</h2>
+                                {isLoadingMonto? (
+                                    <p>Cargando Monto total...</p>
+                                ): (
+                                    <>
+                                        <h2> Monto total transferido en el sistema: </h2>
+                                        {montoTotal.total_amount}
+
+                                    </>
+                                )}
+
+                                {isLoadingTransac? (
+                                    <p>Cargando transacciones...</p>
+                                ): (
+                                    <>
+                                        <h2> Todas las transacciones en el sistema: </h2>
+                                        <TablaPaginacionGenerica
+                                            filas={transacciones || []}
+                                            columnas={[
+                                                { field: 'Date', headerName: 'Fecha', width: 200},
+                                                { field: 'Amount', headerName: 'Monto total de la transacción', width: 200 },
+                                                { field: 'Seller_Email', headerName: 'Correo del vendedor', width: 200 },
+                                                { field: 'Buyer_Email', headerName: 'Correo del comprador', width: 200 },
+                                            ]}
+                                            cantidad= '5'
+                                        />
+                                    </>
+                                )}
+
+                            </>
+                        ),
+                    }}
+                />
             </div>
-        </>
-        )}
-
-
-            <h3>Crear nuevo presidente: </h3>
-            <form onSubmit={crear}>
-                <input type = "text" placeholder="Nombre de la cuenta..." value={name} onChange={(e)=> setName(e.target.value)} required />
-
-                <input type = "email" placeholder="Correo de la cuenta..." value={email} onChange={(e)=> setEmail(e.target.value)} required />
-
-                <input type = "password" placeholder="ContraseÃ±a de la cuenta..." value={contrasenha} onChange={(e)=> setContrasenha(e.target.value)} required />
-
-                <input type = "text" placeholder="Su dirección..." value={direcc} onChange={(e)=> setDireccion(e.target.value)} required />
-
-                <input type = "text" placeholder="Su telefono..." value={telefo} onChange={(e)=> setTelefono(e.target.value)} required />
-
-                <button type="submit">Agregar</button>
-            </form>
-
-
-
         </div>
     );
 };
