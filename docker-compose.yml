@@ -1,0 +1,21 @@
+services:
+  backend:
+    build: ./Backend
+    ports:
+      - "8080:8080"
+    networks:
+      - appnet
+    env_file:
+      - ./Backend/.env
+    volumes:
+      - ./Backend/delivery.db:/app/delivery.db
+  frontend:
+    build: ./Frontend/my-app
+    ports:
+      - "3000:80"
+    networks:
+      - appnet
+    depends_on:
+      - backend
+networks:
+  appnet:
