@@ -40,30 +40,7 @@ Para poder iniciar el proyecto, se debe estar en la carpeta raíz (DeliveryStore
 docker-compose up  
 ```  
 
-## Usuarios de prueba
-###  usuarios comprador/vendedor:
-```  
-correo: roberto@gmail.com contraseña: roberto12
-```  
-```  
-correo: test1@gmail.com contraseña: 123
-```  
-
-### repartidores:
-```  
-correo: test2@gmail.com contraseña: 123
-```
-```  
-correo: usuario2@email.com contraseña: password2
-```  
-
-### admin:
-```  
-correo: test@gmail.com contraseña: 123
-```
-```  
-correo: jorquera@gmail.com contraseña: jorge12
-```
+### Usuarios de prueba
 
 | Usuarios comprador/vendedor                    | Repartidores                                    | Administradores                                |
 |------------------------------------------------|-------------------------------------------------|------------------------------------------------|
