@@ -22,6 +22,11 @@ import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import MarkunreadMailboxIcon from '@mui/icons-material/MarkunreadMailbox';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -66,33 +71,61 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-type SectionKey = 'usuarios' | 'vendedores' | 'productos' | 'envios' | 'ordenes' | 'transacciones';
+type UserType = 'admin' | 'repartidor';
 
-interface PersistentDrawerLeftProps {
-    sections: Record<SectionKey, React.ReactNode>;
+interface MenuItem {
+    key: string;
+    label: string;
+    icon: React.ReactNode;
 }
 
-export default function PersistentDrawerLeft({ sections }: PersistentDrawerLeftProps) {
+interface PersistentDrawerLeftProps {
+    sections: Record<string, React.ReactNode>;
+    userType: UserType;
+}
+
+const menuConfigs: Record<UserType, { title: string; items: MenuItem[] }> = {
+    admin: {
+        title: 'Panel de Administración',
+        items: [
+            { key: 'usuarios', label: 'Usuarios', icon: <PersonIcon /> },
+            { key: 'vendedores', label: 'Vendedores', icon: <ShoppingBagIcon /> },
+            { key: 'productos', label: 'Productos', icon: <InboxIcon /> },
+            { key: 'envios', label: 'Envíos', icon: <MarkunreadMailboxIcon /> },
+            { key: 'ordenes', label: 'Órdenes', icon: <LocalShippingIcon /> },
+            { key: 'transacciones', label: 'Transacciones', icon: <PointOfSaleIcon /> },
+        ]
+    },
+    repartidor: {
+        title: 'Panel de Repartidor',
+        items: [
+            { key: 'ordenesDisponibles', label: 'Órdenes Disponibles', icon: <AssignmentIcon /> },
+            { key: 'misEnvios', label: 'Mis Envíos', icon: <DeliveryDiningIcon /> },
+        ]
+    }
+};
+
+export default function PersistentDrawerLeft({ sections, userType }: PersistentDrawerLeftProps) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-    const [selectedSection, setSelectedSection] = React.useState<SectionKey>('usuarios');
+    const { setToken } = useAuth();
+    const navigate = useNavigate();
 
-    const menuItems: { key: SectionKey; label: string; icon: React.ReactNode }[] = [
-        { key: 'usuarios', label: 'Usuarios', icon: <PersonIcon /> },
-        { key: 'vendedores', label: 'Vendedores', icon: <ShoppingBagIcon /> },
-        { key: 'productos', label: 'Productos', icon: <InboxIcon /> },
-        { key: 'envios', label: 'Envíos', icon: <MarkunreadMailboxIcon /> },
-        { key: 'ordenes', label: 'Órdenes', icon: <LocalShippingIcon /> },
-        { key: 'transacciones', label: 'Transacciones', icon: <PointOfSaleIcon /> },
-    ];
+    const config = menuConfigs[userType];
+    const [selectedSection, setSelectedSection] = React.useState<string>(config.items[0].key);
 
     const handleDrawerOpen = () => setOpen(true);
     const handleDrawerClose = () => setOpen(false);
 
+    const handleLogout = () => {
+        setToken(null);
+        navigate('/Login');
+    };
+
     return (
         <Box sx={{ display: 'flex'}}>
             <CssBaseline />
-            <AppBar position="fixed" open={open} sx ={{backgroundColor: '#B6F500'}}>
+            <AppBar position="fixed" open={open} sx ={{backgroundColor: '#79CB3A'}}>
                 <Toolbar>
                     <IconButton
                         color="inherit"
@@ -104,7 +137,7 @@ export default function PersistentDrawerLeft({ sections }: PersistentDrawerLeftP
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap component="div">
-                        Panel de Administración
+                        {config.title}
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -115,6 +148,8 @@ export default function PersistentDrawerLeft({ sections }: PersistentDrawerLeftP
                     '& .MuiDrawer-paper': {
                         width: drawerWidth,
                         boxSizing: 'border-box',
+                        display: 'flex',
+                        flexDirection: 'column',
                     },
                 }}
                 variant="persistent"
@@ -127,8 +162,8 @@ export default function PersistentDrawerLeft({ sections }: PersistentDrawerLeftP
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
-                <List>
-                    {menuItems.map((item) => (
+                <List sx={{ flexGrow: 1 }}>
+                    {config.items.map((item) => (
                         <ListItem key={item.key} disablePadding>
                             <ListItemButton
                                 selected={selectedSection === item.key}
@@ -139,6 +174,17 @@ export default function PersistentDrawerLeft({ sections }: PersistentDrawerLeftP
                             </ListItemButton>
                         </ListItem>
                     ))}
+                </List>
+                <Divider />
+                <List>
+                    <ListItem disablePadding>
+                        <ListItemButton onClick={handleLogout} sx={{ color: 'red' }}>
+                            <ListItemIcon sx={{ color: 'red' }}>
+                                <LogoutIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Cerrar Sesión" />
+                        </ListItemButton>
+                    </ListItem>
                 </List>
             </Drawer>
             <Main open={open}>

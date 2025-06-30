@@ -87,6 +87,7 @@ export const AdminDashboard = () => {
         <div>
             <div>
                 <PersistentDrawerLeft
+                    userType="admin"
                     sections={{
                         usuarios: (
                             <>

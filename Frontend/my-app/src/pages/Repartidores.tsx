@@ -3,12 +3,17 @@ import { useOrdenes, useAceptarOrden} from '../hooks/useOrdenes';
 import { useNavigate } from 'react-router-dom';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useAuth } from '../context/AuthContext';
+import PersistentDrawerLeft from "../components/Pestañas";
+import {useActualizarEnvio, useEnviosRepartidor, useEnviosRepartidorEntregados} from "../hooks/useEnvios";
+import TablaPaginacionGenerica from "../components/TablaPaginacion";
 
 export const Repartidores = () => {
     const {token, setToken} = useAuth();
-    const {data: ordenes, isLoading} = useOrdenes();
+    const {data: ordenes, isLoading: isLoadingOrdenes} = useOrdenes();
     const {data: user, isLoading: cargauser, isError} = useUserProfile();
-
+    const actualizarEnvio = useActualizarEnvio();
+    const {data: envios, isLoading: isLoadingEnvios} = useEnviosRepartidor(user.PublicID);
+    const {data: enviosEntregados, isLoading: isLoadingEntregados} = useEnviosRepartidorEntregados(user.PublicID);
     const aceptarOrden = useAceptarOrden();
     
     const navigate = useNavigate();
@@ -43,32 +48,93 @@ export const Repartidores = () => {
 
     return (
         <div>
-        <h1>Ordenes disponibles:</h1>
-        <button onClick={() => navigate('/Envios')}>Mis envios</button>
-        {isLoading ? (<p>Cargando ordenes disponibles...</p>)
-        : (
-            <>
-            {ordenes?.length > 0 ? (
-                <ul>
-                    {ordenes.map((o: any) => (
-                        <li key = {o.ID}>
-                            <p>Fecha de entrega: {o.Date} - Estado de la orden: {o.Status}</p>
-                            <p>Dirección de entrega: <strong>{o.Buyer.Address}</strong> - Número del cliente: {o.Buyer.Phone}</p>
-                            <p>Tienda: {o.Seller.Name} - Dirección tienda: {o.Seller.Address}</p>
+            <PersistentDrawerLeft
+                userType="repartidor"
+                sections={{
+                    ordenesDisponibles: (
+                        <div>
+                            <h1>Ordenes disponibles:</h1>
+                            {isLoadingOrdenes ? (<p>Cargando ordenes disponibles...</p>)
+                                : (
+                                    <>
+                                        <TablaPaginacionGenerica
+                                            filas={ordenes || []}
+                                            columnas={[
+                                                { field: 'Date', headerName: 'Fecha', width: 200 },
+                                                { field: 'Status', headerName: 'Estado', width: 200 },
+                                                { field: 'Buyer_Address', headerName: 'Direccion del comprador', width: 200 },
+                                                { field: 'Buyer_Phone', headerName: 'Telefono del comprador', width: 200 },
+                                                { field: 'Seller_Name', headerName: 'Nombre del vendedor', width: 200 },
+                                                { field: 'Seller_Address', headerName: 'Direccion del vendedor', width: 200 },
+                                                {
+                                                    field: 'accion',
+                                                    headerName: 'Acción',
+                                                    width: 150,
+                                                    renderCell: (params) => (
+                                                        <button
+                                                            onClick={() => aceptar(params.row)}
+                                                            disabled={aceptarOrden.isPending}
+                                                        >
+                                                            {aceptarOrden.isPending ? "Procesando..." : "Aceptar orden"}
+                                                        </button>
+                                                    ),
+                                                },
+                                            ]}
+                                            cantidad={"all"}
+                                        />
+                                    </>
+                                )}
+                            </div>
+                    ),misEnvios:(
+                        <div>
+                            <h1>Envios actuales: </h1>
+                            {isLoadingEnvios? (
+                                <p>Cargando los envios...</p>
+                            ): (
+                                <>
+                                    <TablaPaginacionGenerica
+                                        filas={envios || []}
+                                        columnas={[
+                                            { field: 'Delivery_Name', headerName: 'Repartidor', width: 200 },
+                                            { field: 'Status', headerName: 'Estado', width: 200 },
+                                            { field: 'Buyer_Address', headerName: 'Direccion del comprador', width: 200 },
+                                            { field: 'Buyer_Phone', headerName: 'Telefono del comprador', width: 200 },
+                                            {
+                                                field: 'accion',
+                                                headerName: 'Acción',
+                                                width: 150,
+                                                renderCell: (params) => (
+                                                    <button onClick={()=> actualizarEnvio.mutate(params.row.ID)}>producto entregado</button>
+                                                ),
+                                            },
+                                        ]}
+                                        cantidad={"all"}
+                                    />
+                                </>
+                            )}
 
-                            <button 
-                                onClick={() => aceptar(o)}
-                                disabled={aceptarOrden.isPending}
-                            >
-                                {aceptarOrden.isPending ? "Procesando..." : "Aceptar orden"} 
-                            </button> 
-                        </li>
-                    ))}
-                </ul>
-            ) : (<p> No hay Ordenes disponibles...</p>)
-            }
-            </>
-            )}
+                            <h2>Envios entregados: </h2>
+                            {isLoadingEntregados? (
+                                <p>Cargando los envios...</p>
+                            ): (
+                                <>
+                                    <TablaPaginacionGenerica
+                                        filas={enviosEntregados || []}
+                                        columnas={[
+                                            { field: 'Delivery_Name', headerName: 'Repartidor', width: 200 },
+                                            { field: 'Status', headerName: 'Estado', width: 200 },
+                                            { field: 'Buyer_Address', headerName: 'Direccion del comprador', width: 200 },
+                                            { field: 'Buyer_Phone', headerName: 'Telefono del comprador', width: 200 },
+                                        ]}
+                                        cantidad={"all"}
+                                    />
+                                </>
+                            )}
+                        </div>
+                    )
+                }}
+            />
+
         </div>
     );
 };
