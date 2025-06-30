@@ -20,6 +20,9 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import PersonIcon from '@mui/icons-material/Person';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import MarkunreadMailboxIcon from '@mui/icons-material/MarkunreadMailbox';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import BusinessIcon from '@mui/icons-material/Business';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
@@ -71,7 +74,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-type UserType = 'admin' | 'repartidor';
+type UserType = 'admin' | 'repartidor' | 'usuario';
 
 interface MenuItem {
     key: string;
@@ -101,6 +104,16 @@ const menuConfigs: Record<UserType, { title: string; items: MenuItem[] }> = {
         items: [
             { key: 'ordenesDisponibles', label: 'Órdenes Disponibles', icon: <AssignmentIcon /> },
             { key: 'misEnvios', label: 'Mis Envíos', icon: <DeliveryDiningIcon /> },
+        ]
+    },
+    usuario: {
+        title: 'Panel de Usuario',
+        items: [
+            { key: 'productos', label: 'Ver Productos', icon: <InboxIcon /> },
+            { key: 'carrito', label: 'Ver mi carrito', icon: <LocalShippingIcon /> },
+            { key: 'recargarSaldo', label: 'Recargar Saldo', icon: <AccountBalanceWalletIcon /> },
+            { key: 'misProductos', label: 'Mis Productos en Venta', icon: <StorefrontIcon /> },
+            { key: 'misProveedores', label: 'Mis Proveedores', icon: <BusinessIcon /> },
         ]
     }
 };

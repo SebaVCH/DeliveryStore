@@ -1,6 +1,7 @@
 import React,{SyntheticEvent, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister';
+import {BotonVerde} from "../components/BotonVerde";
 
 export const Register = () => { //Hooks
   const [nombre, setName] = useState('');
@@ -58,9 +59,9 @@ export const Register = () => { //Hooks
               <option value={2}>Repartidor</option>
             </select>
 
-            <button type="submit" disabled = {register.isPending}>
+            <BotonVerde onClick={()=>{}} type="submit" disabled = {register.isPending}>
               {register.isPending? 'Registrando...🗿' : 'Registrarse'}
-            </button>
+            </BotonVerde>
         </form>
         {errorMsg && <p>{errorMsg}</p>}
     </div>

@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import PersistentDrawerLeft from "../components/Pestañas";
 import {useActualizarEnvio, useEnviosRepartidor, useEnviosRepartidorEntregados} from "../hooks/useEnvios";
 import TablaPaginacionGenerica from "../components/TablaPaginacion";
+import {BotonVerde} from "../components/BotonVerde";
 
 export const Repartidores = () => {
     const {token, setToken} = useAuth();
@@ -71,12 +72,12 @@ export const Repartidores = () => {
                                                     headerName: 'Acción',
                                                     width: 150,
                                                     renderCell: (params) => (
-                                                        <button
+                                                        <BotonVerde
                                                             onClick={() => aceptar(params.row)}
                                                             disabled={aceptarOrden.isPending}
                                                         >
                                                             {aceptarOrden.isPending ? "Procesando..." : "Aceptar orden"}
-                                                        </button>
+                                                        </BotonVerde>
                                                     ),
                                                 },
                                             ]}
@@ -102,9 +103,9 @@ export const Repartidores = () => {
                                             {
                                                 field: 'accion',
                                                 headerName: 'Acción',
-                                                width: 150,
+                                                width: 200,
                                                 renderCell: (params) => (
-                                                    <button onClick={()=> actualizarEnvio.mutate(params.row.ID)}>producto entregado</button>
+                                                    <BotonVerde onClick={()=> actualizarEnvio.mutate(params.row.ID)}>Marcar como entregado</BotonVerde>
                                                 ),
                                             },
                                         ]}

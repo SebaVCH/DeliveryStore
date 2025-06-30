@@ -11,6 +11,7 @@ import { useOrdenesAdmin, useOrdenes } from '../hooks/useOrdenes';
 import GraficoCircular from "../components/GraficoCircular";
 import TablaPaginacionGenerica from "../components/TablaPaginacion";
 import PersistentDrawerLeft from "../components/Pestañas";
+import {BotonVerde} from "../components/BotonVerde";
 
 export const AdminDashboard = () => {
     
@@ -106,9 +107,9 @@ export const AdminDashboard = () => {
                                                     headerName: 'Acción',
                                                     width: 150,
                                                     renderCell: (params) => (
-                                                        <button onClick={() => eliminarUsuario.mutate(Number(params.row.PublicID))}>
+                                                        <BotonVerde onClick={() => eliminarUsuario.mutate(Number(params.row.PublicID))} >
                                                             Banear usuario
-                                                        </button>
+                                                        </BotonVerde>
                                                     ),
                                                 },
                                             ]}
@@ -131,23 +132,21 @@ export const AdminDashboard = () => {
                                                 style={{flex: 1}}
                                             />
 
-                                            <button
+                                            <BotonVerde
                                                 onClick={handleConfirmar}
-                                                style={{padding: '5px 15px'}}
                                             >
                                                 Confirmar
-                                            </button>
+                                            </BotonVerde>
 
-                                            <button
+                                            <BotonVerde
                                                 onClick={() => {
                                                     setInputValue('');
                                                     setCantidadUsuarios('all');
                                                     setError('');
                                                 }}
-                                                style={{padding: '5px 15px'}}
                                             >
                                                 Mostrar todos
-                                            </button>
+                                            </BotonVerde>
                                         </div>
 
                                         {error && <div style={{color: 'red', marginTop: '5px'}}>{error}</div>}
@@ -165,7 +164,13 @@ export const AdminDashboard = () => {
 
                                     <input type = "text" placeholder="Su telefono..." value={telefo} onChange={(e)=> setTelefono(e.target.value)} required />
 
-                                    <button type="submit">Agregar</button>
+                                    <BotonVerde
+                                        onClick={() => {}}
+                                        style={{ marginTop: '10px' }}
+                                        type="submit"
+                                    >
+                                        Agregar
+                                    </BotonVerde>
                                 </form>
                             </>
                         ),
@@ -184,9 +189,9 @@ export const AdminDashboard = () => {
                                                 onChange={(e) => setCantidadVendedores(e.target.value)}
                                                 style={{marginRight: '10px'}}
                                             />
-                                            <button onClick={() => setCantidadVendedores('all')}>
+                                            <BotonVerde onClick={() => setCantidadVendedores('all')}>
                                                 Mostrar todos
-                                            </button>
+                                            </BotonVerde>
                                         </div>
                                         <TablaPaginacionGenerica
                                             filas={topVendedores || []}
@@ -239,9 +244,9 @@ export const AdminDashboard = () => {
                                                 onChange={(e) => setCantidadProductos(e.target.value)}
                                                 style={{marginRight: '10px'}}
                                             />
-                                            <button onClick={() => setCantidadProductos('all')}>
+                                            <BotonVerde onClick={() => setCantidadProductos('all')}>
                                                 Mostrar todos
-                                            </button>
+                                            </BotonVerde>
                                         </div>
                                     </>
                                 )}

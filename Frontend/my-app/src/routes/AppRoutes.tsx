@@ -15,6 +15,9 @@ import { Cuentaeliminada } from '../pages/Cuentaeliminada';
 export const AppRoutes = () => {
   return (
     <Routes>
+        <Route path = '/'>
+            <Route index element={<Login/>}/>
+        </Route>
       <Route path = '/Login' element = {<Login/>}/>
       <Route path = '/Register' element = {<Register/>}/>
       <Route path = '/AdminDashboard' element={<PrivateRoute roles={[3]}><AdminDashboard/></PrivateRoute>}/> // cambiar a ruta privada cuando se tengan los datos del backend

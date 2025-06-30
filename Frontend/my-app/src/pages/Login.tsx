@@ -2,6 +2,7 @@ import React,{SyntheticEvent, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLogin } from '../hooks/useLogin';
+import {BotonVerde} from "../components/BotonVerde";
 
 export const Login = () => {
   const [correo,setEmail] = useState('');
@@ -12,7 +13,7 @@ export const Login = () => {
 
   const login = useLogin((token) => {
     setToken(token);
-    
+
     navigate('/Homegeneral');
   },
   (error)=>{
@@ -44,9 +45,9 @@ export const Login = () => {
               onChange = {e => setPassword(e.target.value)}
                    placeholder = "Ingrese porfavor su contraseña"
             />
-            <button type="submit" value="Submit" disabled={login.isPending}>
+            <BotonVerde onClick={() => {}} type="submit" disabled={login.isPending}>
               {login.isPending? 'iniciando sesion...🗣️🗣️': 'Login'}
-            </button>
+            </BotonVerde>
         </form>
         {login.isError && <p>usuario o contraseña incorrectas </p>}
         {errorMsg && <p>{errorMsg}</p>}
