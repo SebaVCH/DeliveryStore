@@ -46,7 +46,7 @@ Luego, en el navegador, ingresar en http://localhost:8080/
 | Usuarios comprador/vendedor                    | Repartidores                                    | Administradores                                |
 |------------------------------------------------|-------------------------------------------------|------------------------------------------------|
 |correo: roberto@gmail.com contraseña: roberto12 |correo: test2@gmail.com contraseña: 123          | correo: test@gmail.com contraseña: 123         |
-|correo: test1@gmail.com contraseña: 123         |correo: repartidor2@email.com contraseña: password2 | correo: jorquera@gmail.com contraseña: jorge12 |
+|correo: test1@gmail.com contraseña: 123         |correo: repartido2@email.com contraseña: password2 | correo: jorquera@gmail.com contraseña: jorge12 |
 
 >[!WARNING]  
 > Dado que se trata de un entorno ficticio (y para facilitar el inicio del proyecto), se removió el archivo ".gitignore" que omitía subir el archivo ".env", por lo que este se incluirá desde un inicio. Se asume que en un entorno real esto no se debe hacer.
