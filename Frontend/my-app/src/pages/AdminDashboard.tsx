@@ -302,7 +302,6 @@ export const AdminDashboard = () => {
                                             filas={ordenes || []}
                                             columnas={[
                                                 { field: 'Date', headerName: 'Fecha', width: 200},
-                                                { field: 'Status', headerName: 'Estado del envio', width: 200 },
                                                 { field: 'Buyer_Address', headerName: 'Dirección de entrega', width: 200 },
                                                 { field: 'Buyer_Phone', headerName: 'Teléfono del cliente', width: 200 },
                                                 { field: 'Seller_Name', headerName: 'Tienda', width: 200 },

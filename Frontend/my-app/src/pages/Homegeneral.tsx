@@ -397,6 +397,7 @@ export const Homegeneral = () => {
                     sections={{
                         productos: (
                             <div>
+                                <h2> Bienvenid@: {user?.Name} {user.RoleType === 1 && (<>Tu saldo es: ${user?.Balance}</>)}</h2> 
                                 <h1>Productos disponibles</h1>
                                 <div>
                                     <select

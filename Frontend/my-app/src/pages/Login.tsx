@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLogin } from '../hooks/useLogin';
 import {BotonVerde} from "../components/BotonVerde";
+import '../styles/Login.css'
 
 export const Login = () => {
   const [correo,setEmail] = useState('');
@@ -32,7 +33,7 @@ export const Login = () => {
 
 
   return (
-    <div>
+    <div className="container-login">
         <h1>Login</h1>
         <form onSubmit={submit}>
             <label>Correo: </label>
