@@ -1,0 +1,65 @@
+
+.homegeneral-container {
+  display: flex;
+  justify-content: center;      
+  align-items: flex-start;      
+  min-height: 100vh;            
+  padding: 32px 0;              
+  background: linear-gradient(to right, #fdfbfb, #ebedee);
+  overflow-y: auto;            
+}
+
+
+.homegeneral-card {
+  width: 100%;
+  max-width: 100%;           
+  background: #fff;
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+
+.bienvenida {
+  font-size: 20px;             
+  margin-bottom: 24px;
+  color: #2c3e50;
+}
+
+.bienvenida span {
+  font-weight: bold;
+  color: #27ae60;
+}
+
+
+.botones button {
+  padding: 8px 20px;            
+  background: #2ecc71;
+  color: #fff;
+  font-size: 14px;              
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.25s ease;
+  width: auto;                  
+  min-width: 150px;             
+}
+
+.botones button {
+  flex: 1;
+  padding: 12px 0;
+  border: none;
+  background: #2ecc71;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.botones button:hover { background: #27ae60; }
+
+.botones .cerrar,              
+.botones button:nth-of-type(2) { background: #e74c3c; }
+.botones .cerrar:hover,
+.botones button:nth-of-type(2):hover { background: #c0392b; }

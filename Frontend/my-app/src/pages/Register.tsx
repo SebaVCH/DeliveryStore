@@ -2,6 +2,8 @@ import React,{SyntheticEvent, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister';
 import {BotonVerde} from "../components/BotonVerde";
+import '../styles/Register.css'
+
 
 export const Register = () => { //Hooks
   const [nombre, setName] = useState('');
@@ -28,42 +30,83 @@ export const Register = () => { //Hooks
   };
 
   return (
-    <div>
-        <h1>Registro</h1>
-        <form onSubmit={enviar}>
-            <label>Ingrese su nombre: </label>
-            <input type = "text" name = "username" placeholder = 'Ingrese su nombre de usuario...' required value={nombre}
-              onChange={e => setName(e.target.value)}
-            />
+    <div className="register-container">
+      <h1 className="register-title">Crear cuenta</h1>
 
-            <label> Correo Electronico: </label>
-            <input type = "email" name = "email" placeholder = 'Ingrese un correo electronico porfavor...' required value={correo}
-              onChange={e => setEmail(e.target.value)}
+      <form onSubmit={enviar} className="register-form">
+        <div className="form-field">
+          <label>Nombre completo</label>
+          <input
+            type="text"
+            placeholder="Ingresa tu nombre..."
+            required
+            value={nombre}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
 
-            />
-            <label> Contraseña: </label>
-            <input type = "password" name = "password" placeholder = 'Ingrese una contraseña...' required value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
-            <label> Direccion: </label>
-            <input type = "text" name = "direccion" placeholder = 'Ingrese una direccion...' required value={direccion}
-              onChange={e => setDireccion(e.target.value)}
-            />
-            <label> Telefono: </label>
-            <input type = "text" name = "telefono" placeholder = 'Ingrese un telefono...' required value={telefono}
-              onChange={e => setTelefono(e.target.value)}
-            />
-            <label> Tipo de cuenta: </label>
-            <select value={tipo} onChange={e => setTipo(Number(e.target.value))}>
-              <option value={1}>Usuario normal</option>
-              <option value={2}>Repartidor</option>
-            </select>
+        <div className="form-field">
+          <label>Correo electrónico</label>
+          <input
+            type="email"
+            placeholder="correo@ejemplo.com"
+            required
+            value={correo}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-            <BotonVerde onClick={()=>{}} type="submit" disabled = {register.isPending}>
-              {register.isPending? 'Registrando...🗿' : 'Registrarse'}
-            </BotonVerde>
-        </form>
-        {errorMsg && <p>{errorMsg}</p>}
+        <div className="form-field">
+          <label>Contraseña</label>
+          <input
+            type="password"
+            placeholder="********"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+
+        <div className="form-field">
+          <label>Dirección</label>
+          <input
+            type="text"
+            placeholder="Calle 123, Ciudad"
+            required
+            value={direccion}
+            onChange={(e) => setDireccion(e.target.value)}
+          />
+        </div>
+
+        <div className="form-field">
+          <label>Teléfono</label>
+          <input
+            type="text"
+            placeholder="+56 9 1234 5678"
+            required
+            value={telefono}
+            onChange={(e) => setTelefono(e.target.value)}
+          />
+        </div>
+
+        <div className="form-field">
+          <label>Tipo de cuenta</label>
+          <select value={tipo} onChange={(e) => setTipo(Number(e.target.value))}>
+            <option value={1}>Usuario normal</option>
+            <option value={2}>Repartidor</option>
+          </select>
+        </div>
+
+        <BotonVerde onClick={()=>{}}type="submit" disabled={register.isPending}>
+          {register.isPending ? 'Registrando...' : 'Registrarse'}
+        </BotonVerde>
+
+        {errorMsg && <p className="error-message">{errorMsg}</p>}
+      </form>
+
+      <p className="register-link">
+        ¿Ya tienes cuenta? <a href="/Login">Inicia sesión</a>
+      </p>
     </div>
   );
 }

@@ -33,26 +33,33 @@ export const Login = () => {
 
 
   return (
-    <div className="container-login">
-        <h1>Login</h1>
-        <form onSubmit={submit}>
-            <label>Correo: </label>
-            <input type="email" name="email" id = "email" required value = {correo}
-              onChange = {e => setEmail(e.target.value)}
-                   placeholder = "Ingrese porfavor su correo.."
-            />
-            <label>Contraseña: </label>
-            <input type="password" name="password" required value = {password}
-              onChange = {e => setPassword(e.target.value)}
-                   placeholder = "Ingrese porfavor su contraseña"
-            />
-            <BotonVerde onClick={() => {}} type="submit" disabled={login.isPending}>
-              {login.isPending? 'iniciando sesion...🗣️🗣️': 'Login'}
-            </BotonVerde>
+    <div className="login-container">
+      <div className="login-box">
+        <h1 className="login-title">Iniciar Sesión</h1>
+        <form onSubmit={submit} className="login-form">
+          <label>Correo:</label>
+          <input
+            type="email"
+            value={correo}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="ejemplo@correo.com"
+          />
+          <label>Contraseña:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            placeholder="********"
+          />
+          <BotonVerde onClick={()=>{}}type="submit" disabled={login.isPending}>
+            {login.isPending ? 'Iniciando...' : 'Login'}
+          </BotonVerde>
         </form>
-        {login.isError && <p>usuario o contraseña incorrectas </p>}
-        {errorMsg && <p>{errorMsg}</p>}
-        <p>Si no tienes cuenta, registrate <a href="/Register">aquí</a></p>
+        {errorMsg && <p className="error">{errorMsg}</p>}
+        <p className="register-link">
+          ¿No tienes cuenta? <a href="/Register">Regístrate aquí</a>
+        </p>
+      </div>
     </div>
   );
 }

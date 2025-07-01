@@ -2,6 +2,8 @@ import React from 'react';
 import { useUserProfile } from '../hooks/useUserProfile';
 import {useNavigate} from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
+import '../styles/Home.css'
+
 
 export const Home = () => {
     const {token, setToken} = useAuth();
@@ -35,12 +37,14 @@ export const Home = () => {
     }
 
     return (
-    <div> 
-        <h2>Mis ventas</h2>
-        <button onClick={()=> navigate('/Producto')}>Ver mis productos en venta</button>
-        <button onClick={()=> navigate('/Proveedores')}>Ver mis proveedores</button>
-        <button onClick={()=> navigate('/Homegeneral')}>Seguir comprando</button>
-        <button onClick={logout}>Cerrar la sesion 🤑</button>
+    <div className="home-container">
+        <h2 className="home-title">Mis Ventas</h2>
+        <div className="home-buttons">
+            <button onClick={() => navigate('/Producto')}>Productos</button>
+            <button onClick={() => navigate('/Proveedores')}>Proveedores</button>
+            <button onClick={() => navigate('/Homegeneral')}>Comprar</button>
+            <button onClick={logout} className="logout">Cerrar sesión 🤑</button>
+        </div>
     </div>
     );
     

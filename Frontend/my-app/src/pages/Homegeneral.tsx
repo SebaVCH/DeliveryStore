@@ -14,6 +14,8 @@ import { useCrearTransaccion } from '../hooks/useTransaccion';
 import { useCrearOrden } from '../hooks/useOrdenes';
 import { useProductosVendedor, useCrearProducto, useEliminarProducto } from '../hooks/useProductos';
 import { useCrearProveedor, useEliminarProveedor, useProveedoresVendedor, useCrearProductoProveedor, useProductoProveedor } from '../hooks/useProveedores';
+import '../styles/Homegeneral.css'
+
 
 export const Homegeneral = () => {
     const {token, setToken} = useAuth();
@@ -386,608 +388,612 @@ export const Homegeneral = () => {
 
     const totalPrice = selectedProduct ? (selectedProduct.Price * quantity).toFixed(2) : '0.00';
     return (
-    <div> 
-        <h2> Bienvenid@: {user?.Name} {user.RoleType === 1 && (<>Tu saldo es: ${user?.Balance}</>)}</h2> 
-        
+    <div className="homegeneral-container"> 
 
-        {user.RoleType === 1 && (
-            <>
-                <PersistentDrawerLeft
-                    userType={'usuario'}
-                    sections={{
-                        productos: (
-                            <div>
-                                <h2> Bienvenid@: {user?.Name} {user.RoleType === 1 && (<>Tu saldo es: ${user?.Balance}</>)}</h2> 
-                                <h1>Productos disponibles</h1>
+        <div className="homegeneral-card">
+            
+            
+
+            {user.RoleType === 1 && (
+                <>
+                    <PersistentDrawerLeft
+                        userType={'usuario'}
+                        sections={{
+                            productos: (
                                 <div>
-                                    <select
-                                        name="diet"
-                                        value={filters.diet}
-                                        onChange={handleFilterChange}
-                                        style={{ padding: '5px' }}
-                                    >
-                                        <option value="">Todos los productos</option>
-                                        <option value="veganos">Productos veganos</option>
-                                        <option value="vegetarianos">Productos vegetarianos</option>
-                                        <option value="sin gluten">Productos sin gluten</option>
-                                    </select>
-
-                                    <select
-                                        name="price"
-                                        value={filters.price}
-                                        onChange={handleFilterChange}
-                                        style={{ padding: '5px' }}
-                                    >
-                                        <option value="">Todos los precios</option>
-                                        <option value="menos de $4999">menos de $4999</option>
-                                        <option value="entre $5000 y $14999">entre $5000 y $14999</option>
-                                        <option value="más de $15000">más de $15000</option>
-                                    </select>
-
-                                    <select
-                                        name="calories"
-                                        value={filters.calories}
-                                        onChange={handleFilterChange}
-                                        style={{ padding: '5px' }}
-                                    >
-                                        <option value="">Ningún rango de calorías</option>
-                                        <option value="menos de 200">Menos de 200 cal</option>
-                                        <option value="entre 200 y 400">200 - 400 cal</option>
-                                        <option value="más de 400">Más de 400 cal</option>
-                                    </select>
-
-
-                                    <button
-                                        onClick={clearFilters}
-                                        style={{ padding: '5px 10px' }}
-                                    >
-                                        Limpiar filtros
-                                    </button>
-                                </div>
-                                <TablaPaginacionGenerica
-                                    filas={filteredProducts || []}
-                                    columnas={[
-                                        { field: 'Name', headerName: 'Producto', width: 200 },
-                                        { field: 'Description', headerName: 'Descripcion', width: 150 },
-                                        { field: 'Price', headerName: 'Precio', width: 100 },
-                                        {
-                                            field: 'IsVegan',
-                                            headerName: '¿Es Vegano?',
-                                            width: 150,
-                                            renderCell: (params) => params.row.IsVegan ? 'Sí' : 'No'
-                                        },
-                                        {
-                                            field: 'IsVegetarian',
-                                            headerName: '¿Es Vegetariano?',
-                                            width: 150,
-                                            renderCell: (params) => params.row.IsVegetarian ? 'Sí' : 'No'
-                                        },
-                                        {
-                                            field: 'IsGlutenFree',
-                                            headerName: '¿Es libre de gluten?',
-                                            width: 150,
-                                            renderCell: (params) => params.row.IsGlutenFree ? 'Sí' : 'No'
-                                        },
-                                        { field: 'Calories', headerName: 'Calorías', width: 100 },
-                                        { field: 'Delivery', headerName: 'Tipo de compra', width: 100 },
-                                        {
-                                            field: 'accion',
-                                            headerName: 'Acción',
-                                            width: 150,
-                                            renderCell: (params) => (
-                                                <BotonVerde
-                                                    onClick={() => handleBuyClick(params.row)}
-                                                >
-                                                    Comprar
-                                                </BotonVerde>
-                                            ),
-                                        },
-                                    ]}
-                                    cantidad={"all"}
-                                />
-                            </div>
-                        ), recargarSaldo: (
-                            <div>
-                                <h2>Recargar Saldo</h2>
-                                <p>Saldo actual: <strong>${user?.Balance}</strong></p>
-                                <form onSubmit={handleAddBalance}>
-                                    <div style={{ marginBottom: '15px' }}>
-                                        <label>Monto a agregar:</label>
-                                        <input
-                                            type="number"
-                                            value={amount}
-                                            onChange={(e) => setAmount(e.target.value)}
-                                            placeholder="Ej: 10000"
-                                            min="1"
-                                            step="1"
-                                            style={{
-                                                marginLeft: '10px',
-                                                padding: '8px',
-                                                width: '200px'
-                                            }}
-                                        />
-                                    </div>
-                                    {balanceError && <div style={{ color: 'red', marginBottom: '10px' }}>{balanceError}</div>}
-                                    <BotonVerde
-                                        type="submit"
-                                        disabled={isAddingBalance}
-                                        onClick={() => {}}
-                                    >
-                                        {isAddingBalance ? 'Procesando...' : 'Agregar saldo'}
-                                    </BotonVerde>
-                                </form>
-                            </div>
-                        ), carrito: (
-                            <div>
-                                <h2>Mi Carrito</h2>
-
-                                {carritos?.length === 0 ? (
-                                    <div style={{ textAlign: 'center', padding: '20px' }}>
-                                        <p>No tienes productos en tu carrito.</p>
-                                    </div>
-                                ) : (
+                                    <h1 className="bienvenida">Bienvenid@: {user?.Name} {user.RoleType === 1 && (<>Tu saldo es: ${user?.Balance}</>)}</h1>
+                                    <h1>Productos disponibles</h1>
                                     <div>
-                                        <h3>Productos en tu carrito:</h3>
-                                        <div style={{ marginBottom: '20px' }}>
-                                            {carritos?.map((carrito: any) => (
-                                                <div key={carrito.ID} style={{
-                                                    border: '1px solid #ddd',
-                                                    padding: '15px',
-                                                    marginBottom: '10px',
-                                                    borderRadius: '8px'
-                                                }}>
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <div>
-                                                            <h4>{carrito.Product.Name}</h4>
-                                                            <p>Cantidad: {carrito.Quantity}</p>
-                                                            <p>Precio: ${carrito.FinalPrice}</p>
+                                        <select
+                                            name="diet"
+                                            value={filters.diet}
+                                            onChange={handleFilterChange}
+                                            style={{ padding: '5px' }}
+                                        >
+                                            <option value="">Todos los productos</option>
+                                            <option value="veganos">Productos veganos</option>
+                                            <option value="vegetarianos">Productos vegetarianos</option>
+                                            <option value="sin gluten">Productos sin gluten</option>
+                                        </select>
+
+                                        <select
+                                            name="price"
+                                            value={filters.price}
+                                            onChange={handleFilterChange}
+                                            style={{ padding: '5px' }}
+                                        >
+                                            <option value="">Todos los precios</option>
+                                            <option value="menos de $4999">menos de $4999</option>
+                                            <option value="entre $5000 y $14999">entre $5000 y $14999</option>
+                                            <option value="más de $15000">más de $15000</option>
+                                        </select>
+
+                                        <select
+                                            name="calories"
+                                            value={filters.calories}
+                                            onChange={handleFilterChange}
+                                            style={{ padding: '5px' }}
+                                        >
+                                            <option value="">Ningún rango de calorías</option>
+                                            <option value="menos de 200">Menos de 200 cal</option>
+                                            <option value="entre 200 y 400">200 - 400 cal</option>
+                                            <option value="más de 400">Más de 400 cal</option>
+                                        </select>
+
+
+                                        <button
+                                            onClick={clearFilters}
+                                            style={{ padding: '5px 10px' }}
+                                        >
+                                            Limpiar filtros
+                                        </button>
+                                    </div>
+                                    <TablaPaginacionGenerica
+                                        filas={filteredProducts || []}
+                                        columnas={[
+                                            { field: 'Name', headerName: 'Producto', width: 200 },
+                                            { field: 'Description', headerName: 'Descripcion', width: 150 },
+                                            { field: 'Price', headerName: 'Precio', width: 100 },
+                                            {
+                                                field: 'IsVegan',
+                                                headerName: '¿Es Vegano?',
+                                                width: 150,
+                                                renderCell: (params) => params.row.IsVegan ? 'Sí' : 'No'
+                                            },
+                                            {
+                                                field: 'IsVegetarian',
+                                                headerName: '¿Es Vegetariano?',
+                                                width: 150,
+                                                renderCell: (params) => params.row.IsVegetarian ? 'Sí' : 'No'
+                                            },
+                                            {
+                                                field: 'IsGlutenFree',
+                                                headerName: '¿Es libre de gluten?',
+                                                width: 150,
+                                                renderCell: (params) => params.row.IsGlutenFree ? 'Sí' : 'No'
+                                            },
+                                            { field: 'Calories', headerName: 'Calorías', width: 100 },
+                                            { field: 'Delivery', headerName: 'Tipo de compra', width: 100 },
+                                            {
+                                                field: 'accion',
+                                                headerName: 'Acción',
+                                                width: 150,
+                                                renderCell: (params) => (
+                                                    <BotonVerde
+                                                        onClick={() => handleBuyClick(params.row)}
+                                                    >
+                                                        Comprar
+                                                    </BotonVerde>
+                                                ),
+                                            },
+                                        ]}
+                                        cantidad={"all"}
+                                    />
+                                </div>
+                            ), recargarSaldo: (
+                                <div>
+                                    <h2>Recargar Saldo</h2>
+                                    <p>Saldo actual: <strong>${user?.Balance}</strong></p>
+                                    <form onSubmit={handleAddBalance}>
+                                        <div style={{ marginBottom: '15px' }}>
+                                            <label>Monto a agregar:</label>
+                                            <input
+                                                type="number"
+                                                value={amount}
+                                                onChange={(e) => setAmount(e.target.value)}
+                                                placeholder="Ej: 10000"
+                                                min="1"
+                                                step="1"
+                                                style={{
+                                                    marginLeft: '10px',
+                                                    padding: '8px',
+                                                    width: '200px'
+                                                }}
+                                            />
+                                        </div>
+                                        {balanceError && <div style={{ color: 'red', marginBottom: '10px' }}>{balanceError}</div>}
+                                        <BotonVerde
+                                            type="submit"
+                                            disabled={isAddingBalance}
+                                            onClick={() => {}}
+                                        >
+                                            {isAddingBalance ? 'Procesando...' : 'Agregar saldo'}
+                                        </BotonVerde>
+                                    </form>
+                                </div>
+                            ), carrito: (
+                                <div>
+                                    <h2>Mi Carrito</h2>
+
+                                    {carritos?.length === 0 ? (
+                                        <div style={{ textAlign: 'center', padding: '20px' }}>
+                                            <p>No tienes productos en tu carrito.</p>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <h3>Productos en tu carrito:</h3>
+                                            <div style={{ marginBottom: '20px' }}>
+                                                {carritos?.map((carrito: any) => (
+                                                    <div key={carrito.ID} style={{
+                                                        border: '1px solid #ddd',
+                                                        padding: '15px',
+                                                        marginBottom: '10px',
+                                                        borderRadius: '8px'
+                                                    }}>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                            <div>
+                                                                <h4>{carrito.Product.Name}</h4>
+                                                                <p>Cantidad: {carrito.Quantity}</p>
+                                                                <p>Precio: ${carrito.FinalPrice}</p>
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                ))}
+                                            </div>
+
+                                            <div style={{
+                                                backgroundColor: '#f5f5f5',
+                                                padding: '15px',
+                                                borderRadius: '8px',
+                                                marginBottom: '20px'
+                                            }}>
+                                                <p>Tu saldo actual: <strong>${user?.Balance}</strong></p>
+                                                <p>Total de la compra: <strong>${typeof precioTotal === 'object' ? precioTotal.message : precioTotal || '0'}</strong></p>
+                                            </div>
+
+                                            <BotonVerde
+                                                onClick={handlePagar}
+                                                disabled={isPaying || carritos?.length === 0}
+                                            >
+                                                {isPaying ? 'Procesando...' : saldoInsuficiente ? 'Saldo insuficiente' : 'Pagar ahora'}
+                                            </BotonVerde>
+
+                                            {errorPago && (
+                                                <div style={{ color: 'red', marginTop: '10px' }}>
+                                                    {errorPago}
                                                 </div>
-                                            ))}
+                                            )}
                                         </div>
+                                    )}
 
+                                    {showReviewModal && carritos && ratings.length > 0 && (
                                         <div style={{
-                                            backgroundColor: '#f5f5f5',
-                                            padding: '15px',
-                                            borderRadius: '8px',
-                                            marginBottom: '20px'
+                                            position: 'fixed',
+                                            top: '0',
+                                            left: '0',
+                                            width: '100%',
+                                            height: '100%',
+                                            backgroundColor: 'rgba(0,0,0,0.5)',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            zIndex: 1000
                                         }}>
-                                            <p>Tu saldo actual: <strong>${user?.Balance}</strong></p>
-                                            <p>Total de la compra: <strong>${typeof precioTotal === 'object' ? precioTotal.message : precioTotal || '0'}</strong></p>
+                                            <div style={{
+                                                backgroundColor: 'white',
+                                                padding: '30px',
+                                                borderRadius: '8px',
+                                                width: '400px',
+                                                maxHeight: '500px',
+                                                overflow: 'auto'
+                                            }}>
+                                                <h3>Valorar producto {currentProductIndex + 1} de {carritos.length}</h3>
+                                                <h4>{carritos[currentProductIndex].Product.Name}</h4>
+
+                                                <div style={{ marginBottom: '15px' }}>
+                                                    <label>Puntuación (1-5):</label>
+                                                    <select
+                                                        value={ratings[currentProductIndex].Rating}
+                                                        onChange={(e) => handleRatingChange(currentProductIndex, 'Rating', parseInt(e.target.value))}
+                                                        style={{ marginLeft: '10px', padding: '5px' }}
+                                                    >
+                                                        {[1, 2, 3, 4, 5].map(num => (
+                                                            <option key={num} value={num}>{num}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+
+                                                <div style={{ marginBottom: '20px' }}>
+                                                    <label>Comentario:</label>
+                                                    <textarea
+                                                        value={ratings[currentProductIndex]?.Comment || ''}
+                                                        onChange={(e) => handleRatingChange(currentProductIndex, 'Comment', e.target.value)}
+                                                        placeholder="Tu opinión sobre este producto..."
+                                                        rows={4}
+                                                        style={{
+                                                            width: '100%',
+                                                            padding: '8px',
+                                                            marginTop: '5px',
+                                                            borderRadius: '4px',
+                                                            border: '1px solid #ddd'
+                                                        }}
+                                                    />
+                                                </div>
+
+                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                    <button
+                                                        onClick={() => {
+                                                            setShowReviewModal(false);
+                                                            completePaymentProcess();
+                                                        }}
+                                                        style={{
+                                                            padding: '8px 15px',
+                                                            backgroundColor: '#f44336',
+                                                            color: 'white',
+                                                            border: 'none',
+                                                            borderRadius: '4px',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    >
+                                                        Omitir valoraciones
+                                                    </button>
+                                                    <BotonVerde onClick={handleSubmitReview}>
+                                                        {currentProductIndex < carritos.length - 1 ? 'Siguiente' : 'Finalizar'}
+                                                    </BotonVerde>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ), misProductos: (
+                                <div>
+                                    <h1>Mis productos en venta</h1>
+                                    <div style={{margin: '20px 0'}}>
+                                        <h3>Filtrar productos</h3>
+                                        <div>
+                                            <input
+                                                type="number"
+                                                placeholder='Cantidad de productos a mostrar...'
+                                                value={filterCount || ''}
+                                                onChange={handleFilterChange2}
+                                                min="1"
+                                            />
+                                            <BotonVerde onClick={resetFilter} style={{marginLeft: '10px'}}>
+                                                Reiniciar filtro
+                                            </BotonVerde>
+                                        </div>
+                                        {filterError && <p style={{color: 'red'}}>{filterError}</p>}
+                                    </div>
+
+                                    <TablaPaginacionGenerica
+                                        filas={filteredProductsVendedor || []}
+                                        columnas={[
+                                            { field: 'Name', headerName: 'Producto', width: 200 },
+                                            { field: 'Description', headerName: 'Descripcion', width: 150 },
+                                            { field: 'Price', headerName: 'Precio', width: 100 },
+                                            {
+                                                field: 'IsVegan',
+                                                headerName: '¿Es Vegano?',
+                                                width: 150,
+                                                renderCell: (params) => params.row.IsVegan ? 'Sí' : 'No'
+                                            },
+                                            {
+                                                field: 'IsVegetarian',
+                                                headerName: '¿Es Vegetariano?',
+                                                width: 150,
+                                                renderCell: (params) => params.row.IsVegetarian ? 'Sí' : 'No'
+                                            },
+                                            {
+                                                field: 'IsGlutenFree',
+                                                headerName: '¿Es libre de gluten?',
+                                                width: 150,
+                                                renderCell: (params) => params.row.IsGlutenFree ? 'Sí' : 'No'
+                                            },
+                                            { field: 'Calories', headerName: 'Calorías', width: 100 },
+                                            { field: 'Delivery', headerName: 'Tipo de compra', width: 100 },
+                                            {
+                                                field: 'accion',
+                                                headerName: 'Acción',
+                                                width: 150,
+                                                renderCell: (params) => (
+                                                    <BotonVerde
+                                                        onClick={() => eliminarPrdo.mutate(params.row.ID)}
+                                                    >
+                                                        Eliminar
+                                                    </BotonVerde>
+                                                ),
+                                            },
+                                        ]}
+                                        cantidad={"all"}
+                                    />
+
+                                    <h3>Vender nuevo producto: </h3>
+                                    <form onSubmit={crear}>
+                                        <input type="text" placeholder='Nombre del producto...' value={name} onChange={(e)=> setNombre(e.target.value)} required/>
+                                        <input type="number" placeholder='Precio del producto...' value={price} onChange={(e)=> setPrecio(e.target.value)} required/>
+                                        <input type="text" placeholder='Descripcion del producto...' value={description} onChange={(e)=> setDescripcion(e.target.value)} required/>
+
+                                        <select value={deliver} onChange={(e)=> setEntrega(e.target.value)} required>
+                                            <option value="">seleccione</option>
+                                            <option value="delivery">Delivery</option>
+                                            <option value="retiro en tienda">Retiro en tienda</option>
+                                        </select>
+
+                                        <div style={{margin: '10px 0'}}>
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isComestible}
+                                                    onChange={(e) => setIsComestible(e.target.checked)}
+                                                />
+                                                ¿Su producto es comestible?
+                                            </label>
                                         </div>
 
-                                        <BotonVerde
-                                            onClick={handlePagar}
-                                            disabled={isPaying || carritos?.length === 0}
-                                        >
-                                            {isPaying ? 'Procesando...' : saldoInsuficiente ? 'Saldo insuficiente' : 'Pagar ahora'}
-                                        </BotonVerde>
-
-                                        {errorPago && (
-                                            <div style={{ color: 'red', marginTop: '10px' }}>
-                                                {errorPago}
+                                        {isComestible && (
+                                            <div style={{marginLeft: '20px'}}>
+                                                <div>
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={vegan === 'true'}
+                                                            onChange={(e) => setVegano(e.target.checked ? 'true' : 'false')}
+                                                        />
+                                                        Vegano
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={vegetaria === 'true'}
+                                                            onChange={(e) => setVegetariano(e.target.checked ? 'true' : 'false')}
+                                                        />
+                                                        Vegetariano
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={gluten === 'true'}
+                                                            onChange={(e) => setGluten(e.target.checked ? 'true' : 'false')}
+                                                        />
+                                                        Es libre de gluten?
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input type="number" placeholder='Calorías del producto: ' value={caloria} onChange={(e) => setCalorias(e.target.value)} required min="0"/>
+                                                </div>
                                             </div>
                                         )}
-                                    </div>
-                                )}
 
-                                {showReviewModal && carritos && ratings.length > 0 && (
-                                    <div style={{
-                                        position: 'fixed',
-                                        top: '0',
-                                        left: '0',
-                                        width: '100%',
-                                        height: '100%',
-                                        backgroundColor: 'rgba(0,0,0,0.5)',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        zIndex: 1000
-                                    }}>
+                                        <BotonVerde onClick={() => {} } type="submit"> Agregar</BotonVerde>
+                                    </form>
+
+                                </div>
+                            ), misProveedores: (
+                                <div>
+                                    <h1>Tus Proveedores</h1>
+
+                                    {cargandoProveedores ? (
+                                        <p>Cargando proveedores...</p>
+                                    ) : (
+                                        <>
+                                            {proveedores?.length > 0 ? (
+                                                <ul style={{ listStyle: 'none', padding: 0 }}>
+                                                    {proveedores.map((p: any) => (
+                                                        <li key={p.ID} style={{ marginBottom: '15px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
+                                                            <div>
+                                                                <strong>{p.Name}</strong> - {p.Description}
+                                                                <div style={{ marginTop: '5px' }}>
+                                                                    <BotonVerde
+                                                                        onClick={() => eliminarProv.mutate(p.ID)}
+                                                                    >
+                                                                        Eliminar
+                                                                    </BotonVerde>
+                                                                    <BotonVerde
+                                                                        onClick={() => abrirModalAsociacion(p.ID)}
+                                                                    >
+                                                                        Asociar Producto
+                                                                    </BotonVerde>
+                                                                </div>
+                                                                <ProductosDeProveedor proveedorId={p.ID} />
+                                                            </div>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <p>No hay proveedores registrados</p>
+                                            )}
+                                        </>
+                                    )}
+
+                                    {mostrarModal && (
                                         <div style={{
-                                            backgroundColor: 'white',
-                                            padding: '30px',
-                                            borderRadius: '8px',
-                                            width: '400px',
-                                            maxHeight: '500px',
-                                            overflow: 'auto'
+                                            position: 'fixed',
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            backgroundColor: 'rgba(0,0,0,0.5)',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            zIndex: 1000
                                         }}>
-                                            <h3>Valorar producto {currentProductIndex + 1} de {carritos.length}</h3>
-                                            <h4>{carritos[currentProductIndex].Product.Name}</h4>
+                                            <div style={{
+                                                backgroundColor: 'white',
+                                                padding: '20px',
+                                                borderRadius: '5px',
+                                                width: '350px'
+                                            }}>
+                                                <h3>Asociar Producto</h3>
+                                                <p>Selecciona un producto para asociar:</p>
 
-                                            <div style={{ marginBottom: '15px' }}>
-                                                <label>Puntuación (1-5):</label>
                                                 <select
-                                                    value={ratings[currentProductIndex].Rating}
-                                                    onChange={(e) => handleRatingChange(currentProductIndex, 'Rating', parseInt(e.target.value))}
-                                                    style={{ marginLeft: '10px', padding: '5px' }}
+                                                    value={productoSeleccionado}
+                                                    onChange={(e) => setProductoSeleccionado(e.target.value)}
+                                                    style={{ width: '100%', padding: '8px', marginBottom: '15px' }}
                                                 >
-                                                    {[1, 2, 3, 4, 5].map(num => (
-                                                        <option key={num} value={num}>{num}</option>
+                                                    <option value="">-- Seleccione un producto --</option>
+                                                    {productosVendedor?.map((producto: any) => (
+                                                        <option key={producto.ID} value={producto.ID}>
+                                                            {producto.Name}
+                                                        </option>
                                                     ))}
                                                 </select>
-                                            </div>
 
-                                            <div style={{ marginBottom: '20px' }}>
-                                                <label>Comentario:</label>
-                                                <textarea
-                                                    value={ratings[currentProductIndex]?.Comment || ''}
-                                                    onChange={(e) => handleRatingChange(currentProductIndex, 'Comment', e.target.value)}
-                                                    placeholder="Tu opinión sobre este producto..."
-                                                    rows={4}
-                                                    style={{
-                                                        width: '100%',
-                                                        padding: '8px',
-                                                        marginTop: '5px',
-                                                        borderRadius: '4px',
-                                                        border: '1px solid #ddd'
-                                                    }}
-                                                />
-                                            </div>
-
-                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                <button
-                                                    onClick={() => {
-                                                        setShowReviewModal(false);
-                                                        completePaymentProcess();
-                                                    }}
-                                                    style={{
-                                                        padding: '8px 15px',
-                                                        backgroundColor: '#f44336',
-                                                        color: 'white',
-                                                        border: 'none',
-                                                        borderRadius: '4px',
-                                                        cursor: 'pointer'
-                                                    }}
-                                                >
-                                                    Omitir valoraciones
-                                                </button>
-                                                <BotonVerde onClick={handleSubmitReview}>
-                                                    {currentProductIndex < carritos.length - 1 ? 'Siguiente' : 'Finalizar'}
-                                                </BotonVerde>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        ), misProductos: (
-                            <div>
-                                <h1>Mis productos en venta</h1>
-                                <div style={{margin: '20px 0'}}>
-                                    <h3>Filtrar productos</h3>
-                                    <div>
-                                        <input
-                                            type="number"
-                                            placeholder='Cantidad de productos a mostrar...'
-                                            value={filterCount || ''}
-                                            onChange={handleFilterChange2}
-                                            min="1"
-                                        />
-                                        <BotonVerde onClick={resetFilter} style={{marginLeft: '10px'}}>
-                                            Reiniciar filtro
-                                        </BotonVerde>
-                                    </div>
-                                    {filterError && <p style={{color: 'red'}}>{filterError}</p>}
-                                </div>
-
-                                <TablaPaginacionGenerica
-                                    filas={filteredProductsVendedor || []}
-                                    columnas={[
-                                        { field: 'Name', headerName: 'Producto', width: 200 },
-                                        { field: 'Description', headerName: 'Descripcion', width: 150 },
-                                        { field: 'Price', headerName: 'Precio', width: 100 },
-                                        {
-                                            field: 'IsVegan',
-                                            headerName: '¿Es Vegano?',
-                                            width: 150,
-                                            renderCell: (params) => params.row.IsVegan ? 'Sí' : 'No'
-                                        },
-                                        {
-                                            field: 'IsVegetarian',
-                                            headerName: '¿Es Vegetariano?',
-                                            width: 150,
-                                            renderCell: (params) => params.row.IsVegetarian ? 'Sí' : 'No'
-                                        },
-                                        {
-                                            field: 'IsGlutenFree',
-                                            headerName: '¿Es libre de gluten?',
-                                            width: 150,
-                                            renderCell: (params) => params.row.IsGlutenFree ? 'Sí' : 'No'
-                                        },
-                                        { field: 'Calories', headerName: 'Calorías', width: 100 },
-                                        { field: 'Delivery', headerName: 'Tipo de compra', width: 100 },
-                                        {
-                                            field: 'accion',
-                                            headerName: 'Acción',
-                                            width: 150,
-                                            renderCell: (params) => (
-                                                <BotonVerde
-                                                    onClick={() => eliminarPrdo.mutate(params.row.ID)}
-                                                >
-                                                    Eliminar
-                                                </BotonVerde>
-                                            ),
-                                        },
-                                    ]}
-                                    cantidad={"all"}
-                                />
-
-                                <h3>Vender nuevo producto: </h3>
-                                <form onSubmit={crear}>
-                                    <input type="text" placeholder='Nombre del producto...' value={name} onChange={(e)=> setNombre(e.target.value)} required/>
-                                    <input type="number" placeholder='Precio del producto...' value={price} onChange={(e)=> setPrecio(e.target.value)} required/>
-                                    <input type="text" placeholder='Descripcion del producto...' value={description} onChange={(e)=> setDescripcion(e.target.value)} required/>
-
-                                    <select value={deliver} onChange={(e)=> setEntrega(e.target.value)} required>
-                                        <option value="">seleccione</option>
-                                        <option value="delivery">Delivery</option>
-                                        <option value="retiro en tienda">Retiro en tienda</option>
-                                    </select>
-
-                                    <div style={{margin: '10px 0'}}>
-                                        <label>
-                                            <input
-                                                type="checkbox"
-                                                checked={isComestible}
-                                                onChange={(e) => setIsComestible(e.target.checked)}
-                                            />
-                                            ¿Su producto es comestible?
-                                        </label>
-                                    </div>
-
-                                    {isComestible && (
-                                        <div style={{marginLeft: '20px'}}>
-                                            <div>
-                                                <label>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={vegan === 'true'}
-                                                        onChange={(e) => setVegano(e.target.checked ? 'true' : 'false')}
-                                                    />
-                                                    Vegano
-                                                </label>
-                                            </div>
-                                            <div>
-                                                <label>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={vegetaria === 'true'}
-                                                        onChange={(e) => setVegetariano(e.target.checked ? 'true' : 'false')}
-                                                    />
-                                                    Vegetariano
-                                                </label>
-                                            </div>
-                                            <div>
-                                                <label>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={gluten === 'true'}
-                                                        onChange={(e) => setGluten(e.target.checked ? 'true' : 'false')}
-                                                    />
-                                                    Es libre de gluten?
-                                                </label>
-                                            </div>
-                                            <div>
-                                                <input type="number" placeholder='Calorías del producto: ' value={caloria} onChange={(e) => setCalorias(e.target.value)} required min="0"/>
+                                                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                                                    <button
+                                                        onClick={() => {
+                                                            setMostrarModal(false);
+                                                            setProductoSeleccionado('');
+                                                        }}
+                                                        style={{ padding: '5px 10px' }}
+                                                    >
+                                                        Cancelar
+                                                    </button>
+                                                    <button
+                                                        onClick={asociarProducto}
+                                                        disabled={!productoSeleccionado}
+                                                        style={{ padding: '5px 10px' }}
+                                                    >
+                                                        Asociar
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     )}
 
-                                    <BotonVerde onClick={() => {} } type="submit"> Agregar</BotonVerde>
-                                </form>
+                                    <h3>Agregar proveedor</h3>
+                                    <form onSubmit={crearProveedor}>
+                                        <input
+                                            type="text"
+                                            placeholder='Nombre del proveedor...'
+                                            value={nameProveedor}
+                                            onChange={(e) => setNombreProveedor(e.target.value)}
+                                            required
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder='Descripcion del proveedor...'
+                                            value={descriptionProveedor}
+                                            onChange={(e) => setDescripcionProveedor(e.target.value)}
+                                            required
+                                        />
+                                        <BotonVerde onClick={() => {}} type="submit">Agregar</BotonVerde>
+                                    </form>
+                                </div>
+                            )
+                        }}
+                    />
+                </>
 
-                            </div>
-                        ), misProveedores: (
-                            <div>
-                                <h1>Tus Proveedores</h1>
+            )}
 
-                                {cargandoProveedores ? (
-                                    <p>Cargando proveedores...</p>
-                                ) : (
-                                    <>
-                                        {proveedores?.length > 0 ? (
-                                            <ul style={{ listStyle: 'none', padding: 0 }}>
-                                                {proveedores.map((p: any) => (
-                                                    <li key={p.ID} style={{ marginBottom: '15px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
-                                                        <div>
-                                                            <strong>{p.Name}</strong> - {p.Description}
-                                                            <div style={{ marginTop: '5px' }}>
-                                                                <BotonVerde
-                                                                    onClick={() => eliminarProv.mutate(p.ID)}
-                                                                >
-                                                                    Eliminar
-                                                                </BotonVerde>
-                                                                <BotonVerde
-                                                                    onClick={() => abrirModalAsociacion(p.ID)}
-                                                                >
-                                                                    Asociar Producto
-                                                                </BotonVerde>
-                                                            </div>
-                                                            <ProductosDeProveedor proveedorId={p.ID} />
-                                                        </div>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        ) : (
-                                            <p>No hay proveedores registrados</p>
-                                        )}
-                                    </>
-                                )}
-
-                                {mostrarModal && (
-                                    <div style={{
-                                        position: 'fixed',
-                                        top: 0,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        backgroundColor: 'rgba(0,0,0,0.5)',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        zIndex: 1000
-                                    }}>
-                                        <div style={{
-                                            backgroundColor: 'white',
-                                            padding: '20px',
-                                            borderRadius: '5px',
-                                            width: '350px'
-                                        }}>
-                                            <h3>Asociar Producto</h3>
-                                            <p>Selecciona un producto para asociar:</p>
-
-                                            <select
-                                                value={productoSeleccionado}
-                                                onChange={(e) => setProductoSeleccionado(e.target.value)}
-                                                style={{ width: '100%', padding: '8px', marginBottom: '15px' }}
-                                            >
-                                                <option value="">-- Seleccione un producto --</option>
-                                                {productosVendedor?.map((producto: any) => (
-                                                    <option key={producto.ID} value={producto.ID}>
-                                                        {producto.Name}
-                                                    </option>
-                                                ))}
-                                            </select>
-
-                                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                                                <button
-                                                    onClick={() => {
-                                                        setMostrarModal(false);
-                                                        setProductoSeleccionado('');
-                                                    }}
-                                                    style={{ padding: '5px 10px' }}
-                                                >
-                                                    Cancelar
-                                                </button>
-                                                <button
-                                                    onClick={asociarProducto}
-                                                    disabled={!productoSeleccionado}
-                                                    style={{ padding: '5px 10px' }}
-                                                >
-                                                    Asociar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <h3>Agregar proveedor</h3>
-                                <form onSubmit={crearProveedor}>
-                                    <input
-                                        type="text"
-                                        placeholder='Nombre del proveedor...'
-                                        value={nameProveedor}
-                                        onChange={(e) => setNombreProveedor(e.target.value)}
-                                        required
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder='Descripcion del proveedor...'
-                                        value={descriptionProveedor}
-                                        onChange={(e) => setDescripcionProveedor(e.target.value)}
-                                        required
-                                    />
-                                    <BotonVerde onClick={() => {}} type="submit">Agregar</BotonVerde>
-                                </form>
-                            </div>
-                        )
-                    }}
-                />
-            </>
-
-        )}
-
-        
-
-        { user.RoleType === 2 && (
-            <>
-                <button onClick={()=> navigate('/Repartidores')}>Vista de repartidor</button>
-                <button onClick={logout}> Cerrar sesión </button>
-            </>
             
-        )}
 
-        { user.RoleType === 3 && (
-            <>
-                <button onClick={()=> navigate('/AdminDashboard')}>Vista de admin</button>
-                <button onClick={logout}> Cerrar sesión </button>
-            </>
-        )}
+            { user.RoleType === 2 && (
+                <div className="botones">
+                    <h1>Bienvenid@!: {user.Name}</h1>
+                    <button onClick={()=> navigate('/Repartidores')}>Vista de repartidor</button>
+                    <button onClick={logout}> Cerrar sesión </button>
+                </div>
+                
+            )}
 
-        
-        {showModal && selectedProduct && (
-                <div style={{
-                    position: 'fixed',
-                    top: '0',
-                    left: '0',
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    zIndex: 1000
-                }}>
-                    <div style={{
-                        backgroundColor: 'white',
-                        padding: '20px',
-                        borderRadius: '8px',
-                        width: '300px'
-                    }}>
-                        <h3>Comprar {selectedProduct.Name}</h3>
-                        <p>Precio unitario: ${selectedProduct.Price}</p>
-                        
-                        <div style={{ margin: '15px 0' }}>
-                            <label htmlFor="quantity">Cantidad: </label>
-                            <input
-                                type="number"
-                                id="quantity"
-                                min="1"
-                                value={quantity}
-                                onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                                style={{
-                                    width: '60px',
-                                    padding: '5px',
-                                    marginLeft: '10px'
-                                }}
-                            />
-                        </div>
-                        
-                        <p><strong>Total: ${totalPrice}</strong></p>
-                        
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                style={{
-                                    padding: '8px 15px',
-                                    backgroundColor: '#f44336',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                onClick={handleConfirmPurchase}
-                                style={{
-                                    padding: '8px 15px',
-                                    backgroundColor: '#4CAF50',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                Confirmar
-                            </button>
-                        </div>
-                    </div>
+            { user.RoleType === 3 && (
+                <div className="botones">
+                    <h1>Bienvenid@!: {user.Name}</h1>
+                    <button onClick={()=> navigate('/AdminDashboard')}>Vista de admin</button>
+                    <button onClick={logout}> Cerrar sesión </button>
                 </div>
             )}
 
+            
+            {showModal && selectedProduct && (
+                    <div style={{
+                        position: 'fixed',
+                        top: '0',
+                        left: '0',
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 1000
+                    }}>
+                        <div style={{
+                            backgroundColor: 'white',
+                            padding: '20px',
+                            borderRadius: '8px',
+                            width: '300px'
+                        }}>
+                            <h3>Comprar {selectedProduct.Name}</h3>
+                            <p>Precio unitario: ${selectedProduct.Price}</p>
+                            
+                            <div style={{ margin: '15px 0' }}>
+                                <label htmlFor="quantity">Cantidad: </label>
+                                <input
+                                    type="number"
+                                    id="quantity"
+                                    min="1"
+                                    value={quantity}
+                                    onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+                                    style={{
+                                        width: '60px',
+                                        padding: '5px',
+                                        marginLeft: '10px'
+                                    }}
+                                />
+                            </div>
+                            
+                            <p><strong>Total: ${totalPrice}</strong></p>
+                            
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+                                <button
+                                    onClick={() => setShowModal(false)}
+                                    style={{
+                                        padding: '8px 15px',
+                                        backgroundColor: '#f44336',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={handleConfirmPurchase}
+                                    style={{
+                                        padding: '8px 15px',
+                                        backgroundColor: '#4CAF50',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Confirmar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+        </div>
     </div>
     );
     
