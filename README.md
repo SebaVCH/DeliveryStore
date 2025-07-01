@@ -50,6 +50,10 @@ Luego, en el navegador, ingresar en http://localhost:8080/
 
 >[!WARNING]  
 > Dado que se trata de un entorno ficticio (y para facilitar el inicio del proyecto), se removió el archivo ".gitignore" que omitía subir el archivo ".env", por lo que este se incluirá desde un inicio. Se asume que en un entorno real esto no se debe hacer.
-> Existen datos de prueba presentes en ordenes pasadas, ya que se muestran datos que se crearon en fases de prueba (podrian estar mal formateadas), idealmente considerar ordenes pasadas hechas por el usuario actual, añadidas al final de la tabla de ordenes pasadas.
   
+---
+
+
+>[!WARNING]  
+> Existen datos de prueba presentes en ordenes pasadas, ya que se muestran datos que se crearon en fases de prueba (podrian estar mal formateadas), idealmente considerar ordenes pasadas hechas por el usuario actual, añadidas al final de la tabla de ordenes pasadas.  
 ---
